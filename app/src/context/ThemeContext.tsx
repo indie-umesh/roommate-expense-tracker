@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 
-type Theme = "dark" | "light";
+type Theme = "light" | "dark";
 
 interface ThemeContextType {
   theme: Theme;
@@ -9,7 +9,7 @@ interface ThemeContextType {
 }
 
 const ThemeContext = createContext<ThemeContextType>({
-  theme: "dark",
+  theme: "light",
   toggleTheme: () => {},
   setTheme: () => {},
 });
@@ -19,12 +19,14 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     try {
       if (typeof window !== "undefined" && window.localStorage) {
         const saved = window.localStorage.getItem("roommate-theme");
-        return (saved as Theme) || "dark";
+        if (saved === "dark" || saved === "light") {
+          return saved;
+        }
       }
     } catch {
-      // Fallback if localStorage is blocked by browser policy
+      // Ignore security errors
     }
-    return "dark";
+    return "light"; // Default is light as requested!
   });
 
   useEffect(() => {
@@ -33,26 +35,29 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         window.localStorage.setItem("roommate-theme", theme);
       }
     } catch {
-      // Ignore security errors
+      // Ignore
     }
 
     try {
       if (typeof document !== "undefined") {
+        const root = document.documentElement;
         if (theme === "dark") {
-          document.documentElement.classList.add("dark");
-          document.documentElement.classList.remove("light");
+          root.classList.add("dark");
+          root.classList.remove("light");
+          root.setAttribute("data-theme", "dark");
         } else {
-          document.documentElement.classList.add("light");
-          document.documentElement.classList.remove("dark");
+          root.classList.remove("dark");
+          root.classList.add("light");
+          root.setAttribute("data-theme", "light");
         }
       }
     } catch {
-      // Ignore DOM errors
+      // Ignore
     }
   }, [theme]);
 
   function toggleTheme() {
-    setThemeState((prev) => (prev === "dark" ? "light" : "dark"));
+    setThemeState((prev) => (prev === "light" ? "dark" : "light"));
   }
 
   function setTheme(t: Theme) {

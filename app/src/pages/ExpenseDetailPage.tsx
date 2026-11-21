@@ -152,27 +152,27 @@ export const ExpenseDetailPage: React.FC = () => {
 
   if (isLoading || !expense) {
     return (
-      <div className="min-h-screen bg-[#0b0f19] flex items-center justify-center text-slate-400 text-sm">
+      <div className="min-h-screen bg-[var(--bg-page)] flex items-center justify-center text-[var(--text-muted)] text-sm font-semibold">
         Loading bill details...
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#0b0f19] text-white flex flex-col pb-12">
-      <header className="px-4 md:px-8 py-4 bg-[#121826]/85 backdrop-blur-md border-b border-white/10 sticky top-0 z-20">
+    <div className="min-h-screen bg-[var(--bg-page)] text-[var(--text-primary)] flex flex-col pb-12 transition-colors duration-200">
+      <header className="px-4 md:px-8 py-4 bg-white/85 dark:bg-[#121826]/85 backdrop-blur-md border-b border-slate-200/80 dark:border-white/10 sticky top-0 z-20">
         <div className="max-w-3xl mx-auto flex items-center justify-between">
           <button
             onClick={() => navigate(`/group/${groupId}`)}
-            className="p-1.5 -ml-1 text-slate-400 hover:text-white hover:bg-white/10 rounded-full transition cursor-pointer"
+            className="p-1.5 -ml-1 text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-slate-100 dark:hover:bg-white/10 rounded-full transition cursor-pointer"
           >
             <ChevronLeft className="w-6 h-6" />
           </button>
-          <h1 className="font-bold text-base text-white tracking-tight">Expense Details</h1>
+          <h1 className="font-black text-base text-[var(--text-primary)] tracking-tight">Expense Details</h1>
           {!isEditing ? (
             <button
               onClick={() => setIsEditing(true)}
-              className="px-3 py-1 bg-white/10 hover:bg-white/20 text-slate-200 rounded-full font-semibold text-xs flex items-center gap-1.5 cursor-pointer transition"
+              className="btn-3d-surface px-3 py-1.5 rounded-xl font-bold text-xs flex items-center gap-1.5 cursor-pointer"
             >
               <Edit2 className="w-3.5 h-3.5" />
               Edit
@@ -180,7 +180,7 @@ export const ExpenseDetailPage: React.FC = () => {
           ) : (
             <button
               onClick={() => setIsEditing(false)}
-              className="px-3 py-1 text-slate-400 hover:text-white text-xs cursor-pointer"
+              className="px-3 py-1 text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer"
             >
               Cancel
             </button>
@@ -190,15 +190,15 @@ export const ExpenseDetailPage: React.FC = () => {
 
       <main className="flex-1 p-4 md:p-6 max-w-md md:max-w-2xl lg:max-w-3xl w-full mx-auto space-y-4">
         {error && (
-          <div className="p-3.5 bg-rose-950/60 border border-rose-500/40 rounded-2xl text-rose-300 text-xs font-semibold">
+          <div className="p-3.5 bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-500/40 rounded-2xl text-rose-700 dark:text-rose-300 text-xs font-semibold">
             {error}
           </div>
         )}
 
         {isEditing ? (
-          <div className="bg-[#121826] p-6 rounded-[26px] border border-white/10 space-y-4 shadow-xl">
+          <div className="card-3d p-6 space-y-4">
             <div>
-              <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-extrabold text-[var(--text-muted)] uppercase tracking-wider mb-1.5">
                 Amount (₹)
               </label>
               <input
@@ -206,24 +206,24 @@ export const ExpenseDetailPage: React.FC = () => {
                 inputMode="decimal"
                 value={editAmount}
                 onChange={(e) => setEditAmount(e.target.value)}
-                className="w-full px-4 py-3 bg-[#182238] border border-white/10 rounded-xl text-2xl font-black text-white focus:outline-none focus:border-indigo-500"
+                className="w-full px-4 py-3 bg-slate-50 dark:bg-[#182238] border border-slate-200 dark:border-white/10 rounded-xl text-2xl font-black text-[var(--text-primary)] focus:outline-none focus:border-indigo-500"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-extrabold text-[var(--text-muted)] uppercase tracking-wider mb-1.5">
                 Details / Category
               </label>
               <input
                 type="text"
                 value={editDetails}
                 onChange={(e) => setEditDetails(e.target.value)}
-                className="w-full px-4 py-3 bg-[#182238] border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-indigo-500"
+                className="w-full px-4 py-3 bg-slate-50 dark:bg-[#182238] border border-slate-200 dark:border-white/10 rounded-xl text-sm text-[var(--text-primary)] focus:outline-none focus:border-indigo-500"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-extrabold text-[var(--text-muted)] uppercase tracking-wider mb-1.5">
                 Who Paid?
               </label>
               <div className="flex flex-wrap gap-2">
@@ -232,10 +232,10 @@ export const ExpenseDetailPage: React.FC = () => {
                     key={m.id}
                     type="button"
                     onClick={() => setEditPaidBy(m.id)}
-                    className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition active:scale-95 cursor-pointer ${
+                    className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
                       editPaidBy === m.id
-                        ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/30"
-                        : "bg-white/5 text-slate-300 hover:bg-white/10 border border-white/10"
+                        ? "btn-3d-indigo text-white"
+                        : "btn-3d-surface text-[var(--text-muted)]"
                     }`}
                   >
                     {m.display_name}
@@ -245,7 +245,7 @@ export const ExpenseDetailPage: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-extrabold text-[var(--text-muted)] uppercase tracking-wider mb-1.5">
                 Split Participants
               </label>
               <div className="flex flex-wrap gap-2">
@@ -256,15 +256,15 @@ export const ExpenseDetailPage: React.FC = () => {
                       key={m.id}
                       type="button"
                       onClick={() => toggleParticipant(m.id)}
-                      className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-2 border transition active:scale-95 cursor-pointer ${
+                      className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-2 border transition cursor-pointer ${
                         isChecked
-                          ? "bg-indigo-950/70 border-indigo-500/60 text-indigo-200"
-                          : "bg-white/5 border-white/10 text-slate-400"
+                          ? "bg-indigo-50 dark:bg-indigo-950/70 border-indigo-200 dark:border-indigo-500/60 text-indigo-700 dark:text-indigo-200 shadow-sm"
+                          : "bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/10 text-[var(--text-muted)]"
                       }`}
                     >
                       <div
                         className={`w-3.5 h-3.5 rounded-full flex items-center justify-center ${
-                          isChecked ? "bg-indigo-500 text-white" : "border border-slate-600"
+                          isChecked ? "bg-indigo-600 text-white" : "border border-slate-400 dark:border-slate-600"
                         }`}
                       >
                         {isChecked && <Check className="w-2.5 h-2.5 stroke-[3]" />}
@@ -279,7 +279,7 @@ export const ExpenseDetailPage: React.FC = () => {
             <button
               onClick={() => updateMutation.mutate()}
               disabled={updateMutation.isPending}
-              className="w-full py-3.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 text-slate-950 font-black text-sm shadow-md transition active:scale-95 cursor-pointer"
+              className="w-full py-3.5 rounded-xl btn-3d-indigo font-black text-sm flex items-center justify-center gap-2 cursor-pointer"
             >
               {updateMutation.isPending ? "Updating..." : "Save Changes"}
             </button>
@@ -287,15 +287,15 @@ export const ExpenseDetailPage: React.FC = () => {
         ) : (
           <>
             {/* Main Expense Card */}
-            <div className="p-6 bg-[#121826] border border-white/10 rounded-[26px] space-y-4 shadow-xl">
+            <div className="card-3d p-6 space-y-4">
               <div className="flex justify-between items-start">
                 <div className="space-y-1">
-                  <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center font-bold text-2xl mb-2">
+                  <div className="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-white/5 border border-indigo-100 dark:border-white/10 flex items-center justify-center font-bold text-2xl mb-2 shadow-sm">
                     {expense.details.match(/^(\p{Emoji})/u)?.[0] || "🧾"}
                   </div>
-                  <h2 className="text-2xl font-black text-white tracking-tight">{expense.details}</h2>
-                  <p className="text-xs text-slate-400">
-                    Paid by <span className="font-bold text-indigo-400">{payerName}</span> on{" "}
+                  <h2 className="text-2xl font-black text-[var(--text-primary)] tracking-tight">{expense.details}</h2>
+                  <p className="text-xs text-[var(--text-muted)] font-medium">
+                    Paid by <span className="font-extrabold text-indigo-600 dark:text-indigo-400">{payerName}</span> on{" "}
                     {new Date(expense.spent_on).toLocaleDateString("en-IN", {
                       day: "numeric",
                       month: "long",
@@ -305,11 +305,11 @@ export const ExpenseDetailPage: React.FC = () => {
                 </div>
 
                 <div className="text-right">
-                  <span className="text-3xl font-black text-emerald-400 block tracking-tight">
+                  <span className="text-3xl font-black text-indigo-600 dark:text-indigo-400 block tracking-tight">
                     {formatINR(expense.amount_paise)}
                   </span>
                   {expense.updated_at > expense.created_at && (
-                    <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-amber-950/80 text-amber-300 font-bold border border-amber-500/30 inline-block mt-1">
+                    <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-amber-50 dark:bg-amber-950/80 text-amber-700 dark:text-amber-300 font-bold border border-amber-200 dark:border-amber-500/30 inline-block mt-1">
                       Edited
                     </span>
                   )}
@@ -318,8 +318,8 @@ export const ExpenseDetailPage: React.FC = () => {
             </div>
 
             {/* Splits breakdown */}
-            <div className="p-5 bg-[#121826] border border-white/10 rounded-[24px] space-y-3 shadow-sm">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+            <div className="card-3d p-5 space-y-3">
+              <h3 className="text-xs font-extrabold uppercase tracking-wider text-[var(--text-muted)]">
                 Split Breakdown
               </h3>
               <div className="space-y-2">
@@ -328,10 +328,10 @@ export const ExpenseDetailPage: React.FC = () => {
                   return (
                     <div
                       key={split.member_id}
-                      className="flex items-center justify-between py-2 border-b border-white/5 last:border-0 text-sm"
+                      className="flex items-center justify-between py-2 border-b border-slate-100 dark:border-white/5 last:border-0 text-sm"
                     >
-                      <span className="text-slate-200 font-medium">{name}</span>
-                      <span className="font-bold text-white">
+                      <span className="text-[var(--text-primary)] font-medium">{name}</span>
+                      <span className="font-black text-[var(--text-primary)]">
                         {formatINR(split.share_paise)}
                       </span>
                     </div>
@@ -343,40 +343,40 @@ export const ExpenseDetailPage: React.FC = () => {
             {/* Foolproof Delete Action Section */}
             <div className="pt-2">
               {!canDelete ? (
-                <div className="p-4 bg-white/5 border border-white/10 rounded-2xl text-xs text-slate-400 flex items-center gap-2.5">
-                  <ShieldAlert className="w-4 h-4 text-amber-400 shrink-0" />
+                <div className="p-4 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl text-xs text-[var(--text-muted)] flex items-center gap-2.5">
+                  <ShieldAlert className="w-4 h-4 text-amber-500 shrink-0" />
                   <span>
-                    Locked: Only <strong className="text-white">{payerName}</strong> or a Flat Admin can delete this bill to prevent disputes.
+                    Locked: Only <strong className="text-[var(--text-primary)]">{payerName}</strong> or a Flat Admin can delete this bill to prevent disputes.
                   </span>
                 </div>
               ) : !confirmDelete ? (
                 <button
                   onClick={() => setConfirmDelete(true)}
-                  className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-full text-rose-400 border border-rose-500/30 hover:bg-rose-500/10 text-xs font-bold transition cursor-pointer"
+                  className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-rose-500 hover:text-rose-600 border border-rose-200 dark:border-rose-500/30 hover:bg-rose-50 dark:hover:bg-rose-500/10 text-xs font-bold transition cursor-pointer"
                 >
                   <Trash2 className="w-4 h-4" />
                   Delete Bill...
                 </button>
               ) : (
-                <div className="p-5 bg-rose-950/30 border border-rose-500/40 rounded-[24px] space-y-3 shadow-lg">
-                  <div className="flex items-center gap-2 text-rose-400 font-bold text-sm">
+                <div className="card-3d p-5 border-rose-500/40 space-y-3">
+                  <div className="flex items-center gap-2 text-rose-500 font-extrabold text-sm">
                     <AlertTriangle className="w-5 h-5 shrink-0" />
                     <span>Delete Bill Confirmation</span>
                   </div>
 
-                  <p className="text-xs text-slate-300">
+                  <p className="text-xs text-[var(--text-muted)] leading-relaxed">
                     Deleting removes ₹{formatINR(expense.amount_paise)} from group balances.
                     Don't worry — this bill will be saved in the <strong>Deleted Bills Archive</strong> so any roommate can view or restore it anytime!
                   </p>
 
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                    <label className="block text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1">
                       Reason for Deletion
                     </label>
                     <select
                       value={deleteReason}
                       onChange={(e) => setDeleteReason(e.target.value)}
-                      className="w-full px-3 py-2 bg-[#182238] border border-white/10 rounded-xl text-xs text-white focus:outline-none"
+                      className="w-full px-3 py-2 bg-slate-50 dark:bg-[#182238] border border-slate-200 dark:border-white/10 rounded-xl text-xs text-[var(--text-primary)] focus:outline-none"
                     >
                       <option value="Duplicate entry">Duplicate entry</option>
                       <option value="Wrong amount entered">Wrong amount entered</option>
@@ -386,17 +386,17 @@ export const ExpenseDetailPage: React.FC = () => {
                     </select>
                   </div>
 
-                  <div className="flex gap-2 justify-end pt-2">
+                  <div className="flex gap-2.5 justify-end pt-2">
                     <button
                       onClick={() => setConfirmDelete(false)}
-                      className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-full text-xs text-slate-300 font-semibold cursor-pointer"
+                      className="px-4 py-2 rounded-xl text-xs text-[var(--text-muted)] hover:text-[var(--text-primary)] font-semibold cursor-pointer"
                     >
                       Cancel
                     </button>
                     <button
                       onClick={() => deleteMutation.mutate()}
                       disabled={deleteMutation.isPending}
-                      className="px-5 py-2 bg-rose-600 hover:bg-rose-500 rounded-full text-xs text-white font-bold flex items-center gap-1.5 shadow-md transition cursor-pointer"
+                      className="px-5 py-2 bg-rose-600 hover:bg-rose-500 rounded-xl text-xs text-white font-black flex items-center gap-1.5 shadow-[0_4px_0_0_#9f1239] active:translate-y-[3px] active:shadow-[0_1px_0_0_#9f1239] transition cursor-pointer"
                     >
                       {deleteMutation.isPending && (
                         <Loader2 className="w-3.5 h-3.5 animate-spin" />

@@ -3,12 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../context/ThemeContext";
 import type { Group } from "../lib/types";
-import { Users, Plus, ArrowRight, LogOut, KeyRound } from "lucide-react";
+import { Users, Plus, ArrowRight, LogOut, KeyRound, Sun, Moon } from "lucide-react";
 
 export const GroupsPage: React.FC = () => {
   const navigate = useNavigate();
   const { user, profile, signOut } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const queryClient = useQueryClient();
 
   const [isCreating, setIsCreating] = useState(false);
@@ -73,44 +75,66 @@ export const GroupsPage: React.FC = () => {
   });
 
   return (
-    <div className="min-h-screen bg-[#0b0f19] text-white flex flex-col">
+    <div className="min-h-screen bg-[var(--bg-page)] text-[var(--text-primary)] flex flex-col transition-colors duration-200">
       {/* Top Header */}
-      <header className="px-5 md:px-8 py-4 bg-[#121826]/85 backdrop-blur-md border-b border-white/10 flex items-center justify-between sticky top-0 z-10">
+      <header className="px-5 md:px-8 py-4 bg-white/80 dark:bg-[#121826]/85 backdrop-blur-md border-b border-slate-200/80 dark:border-white/10 flex items-center justify-between sticky top-0 z-20">
         <div className="max-w-5xl mx-auto w-full flex items-center justify-between">
-          <div>
-            <h1 className="font-black text-lg text-white tracking-tight flex items-center gap-2">
-              <span className="text-emerald-400">⚡</span> Roommate
-            </h1>
-            <p className="text-xs text-slate-400">
-              Signed in as <span className="font-bold text-emerald-400">{profile?.display_name || "User"}</span>
-            </p>
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-xl btn-3d-indigo flex items-center justify-center text-white font-black text-sm">
+              ₹
+            </div>
+            <div>
+              <h1 className="font-black text-lg text-[var(--text-primary)] tracking-tight">
+                Roommate
+              </h1>
+              <p className="text-xs text-[var(--text-muted)] font-medium">
+                Signed in as <span className="font-bold text-indigo-600 dark:text-indigo-400">{profile?.display_name || "User"}</span>
+              </p>
+            </div>
           </div>
-          <button
-            onClick={() => signOut()}
-            className="p-2 text-slate-400 hover:text-white rounded-full hover:bg-white/10 transition cursor-pointer"
-            title="Sign out"
-          >
-            <LogOut className="w-4 h-4" />
-          </button>
+
+          <div className="flex items-center gap-2">
+            {/* Theme Toggle Button */}
+            <button
+              onClick={toggleTheme}
+              className="btn-3d-surface p-2 rounded-full transition flex items-center justify-center cursor-pointer"
+              title={`Switch to ${theme === "light" ? "Dark" : "Light"} Mode`}
+            >
+              {theme === "light" ? (
+                <Moon className="w-4 h-4 text-indigo-600" />
+              ) : (
+                <Sun className="w-4 h-4 text-amber-400" />
+              )}
+            </button>
+
+            {/* Logout Button */}
+            <button
+              onClick={() => signOut()}
+              className="p-2 text-[var(--text-muted)] hover:text-rose-500 rounded-full hover:bg-slate-100 dark:hover:bg-white/10 transition cursor-pointer"
+              title="Sign out"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
+          </div>
         </div>
       </header>
 
-      <main className="flex-1 p-5 md:p-8 max-w-md md:max-w-3xl lg:max-w-5xl w-full mx-auto space-y-5">
+      <main className="flex-1 p-5 md:p-8 max-w-md md:max-w-3xl lg:max-w-5xl w-full mx-auto space-y-6">
         {error && (
-          <div className="p-3.5 bg-rose-950/60 border border-rose-500/40 rounded-2xl text-rose-300 text-xs font-semibold">
+          <div className="p-3.5 bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-500/40 rounded-2xl text-rose-700 dark:text-rose-300 text-xs font-semibold">
             {error}
           </div>
         )}
 
-        {/* Action Buttons */}
-        <div className="grid grid-cols-2 gap-3 max-w-md mx-auto">
+        {/* 3D Action Buttons */}
+        <div className="grid grid-cols-2 gap-3.5 max-w-md mx-auto">
           <button
             onClick={() => {
               setIsCreating(true);
               setIsJoining(false);
               setError(null);
             }}
-            className="flex items-center justify-center gap-2 py-3 px-4 rounded-full bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 text-slate-950 font-black text-sm shadow-md active:scale-98 transition cursor-pointer"
+            className="flex items-center justify-center gap-2 py-3 px-5 rounded-2xl btn-3d-indigo font-black text-sm"
           >
             <Plus className="w-4 h-4 stroke-[3]" />
             New Group
@@ -121,9 +145,9 @@ export const GroupsPage: React.FC = () => {
               setIsCreating(false);
               setError(null);
             }}
-            className="flex items-center justify-center gap-2 py-3 px-4 rounded-full bg-[#121826] hover:bg-white/10 text-white border border-white/10 font-bold text-sm active:scale-98 transition shadow-sm cursor-pointer"
+            className="flex items-center justify-center gap-2 py-3 px-5 rounded-2xl btn-3d-surface font-extrabold text-sm"
           >
-            <KeyRound className="w-4 h-4 text-emerald-400" />
+            <KeyRound className="w-4 h-4 text-indigo-500" />
             Join Code
           </button>
         </div>
@@ -135,9 +159,9 @@ export const GroupsPage: React.FC = () => {
               e.preventDefault();
               if (groupName.trim()) createGroupMutation.mutate(groupName);
             }}
-            className="p-5 bg-[#121826] border border-white/10 rounded-2xl space-y-3.5 shadow-xl max-w-md mx-auto"
+            className="card-3d p-6 space-y-4 max-w-md mx-auto"
           >
-            <h3 className="font-bold text-sm text-white">Create New Group</h3>
+            <h3 className="font-extrabold text-sm text-[var(--text-primary)]">Create New Flat</h3>
             <input
               type="text"
               required
@@ -145,22 +169,22 @@ export const GroupsPage: React.FC = () => {
               placeholder="e.g. Flat 302 Roommates"
               value={groupName}
               onChange={(e) => setGroupName(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-[#182238] border border-white/10 rounded-xl text-sm text-white placeholder-slate-400 focus:outline-none focus:border-emerald-500"
+              className="w-full px-4 py-3 bg-slate-50 dark:bg-[#182238] border border-slate-200 dark:border-white/10 rounded-xl text-sm text-[var(--text-primary)] placeholder-slate-400 focus:outline-none focus:border-indigo-500"
             />
-            <div className="flex gap-2 justify-end pt-1">
+            <div className="flex gap-2.5 justify-end pt-1">
               <button
                 type="button"
                 onClick={() => setIsCreating(false)}
-                className="px-4 py-2 text-xs font-semibold text-slate-400 hover:text-white cursor-pointer"
+                className="px-4 py-2 text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={createGroupMutation.isPending}
-                className="px-5 py-2 text-xs bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black rounded-full disabled:opacity-50 cursor-pointer"
+                className="px-6 py-2 text-xs btn-3d-indigo font-black rounded-xl disabled:opacity-50"
               >
-                {createGroupMutation.isPending ? "Creating..." : "Create"}
+                {createGroupMutation.isPending ? "Creating..." : "Create Flat"}
               </button>
             </div>
           </form>
@@ -173,9 +197,9 @@ export const GroupsPage: React.FC = () => {
               e.preventDefault();
               if (inviteCode.trim()) joinGroupMutation.mutate(inviteCode);
             }}
-            className="p-5 bg-[#121826] border border-white/10 rounded-2xl space-y-3.5 shadow-xl max-w-md mx-auto"
+            className="card-3d p-6 space-y-4 max-w-md mx-auto"
           >
-            <h3 className="font-bold text-sm text-white">Enter Invite Code</h3>
+            <h3 className="font-extrabold text-sm text-[var(--text-primary)]">Enter Invite Code</h3>
             <input
               type="text"
               required
@@ -183,63 +207,65 @@ export const GroupsPage: React.FC = () => {
               placeholder="e.g. ROOM-1234"
               value={inviteCode}
               onChange={(e) => setInviteCode(e.target.value.toUpperCase())}
-              className="w-full px-3.5 py-2.5 bg-[#182238] border border-white/10 rounded-xl text-sm text-white placeholder-slate-400 uppercase tracking-widest text-center focus:outline-none focus:border-emerald-500"
+              className="w-full px-4 py-3 bg-slate-50 dark:bg-[#182238] border border-slate-200 dark:border-white/10 rounded-xl text-base text-[var(--text-primary)] placeholder-slate-400 uppercase tracking-widest text-center font-mono font-bold focus:outline-none focus:border-indigo-500"
             />
-            <div className="flex gap-2 justify-end pt-1">
+            <div className="flex gap-2.5 justify-end pt-1">
               <button
                 type="button"
                 onClick={() => setIsJoining(false)}
-                className="px-4 py-2 text-xs font-semibold text-slate-400 hover:text-white cursor-pointer"
+                className="px-4 py-2 text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={joinGroupMutation.isPending}
-                className="px-5 py-2 text-xs bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black rounded-full disabled:opacity-50 cursor-pointer"
+                className="px-6 py-2 text-xs btn-3d-indigo font-black rounded-xl disabled:opacity-50"
               >
-                {joinGroupMutation.isPending ? "Joining..." : "Join"}
+                {joinGroupMutation.isPending ? "Joining..." : "Join Flat"}
               </button>
             </div>
           </form>
         )}
 
-        {/* Group List - Responsive Grid on Tablet / Desktop */}
+        {/* Group List - 3D Cards in Responsive Grid */}
         <div className="pt-2">
           {isLoading ? (
-            <div className="text-center py-12 text-slate-400 text-sm">
-              Loading groups...
+            <div className="text-center py-12 text-[var(--text-muted)] text-sm font-semibold">
+              Loading your flats...
             </div>
           ) : groups && groups.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {groups.map((group) => (
                 <div
                   key={group.id}
                   onClick={() => navigate(`/group/${group.id}`)}
-                  className="p-4 md:p-5 bg-[#121826] border border-white/10 hover:border-emerald-500/40 rounded-2xl flex items-center justify-between cursor-pointer active:scale-[0.99] transition shadow-md"
+                  className="card-3d p-5 flex items-center justify-between cursor-pointer active:scale-[0.99] transition hover:-translate-y-1"
                 >
                   <div className="flex items-center gap-3.5">
-                    <div className="w-11 h-11 rounded-full bg-white/5 border border-white/10 text-emerald-400 flex items-center justify-center font-bold shrink-0">
-                      <Users className="w-5 h-5" />
+                    <div className="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-white/5 border border-indigo-100 dark:border-white/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold shrink-0 shadow-sm">
+                      <Users className="w-6 h-6" />
                     </div>
                     <div>
-                      <h3 className="font-bold text-white text-base tracking-tight">
+                      <h3 className="font-black text-[var(--text-primary)] text-base tracking-tight">
                         {group.name}
                       </h3>
-                      <p className="text-xs text-slate-400 tracking-wider mt-0.5">
-                        Invite code: <span className="font-bold text-emerald-400">{group.invite_code}</span>
+                      <p className="text-xs text-[var(--text-muted)] tracking-wider mt-0.5">
+                        Code: <span className="font-extrabold text-indigo-600 dark:text-indigo-400">{group.invite_code}</span>
                       </p>
                     </div>
                   </div>
-                  <ArrowRight className="w-4 h-4 text-slate-400" />
+                  <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-white/5 flex items-center justify-center text-[var(--text-muted)]">
+                    <ArrowRight className="w-4 h-4" />
+                  </div>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="text-center py-12 bg-[#121826] rounded-2xl border border-dashed border-white/10 p-6 max-w-md mx-auto">
-              <Users className="w-10 h-10 mx-auto text-slate-500 mb-2.5 opacity-60" />
-              <p className="text-sm font-bold text-white">No groups yet</p>
-              <p className="text-xs text-slate-400 mt-1 max-w-xs mx-auto">
+            <div className="card-3d text-center py-12 p-6 max-w-md mx-auto">
+              <Users className="w-12 h-12 mx-auto text-[var(--text-muted)] mb-3 opacity-60" />
+              <p className="text-base font-extrabold text-[var(--text-primary)]">No groups yet</p>
+              <p className="text-xs text-[var(--text-muted)] mt-1 max-w-xs mx-auto">
                 Create a group for your roommates or enter an invite code to join.
               </p>
             </div>

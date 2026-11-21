@@ -167,46 +167,46 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: "100%", opacity: 0 }}
             transition={{ type: "spring", damping: 26, stiffness: 300 }}
-            className="relative bg-[#121826] text-white w-full max-w-lg rounded-t-[32px] sm:rounded-[28px] p-5 pb-7 sm:p-6 shadow-2xl z-10 max-h-[92vh] overflow-y-auto border-t sm:border border-white/10"
+            className="relative bg-white dark:bg-[#121826] text-[var(--text-primary)] w-full max-w-lg rounded-t-[32px] sm:rounded-[28px] p-5 pb-7 sm:p-6 shadow-2xl z-10 max-h-[92vh] overflow-y-auto border-t sm:border border-slate-200/80 dark:border-white/10"
           >
             {/* Mobile Drag Indicator */}
-            <div className="w-12 h-1.5 bg-slate-700/80 rounded-full mx-auto mb-3 sm:hidden" />
+            <div className="w-12 h-1.5 bg-slate-300 dark:bg-slate-700/80 rounded-full mx-auto mb-3 sm:hidden" />
 
             {/* Header */}
-            <div className="flex items-center justify-between pb-3 border-b border-white/10">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-white/10">
               <div className="flex items-center gap-2">
-                <span className="w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xs">
-                  ⚡
+                <span className="w-8 h-8 rounded-xl btn-3d-indigo text-white flex items-center justify-center font-black text-xs">
+                  ₹
                 </span>
                 <div>
-                  <h3 className="font-extrabold text-base text-white tracking-tight">
+                  <h3 className="font-black text-base text-[var(--text-primary)] tracking-tight">
                     Add Expense
                   </h3>
-                  <p className="text-[11px] text-slate-400">Takes under 5 seconds</p>
+                  <p className="text-[11px] text-[var(--text-muted)] font-medium">Split bills in under 5 seconds</p>
                 </div>
               </div>
               <button
                 onClick={onClose}
-                className="p-1.5 rounded-full text-slate-400 hover:text-white hover:bg-white/10 transition cursor-pointer"
+                className="p-1.5 rounded-full text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-slate-100 dark:hover:bg-white/10 transition cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             {error && (
-              <div className="mt-3 p-3 bg-rose-950/60 border border-rose-500/40 rounded-xl text-rose-300 text-xs font-semibold">
+              <div className="mt-3 p-3 bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-500/40 rounded-xl text-rose-700 dark:text-rose-300 text-xs font-semibold">
                 {error}
               </div>
             )}
 
             <div className="space-y-4 pt-3">
               {/* Amount Display */}
-              <div className="bg-[#182238] border border-white/10 p-4 rounded-2xl text-center shadow-inner">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">
+              <div className="bg-slate-50 dark:bg-[#182238] border border-slate-200/80 dark:border-white/10 p-4 rounded-2xl text-center shadow-inner">
+                <span className="text-[10px] font-extrabold uppercase tracking-wider text-[var(--text-muted)] block mb-1">
                   Amount Spent
                 </span>
                 <div className="flex items-center justify-center">
-                  <span className="text-3xl font-black text-emerald-400 mr-1.5">₹</span>
+                  <span className="text-3xl font-black text-indigo-600 dark:text-indigo-400 mr-1.5">₹</span>
                   <input
                     ref={inputRef}
                     type="number"
@@ -215,18 +215,18 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                     placeholder="0"
                     value={amountRupees}
                     onChange={(e) => setAmountRupees(e.target.value)}
-                    className="text-4xl sm:text-5xl font-black text-white bg-transparent outline-none max-w-[220px] text-center placeholder-slate-600 tracking-tight"
+                    className="text-4xl sm:text-5xl font-black text-[var(--text-primary)] bg-transparent outline-none max-w-[220px] text-center placeholder-slate-400 dark:placeholder-slate-600 tracking-tight"
                   />
                 </div>
 
-                {/* Quick Add Chips (Single Clean Row - Never Wraps) */}
+                {/* Quick Add Chips (Single Clean Row) */}
                 <div className="flex items-center justify-center gap-1.5 mt-3 overflow-x-auto no-scrollbar py-0.5">
                   {QUICK_AMOUNTS.map((amt) => (
                     <button
                       key={amt}
                       type="button"
                       onClick={() => handleQuickAmount(amt)}
-                      className="px-2.5 py-1 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 text-xs font-bold text-slate-200 active:scale-95 transition whitespace-nowrap cursor-pointer"
+                      className="btn-3d-surface px-2.5 py-1 rounded-xl text-xs font-bold whitespace-nowrap cursor-pointer"
                     >
                       +{amt}
                     </button>
@@ -241,7 +241,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                   placeholder="What was this for? (e.g. Swiggy, Groceries, Milk)"
                   value={details}
                   onChange={(e) => setDetails(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-[#182238] border border-white/10 rounded-xl text-sm text-white placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                  className="w-full px-4 py-2.5 bg-slate-50 dark:bg-[#182238] border border-slate-200/80 dark:border-white/10 rounded-xl text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
                 />
                 {/* Horizontal Category Slider */}
                 <div className="flex items-center gap-1.5 mt-2 overflow-x-auto pb-1 no-scrollbar">
@@ -250,7 +250,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                       key={tag.label}
                       type="button"
                       onClick={() => handleQuickTag(tag.emoji, tag.label)}
-                      className="px-2.5 py-1 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-medium text-slate-300 flex items-center gap-1 whitespace-nowrap active:scale-95 transition cursor-pointer"
+                      className="btn-3d-surface px-2.5 py-1 rounded-full text-xs font-semibold flex items-center gap-1 whitespace-nowrap cursor-pointer"
                     >
                       <span>{tag.emoji}</span>
                       <span>{tag.label}</span>
@@ -261,7 +261,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
 
               {/* Paid by */}
               <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                <label className="block text-[11px] font-extrabold uppercase tracking-wider text-[var(--text-muted)] mb-1.5">
                   Who Paid?
                 </label>
                 <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1">
@@ -272,10 +272,10 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                         key={member.id}
                         type="button"
                         onClick={() => setPaidByMemberId(member.id)}
-                        className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition active:scale-95 whitespace-nowrap cursor-pointer ${
+                        className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap cursor-pointer ${
                           isSelected
-                            ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/30"
-                            : "bg-white/5 text-slate-300 hover:bg-white/10 border border-white/10"
+                            ? "btn-3d-indigo text-white"
+                            : "btn-3d-surface text-[var(--text-muted)]"
                         }`}
                       >
                         {getMemberLabel(member)}
@@ -288,13 +288,13 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
               {/* Split equally among */}
               <div>
                 <div className="flex justify-between items-center mb-1.5">
-                  <label className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                  <label className="text-[11px] font-extrabold uppercase tracking-wider text-[var(--text-muted)]">
                     Split Among ({selectedMemberIds.length})
                   </label>
                   <button
                     type="button"
                     onClick={() => setSelectedMemberIds(uniqueMembers.map((m) => m.id))}
-                    className="text-[11px] text-indigo-400 font-bold hover:underline cursor-pointer"
+                    className="text-[11px] text-indigo-600 dark:text-indigo-400 font-extrabold hover:underline cursor-pointer"
                   >
                     Equal Split (All)
                   </button>
@@ -308,17 +308,17 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                         key={member.id}
                         type="button"
                         onClick={() => toggleMemberSplit(member.id)}
-                        className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-2 border transition active:scale-95 cursor-pointer ${
+                        className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-2 border transition cursor-pointer ${
                           isChecked
-                            ? "bg-indigo-950/70 border-indigo-500/60 text-indigo-200"
-                            : "bg-white/5 border-white/10 text-slate-400"
+                            ? "bg-indigo-50 dark:bg-indigo-950/70 border-indigo-200 dark:border-indigo-500/60 text-indigo-700 dark:text-indigo-200 shadow-sm"
+                            : "bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/10 text-[var(--text-muted)]"
                         }`}
                       >
                         <div
                           className={`w-3.5 h-3.5 rounded-full flex items-center justify-center ${
                             isChecked
-                              ? "bg-indigo-500 text-white"
-                              : "border border-slate-600"
+                              ? "bg-indigo-600 text-white"
+                              : "border border-slate-400 dark:border-slate-600"
                           }`}
                         >
                           {isChecked && <Check className="w-2.5 h-2.5 stroke-[3]" />}
@@ -330,15 +330,15 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                 </div>
               </div>
 
-              {/* High-energy Glowing Thumb Button */}
+              {/* 3D Indigo Action Button */}
               <button
                 type="button"
                 disabled={createExpenseMutation.isPending}
                 onClick={() => createExpenseMutation.mutate()}
-                className="w-full mt-3 py-3.5 px-4 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 active:scale-[0.98] text-slate-950 font-black text-sm shadow-[0_4px_24px_rgba(16,185,129,0.4)] transition disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full mt-3 py-3.5 px-4 rounded-xl btn-3d-indigo font-black text-sm flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
               >
                 {createExpenseMutation.isPending ? (
-                  <Loader2 className="w-5 h-5 animate-spin" />
+                  <Loader2 className="w-5 h-5 animate-spin text-white" />
                 ) : (
                   "Split & Save →"
                 )}

@@ -109,35 +109,35 @@ export const SettleUpPage: React.FC = () => {
   });
 
   return (
-    <div className="min-h-screen bg-[#0b0f19] text-white flex flex-col">
-      <header className="px-4 py-3.5 bg-[#121826]/85 backdrop-blur-md border-b border-white/10 flex items-center justify-between sticky top-0 z-10">
+    <div className="min-h-screen bg-[var(--bg-page)] text-[var(--text-primary)] flex flex-col transition-colors duration-200">
+      <header className="px-4 py-3.5 bg-white/85 dark:bg-[#121826]/85 backdrop-blur-md border-b border-slate-200/80 dark:border-white/10 flex items-center justify-between sticky top-0 z-10">
         <button
           onClick={() => navigate(`/group/${groupId}`)}
-          className="p-1 -ml-1 text-slate-400 hover:text-white"
+          className="p-1 -ml-1 text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-slate-100 dark:hover:bg-white/10 rounded-full transition cursor-pointer"
         >
           <ChevronLeft className="w-6 h-6" />
         </button>
-        <h1 className="font-bold text-base text-white tracking-tight">Settle Up</h1>
+        <h1 className="font-black text-base text-[var(--text-primary)] tracking-tight">Settle Up</h1>
         <div className="w-6" />
       </header>
 
       <main className="flex-1 p-4 max-w-lg w-full mx-auto space-y-4">
         {error && (
-          <div className="p-3.5 bg-rose-950/60 border border-rose-500/40 rounded-2xl text-rose-300 text-xs font-semibold">
+          <div className="p-3.5 bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-500/40 rounded-2xl text-rose-700 dark:text-rose-300 text-xs font-semibold">
             {error}
           </div>
         )}
 
-        <div className="p-6 bg-[#121826] border border-white/10 rounded-[28px] shadow-xl">
-          <h2 className="text-base font-black text-white mb-1">
+        <div className="card-3d p-6">
+          <h2 className="text-base font-black text-[var(--text-primary)] mb-1">
             Minimal Payments
           </h2>
-          <p className="text-xs text-slate-400 mb-5">
+          <p className="text-xs text-[var(--text-muted)] mb-5">
             Optimized minimal payments required to balance all roommates to zero.
           </p>
 
           {simplifiedTransfers.length === 0 ? (
-            <div className="text-center py-10 text-emerald-400 text-sm font-black">
+            <div className="text-center py-10 text-indigo-600 dark:text-indigo-400 text-sm font-black">
               ✓ All accounts are balanced! Zero debt.
             </div>
           ) : (
@@ -148,15 +148,15 @@ export const SettleUpPage: React.FC = () => {
                 return (
                   <div
                     key={idx}
-                    className="p-4 bg-[#182238] border border-white/10 rounded-2xl flex items-center justify-between shadow-md"
+                    className="card-3d p-4 flex items-center justify-between"
                   >
                     <div>
-                      <div className="flex items-center gap-1.5 text-xs text-slate-400">
-                        <span className="font-bold text-rose-400">{fromName}</span>
-                        <ArrowRight className="w-3.5 h-3.5 text-slate-500" />
-                        <span className="font-bold text-emerald-400">{toName}</span>
+                      <div className="flex items-center gap-1.5 text-xs text-[var(--text-muted)]">
+                        <span className="font-bold text-rose-500 dark:text-rose-400">{fromName}</span>
+                        <ArrowRight className="w-3.5 h-3.5 text-[var(--text-muted)]" />
+                        <span className="font-bold text-indigo-600 dark:text-indigo-400">{toName}</span>
                       </div>
-                      <span className="text-2xl font-black text-white mt-1 block tracking-tight">
+                      <span className="text-2xl font-black text-[var(--text-primary)] mt-1 block tracking-tight">
                         {formatINR(t.amountPaise)}
                       </span>
                     </div>
@@ -170,7 +170,7 @@ export const SettleUpPage: React.FC = () => {
                         })
                       }
                       disabled={recordSettlementMutation.isPending}
-                      className="px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 text-slate-950 font-black text-xs rounded-full shadow-md transition active:scale-95 cursor-pointer flex items-center gap-1.5"
+                      className="px-4 py-2 btn-3d-amber font-black text-xs rounded-xl flex items-center gap-1.5 cursor-pointer"
                     >
                       <CheckCircle2 className="w-4 h-4" />
                       Mark Paid
