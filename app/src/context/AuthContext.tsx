@@ -43,7 +43,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     let isMounted = true;
 
-    async function restoreSession() {
+    async function initAuth() {
       try {
         const { data: { session }, error } = await supabase.auth.getSession();
         if (error) {
@@ -53,19 +53,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         setSession(session);
         setUser(session?.user ?? null);
+        setLoading(false); // unblock loading immediately!
+
         if (session?.user) {
-          await fetchProfile(session.user.id);
+          fetchProfile(session.user.id);
         }
       } catch (err) {
-        console.error("Auth restore error:", err);
-      } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
+        console.error("Auth init error:", err);
+        if (isMounted) setLoading(false);
       }
     }
 
-    restoreSession();
+    initAuth();
 
     const {
       data: { subscription },
@@ -73,12 +72,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (!isMounted) return;
       setSession(newSession);
       setUser(newSession?.user ?? null);
+      setLoading(false);
+
       if (newSession?.user) {
-        await fetchProfile(newSession.user.id);
+        fetchProfile(newSession.user.id);
       } else {
         setProfile(null);
       }
-      setLoading(false);
     });
 
     return () => {
@@ -123,7 +123,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
     if (error) throw error;
 
-    // Immediately sign in if no active session returned
+    // Immediately sign in to ensure active session
     if (!data.session) {
       const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
         email: syntheticEmail,
