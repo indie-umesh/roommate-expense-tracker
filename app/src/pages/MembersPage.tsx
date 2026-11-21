@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../lib/supabase";
 import type { Group, Member } from "../lib/types";
-import { ChevronLeft, Share2, UserPlus, Copy, Check } from "lucide-react";
+import { ChevronLeft, Share2, UserPlus, Copy, Check, Calendar } from "lucide-react";
 
 export const MembersPage: React.FC = () => {
   const { groupId } = useParams<{ groupId: string }>();
@@ -11,6 +11,7 @@ export const MembersPage: React.FC = () => {
   const queryClient = useQueryClient();
 
   const [newGhostName, setNewGhostName] = useState("");
+  const [newGhostPayday, setNewGhostPayday] = useState<string>("");
   const [copied, setCopied] = useState(false);
   const [isAddingGhost, setIsAddingGhost] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -47,22 +48,38 @@ export const MembersPage: React.FC = () => {
 
   // Add Ghost Member Mutation
   const addGhostMutation = useMutation({
-    mutationFn: async (name: string) => {
+    mutationFn: async ({ name, payday }: { name: string; payday?: number | null }) => {
       const { error } = await supabase.from("members").insert({
         group_id: groupId,
         user_id: null,
         display_name: name.trim(),
         role: "member",
+        payday_day: payday || null,
       });
       if (error) throw error;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["group-members", groupId] });
       setNewGhostName("");
+      setNewGhostPayday("");
       setIsAddingGhost(false);
     },
     onError: (err: any) => {
       setError(err?.message || "Failed to add roommate");
+    },
+  });
+
+  // Update Payday Mutation
+  const updatePaydayMutation = useMutation({
+    mutationFn: async ({ memberId, payday }: { memberId: string; payday: number }) => {
+      const { error } = await supabase
+        .from("members")
+        .update({ payday_day: payday })
+        .eq("id", memberId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["group-members", groupId] });
     },
   });
 
@@ -150,9 +167,14 @@ export const MembersPage: React.FC = () => {
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                if (newGhostName.trim()) addGhostMutation.mutate(newGhostName);
+                if (newGhostName.trim()) {
+                  addGhostMutation.mutate({
+                    name: newGhostName,
+                    payday: newGhostPayday ? parseInt(newGhostPayday, 10) : null,
+                  });
+                }
               }}
-              className="p-4 bg-white border border-[#e5e5e7] rounded-2xl space-y-3 shadow-sm"
+              className="p-5 bg-white border border-[#e5e5e7] rounded-2xl space-y-3 shadow-sm"
             >
               <p className="text-xs text-[#86868b]">
                 Add Aman or Ritesh by name now. They can claim their spot when they sign up!
@@ -161,25 +183,36 @@ export const MembersPage: React.FC = () => {
                 type="text"
                 required
                 autoFocus
-                placeholder="e.g. Aman or Ritesh"
+                placeholder="Name (e.g. Aman, Umesh, Ritesh)"
                 value={newGhostName}
                 onChange={(e) => setNewGhostName(e.target.value)}
                 className="w-full px-3.5 py-2.5 bg-[#fbfbfd] border border-[#d2d2d7] rounded-xl text-xs text-[#1d1d1f] placeholder-[#86868b] focus:outline-none focus:border-[#0066cc]"
               />
-              <div className="flex justify-end gap-2">
+              <div className="flex items-center gap-2">
+                <input
+                  type="number"
+                  min="1"
+                  max="31"
+                  placeholder="Payday date of month (1-31)"
+                  value={newGhostPayday}
+                  onChange={(e) => setNewGhostPayday(e.target.value)}
+                  className="w-full px-3.5 py-2 bg-[#fbfbfd] border border-[#d2d2d7] rounded-xl text-xs text-[#1d1d1f] placeholder-[#86868b]"
+                />
+              </div>
+              <div className="flex justify-end gap-2 pt-1">
                 <button
                   type="button"
                   onClick={() => setIsAddingGhost(false)}
-                  className="px-3 py-1.5 text-xs text-[#86868b] hover:text-[#1d1d1f]"
+                  className="px-3.5 py-1.5 text-xs text-[#86868b] hover:text-[#1d1d1f]"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={addGhostMutation.isPending}
-                  className="px-4 py-1.5 bg-[#0066cc] hover:bg-[#0071e3] text-white text-xs font-semibold rounded-full"
+                  className="px-5 py-1.5 bg-[#0066cc] hover:bg-[#0071e3] text-white text-xs font-semibold rounded-full"
                 >
-                  Add
+                  Add Roommate
                 </button>
               </div>
             </form>
@@ -195,16 +228,38 @@ export const MembersPage: React.FC = () => {
                   <h4 className="text-sm font-semibold text-[#1d1d1f] tracking-tight">
                     {member.display_name}
                   </h4>
-                  <p className="text-[11px] text-[#86868b]">
-                    {member.user_id ? "Active user" : "Added (Unclaimed)"} • Role:{" "}
-                    {member.role}
-                  </p>
+                  <div className="flex items-center gap-2 mt-0.5 text-[11px] text-[#86868b]">
+                    <span>{member.user_id ? "Active user" : "Added (Unclaimed)"}</span>
+                    <span>•</span>
+                    <span className="flex items-center gap-1">
+                      <Calendar className="w-3 h-3" />
+                      {member.payday_day ? `Payday: ${member.payday_day}th` : "No payday set"}
+                    </span>
+                  </div>
                 </div>
-                {member.role === "admin" && (
-                  <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-[#f0f5ff] text-[#0066cc] font-semibold">
-                    Admin
-                  </span>
-                )}
+                <div className="flex items-center gap-2">
+                  {!member.payday_day && (
+                    <button
+                      onClick={() => {
+                        const day = prompt(`Enter payday day-of-month for ${member.display_name} (1-31):`);
+                        if (day && parseInt(day, 10) >= 1 && parseInt(day, 10) <= 31) {
+                          updatePaydayMutation.mutate({
+                            memberId: member.id,
+                            payday: parseInt(day, 10),
+                          });
+                        }
+                      }}
+                      className="text-[10px] px-2 py-0.5 rounded-full border border-[#d2d2d7] text-[#86868b] hover:text-[#1d1d1f]"
+                    >
+                      + Payday
+                    </button>
+                  )}
+                  {member.role === "admin" && (
+                    <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-[#f0f5ff] text-[#0066cc] font-semibold">
+                      Admin
+                    </span>
+                  )}
+                </div>
               </div>
             ))}
           </div>

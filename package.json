@@ -8,7 +8,8 @@
     "build": "npm --prefix app run build",
     "test": "npm --prefix app run test",
     "db:migrate": "node supabase/migrate.js",
-    "db:test": "node supabase/tests/verify_rls.js"
+    "db:test": "node supabase/tests/verify_rls.js",
+    "db:seed": "node supabase/seed_real_group.js"
   },
   "devDependencies": {
     "dotenv": "^16.4.7",
