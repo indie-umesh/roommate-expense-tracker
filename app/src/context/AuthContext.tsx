@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import type { User, Session } from "@supabase/supabase-js";
-import { supabase, normalizeIndianPhone } from "../lib/supabase";
+import { supabase, normalizeIndianPhone, phoneToSyntheticEmail } from "../lib/supabase";
 import type { Profile } from "../lib/types";
 
 interface AuthContextType {
@@ -67,9 +67,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   async function signInWithPhonePin(rawPhone: string, pin: string) {
-    const phone = normalizeIndianPhone(rawPhone);
+    const syntheticEmail = phoneToSyntheticEmail(rawPhone);
     const { data, error } = await supabase.auth.signInWithPassword({
-      phone,
+      email: syntheticEmail,
       password: pin,
     });
     if (error) throw error;
@@ -83,23 +83,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     pin: string,
     displayName: string
   ) {
-    const phone = normalizeIndianPhone(rawPhone);
+    const normalizedPhone = normalizeIndianPhone(rawPhone);
+    const syntheticEmail = phoneToSyntheticEmail(rawPhone);
+
     const { data, error } = await supabase.auth.signUp({
-      phone,
+      email: syntheticEmail,
       password: pin,
       options: {
         data: {
           display_name: displayName.trim(),
+          phone: normalizedPhone,
         },
       },
     });
     if (error) throw error;
 
     if (data.user) {
-      // Upsert into profiles table
       const { error: profileError } = await supabase.from("profiles").upsert({
         id: data.user.id,
-        phone,
+        phone: normalizedPhone,
         display_name: displayName.trim(),
       });
       if (profileError) {

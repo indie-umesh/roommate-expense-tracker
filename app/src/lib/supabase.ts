@@ -23,10 +23,18 @@ export function normalizeIndianPhone(input: string): string {
     return `+${digits}`;
   }
   if (digits.length > 10) {
-    // If it has leading 0
     if (digits.startsWith("0") && digits.length === 11) {
       return `+91${digits.slice(1)}`;
     }
   }
   return input.startsWith("+") ? input : `+91${digits}`;
+}
+
+/**
+ * Synthetic email fallback for Supabase Auth without SMS/OTP.
+ * Maps phone number to a valid synthetic email format: phone9876543210@roommate.com
+ */
+export function phoneToSyntheticEmail(rawPhone: string): string {
+  const digits = rawPhone.replace(/\D/g, "");
+  return `phone${digits}@roommate.com`;
 }
