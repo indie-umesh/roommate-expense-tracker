@@ -50,7 +50,7 @@ export const MembersPage: React.FC = () => {
     mutationFn: async (name: string) => {
       const { error } = await supabase.from("members").insert({
         group_id: groupId,
-        user_id: null, // Ghost member
+        user_id: null,
         display_name: name.trim(),
         role: "member",
       });
@@ -62,7 +62,7 @@ export const MembersPage: React.FC = () => {
       setIsAddingGhost(false);
     },
     onError: (err: any) => {
-      setError(err?.message || "Failed to add member");
+      setError(err?.message || "Failed to add roommate");
     },
   });
 
@@ -83,48 +83,48 @@ export const MembersPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col">
-      <header className="px-4 py-4 bg-slate-800/90 border-b border-slate-800 flex items-center justify-between sticky top-0 z-10">
+    <div className="min-h-screen bg-[#f5f5f7] text-[#1d1d1f] flex flex-col">
+      <header className="px-4 py-3.5 bg-white/80 backdrop-blur-md border-b border-[#e5e5e7] flex items-center justify-between sticky top-0 z-10">
         <button
           onClick={() => navigate(`/group/${groupId}`)}
-          className="p-1 -ml-1 text-slate-400 hover:text-white"
+          className="p-1 -ml-1 text-[#86868b] hover:text-[#1d1d1f]"
         >
           <ChevronLeft className="w-6 h-6" />
         </button>
-        <h1 className="font-bold text-base text-white">Roommates & Invite</h1>
+        <h1 className="font-semibold text-base text-[#1d1d1f] tracking-tight">Roommates & Invite</h1>
         <div className="w-6" />
       </header>
 
       <main className="flex-1 p-4 max-w-lg w-full mx-auto space-y-4">
         {error && (
-          <div className="p-3 bg-red-950/60 border border-red-500/40 rounded-xl text-red-300 text-xs">
+          <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-2xl text-rose-700 text-xs font-medium">
             {error}
           </div>
         )}
 
         {/* Invite Code Card */}
-        <div className="p-5 bg-gradient-to-br from-blue-900/40 to-slate-800 border border-blue-500/30 rounded-2xl space-y-3">
+        <div className="p-6 bg-white border border-[#e5e5e7] rounded-[22px] space-y-4 shadow-sm">
           <div className="flex justify-between items-center">
             <div>
-              <p className="text-xs text-blue-300 font-semibold uppercase tracking-wider">
+              <p className="text-xs text-[#86868b] font-semibold uppercase tracking-wider">
                 Group Invite Code
               </p>
-              <h2 className="text-2xl font-black text-white tracking-widest mt-0.5">
+              <h2 className="text-3xl font-extrabold text-[#1d1d1f] tracking-widest mt-0.5">
                 {group?.invite_code || "------"}
               </h2>
             </div>
             <button
               onClick={copyInviteCode}
-              className="p-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl shadow transition"
+              className="p-3 bg-[#f5f5f7] hover:bg-[#e5e5e7] text-[#1d1d1f] rounded-full transition"
               title="Copy code"
             >
-              {copied ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
+              {copied ? <Check className="w-5 h-5 text-[#00875a]" /> : <Copy className="w-5 h-5" />}
             </button>
           </div>
 
           <button
             onClick={shareWhatsApp}
-            className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs shadow-md shadow-emerald-600/20 active:scale-95 transition"
+            className="w-full flex items-center justify-center gap-2 py-3 px-5 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-semibold text-sm shadow-sm active:scale-98 transition"
           >
             <Share2 className="w-4 h-4" />
             Share via WhatsApp
@@ -133,13 +133,13 @@ export const MembersPage: React.FC = () => {
 
         {/* Members List */}
         <div className="space-y-3">
-          <div className="flex justify-between items-center">
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-              Members ({members.length})
+          <div className="flex justify-between items-center px-1">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-[#86868b]">
+              Roommates ({members.length})
             </h3>
             <button
               onClick={() => setIsAddingGhost(true)}
-              className="flex items-center gap-1 text-xs text-blue-400 hover:text-blue-300 font-semibold"
+              className="flex items-center gap-1 text-xs text-[#0066cc] hover:underline font-semibold"
             >
               <UserPlus className="w-3.5 h-3.5" />
               Add Roommate
@@ -152,10 +152,10 @@ export const MembersPage: React.FC = () => {
                 e.preventDefault();
                 if (newGhostName.trim()) addGhostMutation.mutate(newGhostName);
               }}
-              className="p-3.5 bg-slate-800 border border-slate-700 rounded-xl space-y-2.5"
+              className="p-4 bg-white border border-[#e5e5e7] rounded-2xl space-y-3 shadow-sm"
             >
-              <p className="text-xs text-slate-300">
-                Add by name now. They can claim this spot when they sign up later!
+              <p className="text-xs text-[#86868b]">
+                Add Aman or Ritesh by name now. They can claim their spot when they sign up!
               </p>
               <input
                 type="text"
@@ -164,20 +164,20 @@ export const MembersPage: React.FC = () => {
                 placeholder="e.g. Aman or Ritesh"
                 value={newGhostName}
                 onChange={(e) => setNewGhostName(e.target.value)}
-                className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3.5 py-2.5 bg-[#fbfbfd] border border-[#d2d2d7] rounded-xl text-xs text-[#1d1d1f] placeholder-[#86868b] focus:outline-none focus:border-[#0066cc]"
               />
               <div className="flex justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setIsAddingGhost(false)}
-                  className="px-2.5 py-1 text-xs text-slate-400 hover:text-white"
+                  className="px-3 py-1.5 text-xs text-[#86868b] hover:text-[#1d1d1f]"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={addGhostMutation.isPending}
-                  className="px-3.5 py-1 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-lg"
+                  className="px-4 py-1.5 bg-[#0066cc] hover:bg-[#0071e3] text-white text-xs font-semibold rounded-full"
                 >
                   Add
                 </button>
@@ -189,19 +189,19 @@ export const MembersPage: React.FC = () => {
             {members.map((member) => (
               <div
                 key={member.id}
-                className="p-3 bg-slate-800/80 border border-slate-700/60 rounded-xl flex items-center justify-between"
+                className="p-4 bg-white border border-[#e5e5e7] rounded-2xl flex items-center justify-between shadow-[0_1px_3px_rgba(0,0,0,0.02)]"
               >
                 <div>
-                  <h4 className="text-sm font-semibold text-white">
+                  <h4 className="text-sm font-semibold text-[#1d1d1f] tracking-tight">
                     {member.display_name}
                   </h4>
-                  <p className="text-[11px] text-slate-400">
-                    {member.user_id ? "Active member" : "Added (Unclaimed)"} • Role:{" "}
+                  <p className="text-[11px] text-[#86868b]">
+                    {member.user_id ? "Active user" : "Added (Unclaimed)"} • Role:{" "}
                     {member.role}
                   </p>
                 </div>
                 {member.role === "admin" && (
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 font-medium">
+                  <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-[#f0f5ff] text-[#0066cc] font-semibold">
                     Admin
                   </span>
                 )}

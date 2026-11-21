@@ -131,36 +131,36 @@ export const SettleUpPage: React.FC = () => {
   });
 
   return (
-    <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col">
-      <header className="px-4 py-4 bg-slate-800/90 border-b border-slate-800 flex items-center justify-between sticky top-0 z-10">
+    <div className="min-h-screen bg-[#f5f5f7] text-[#1d1d1f] flex flex-col">
+      <header className="px-4 py-3.5 bg-white/80 backdrop-blur-md border-b border-[#e5e5e7] flex items-center justify-between sticky top-0 z-10">
         <button
           onClick={() => navigate(`/group/${groupId}`)}
-          className="p-1 -ml-1 text-slate-400 hover:text-white"
+          className="p-1 -ml-1 text-[#86868b] hover:text-[#1d1d1f]"
         >
           <ChevronLeft className="w-6 h-6" />
         </button>
-        <h1 className="font-bold text-base text-white">Settle Up</h1>
+        <h1 className="font-semibold text-base text-[#1d1d1f] tracking-tight">Settle Up</h1>
         <div className="w-6" />
       </header>
 
       <main className="flex-1 p-4 max-w-lg w-full mx-auto space-y-4">
         {error && (
-          <div className="p-3 bg-red-950/60 border border-red-500/40 rounded-xl text-red-300 text-xs">
+          <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-2xl text-rose-700 text-xs font-medium">
             {error}
           </div>
         )}
 
-        <div className="p-4 bg-slate-800 border border-slate-700/80 rounded-2xl">
-          <h2 className="text-sm font-semibold text-white mb-1">
-            Minimal Payments to Settle
+        <div className="p-5 bg-white border border-[#e5e5e7] rounded-[22px] shadow-sm">
+          <h2 className="text-base font-semibold text-[#1d1d1f] mb-1">
+            Minimal Payments
           </h2>
-          <p className="text-xs text-slate-400 mb-4">
-            Optimized minimal transfers required to balance all accounts to zero.
+          <p className="text-xs text-[#86868b] mb-4">
+            Optimized minimal transactions required to balance all roommates to zero.
           </p>
 
           {simplifiedTransfers.length === 0 ? (
-            <div className="text-center py-6 text-emerald-400 text-sm font-medium">
-              ✓ Everything is already settled up!
+            <div className="text-center py-8 text-[#00875a] text-sm font-semibold">
+              ✓ All accounts are balanced!
             </div>
           ) : (
             <div className="space-y-3">
@@ -170,15 +170,15 @@ export const SettleUpPage: React.FC = () => {
                 return (
                   <div
                     key={idx}
-                    className="p-3.5 bg-slate-900/80 border border-slate-700/60 rounded-xl flex items-center justify-between"
+                    className="p-4 bg-[#fbfbfd] border border-[#e5e5e7] rounded-2xl flex items-center justify-between"
                   >
                     <div>
-                      <div className="flex items-center gap-1.5 text-xs text-slate-300">
-                        <span className="font-bold text-rose-300">{fromName}</span>
-                        <ArrowRight className="w-3.5 h-3.5 text-slate-500" />
-                        <span className="font-bold text-emerald-300">{toName}</span>
+                      <div className="flex items-center gap-1.5 text-xs text-[#86868b]">
+                        <span className="font-semibold text-[#1d1d1f]">{fromName}</span>
+                        <ArrowRight className="w-3.5 h-3.5 text-[#86868b]" />
+                        <span className="font-semibold text-[#0066cc]">{toName}</span>
                       </div>
-                      <span className="text-base font-extrabold text-white mt-1 block">
+                      <span className="text-lg font-bold text-[#1d1d1f] mt-1 block tracking-tight">
                         {formatINR(t.amountPaise)}
                       </span>
                     </div>
@@ -192,10 +192,10 @@ export const SettleUpPage: React.FC = () => {
                         })
                       }
                       disabled={recordSettlementMutation.isPending}
-                      className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-semibold text-xs transition flex items-center gap-1.5 shadow-md shadow-emerald-600/20"
+                      className="px-4 py-2 rounded-full bg-[#00875a] hover:bg-[#00704a] active:scale-95 text-white font-semibold text-xs transition flex items-center gap-1.5 shadow-sm"
                     >
                       <CheckCircle2 className="w-3.5 h-3.5" />
-                      Mark as Paid
+                      Mark Paid
                     </button>
                   </div>
                 );
@@ -205,18 +205,18 @@ export const SettleUpPage: React.FC = () => {
         </div>
 
         {/* Checkpoint Section */}
-        <div className="p-4 bg-slate-800/60 border border-slate-700/60 rounded-2xl space-y-3">
+        <div className="p-5 bg-white border border-[#e5e5e7] rounded-[22px] space-y-3 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-semibold text-white">Create Checkpoint</h3>
-              <p className="text-xs text-slate-400">
-                Mark that everything has been settled up to this date.
+              <h3 className="text-sm font-semibold text-[#1d1d1f]">Monthly Checkpoint</h3>
+              <p className="text-xs text-[#86868b]">
+                Record a marker that everything has been settled up to this date.
               </p>
             </div>
             {!showCheckpointInput && (
               <button
                 onClick={() => setShowCheckpointInput(true)}
-                className="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-xs font-medium rounded-lg text-white"
+                className="px-4 py-1.5 bg-[#f5f5f7] hover:bg-[#e5e5e7] text-xs font-semibold rounded-full text-[#1d1d1f] transition"
               >
                 Add
               </button>
@@ -224,19 +224,19 @@ export const SettleUpPage: React.FC = () => {
           </div>
 
           {showCheckpointInput && (
-            <div className="space-y-2 pt-2 border-t border-slate-700/50">
+            <div className="space-y-2.5 pt-3 border-t border-[#f0f0f0]">
               <input
                 type="text"
                 placeholder="e.g. Settled up for November 2026"
                 value={checkpointNote}
                 onChange={(e) => setCheckpointNote(e.target.value)}
-                className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3.5 py-2.5 bg-[#fbfbfd] border border-[#d2d2d7] rounded-xl text-xs text-[#1d1d1f] placeholder-[#86868b] focus:outline-none focus:border-[#0066cc]"
               />
               <div className="flex justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setShowCheckpointInput(false)}
-                  className="px-3 py-1 text-xs text-slate-400 hover:text-white"
+                  className="px-3.5 py-1.5 text-xs text-[#86868b] hover:text-[#1d1d1f]"
                 >
                   Cancel
                 </button>
@@ -244,7 +244,7 @@ export const SettleUpPage: React.FC = () => {
                   type="button"
                   disabled={createCheckpointMutation.isPending}
                   onClick={() => createCheckpointMutation.mutate(checkpointNote)}
-                  className="px-4 py-1.5 bg-blue-600 hover:bg-blue-500 text-xs font-semibold rounded-lg text-white flex items-center gap-1.5"
+                  className="px-4 py-1.5 bg-[#0066cc] hover:bg-[#0071e3] text-xs font-semibold rounded-full text-white flex items-center gap-1.5"
                 >
                   {createCheckpointMutation.isPending && (
                     <Loader2 className="w-3 h-3 animate-spin" />

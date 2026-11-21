@@ -41,29 +41,50 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        fetchProfile(session.user.id);
+    let isMounted = true;
+
+    async function restoreSession() {
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        if (error) {
+          console.error("Get session error:", error);
+        }
+        if (!isMounted) return;
+
+        setSession(session);
+        setUser(session?.user ?? null);
+        if (session?.user) {
+          await fetchProfile(session.user.id);
+        }
+      } catch (err) {
+        console.error("Auth restore error:", err);
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
       }
-      setLoading(false);
-    });
+    }
+
+    restoreSession();
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        fetchProfile(session.user.id);
+    } = supabase.auth.onAuthStateChange(async (_event, newSession) => {
+      if (!isMounted) return;
+      setSession(newSession);
+      setUser(newSession?.user ?? null);
+      if (newSession?.user) {
+        await fetchProfile(newSession.user.id);
       } else {
         setProfile(null);
       }
       setLoading(false);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      isMounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   async function signInWithPhonePin(rawPhone: string, pin: string) {
@@ -73,6 +94,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       password: pin,
     });
     if (error) throw error;
+    if (data.session) {
+      setSession(data.session);
+      setUser(data.user);
+    }
     if (data.user) {
       await fetchProfile(data.user.id);
     }
@@ -98,22 +123,43 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
     if (error) throw error;
 
-    if (data.user) {
-      const { error: profileError } = await supabase.from("profiles").upsert({
-        id: data.user.id,
-        phone: normalizedPhone,
-        display_name: displayName.trim(),
+    // Immediately sign in if no active session returned
+    if (!data.session) {
+      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+        email: syntheticEmail,
+        password: pin,
       });
-      if (profileError) {
-        console.error("Profile upsert error:", profileError);
+      if (signInError) throw signInError;
+      if (signInData.session) {
+        setSession(signInData.session);
+        setUser(signInData.user);
       }
-      await fetchProfile(data.user.id);
+      if (signInData.user) {
+        await supabase.from("profiles").upsert({
+          id: signInData.user.id,
+          phone: normalizedPhone,
+          display_name: displayName.trim(),
+        });
+        await fetchProfile(signInData.user.id);
+      }
+    } else {
+      setSession(data.session);
+      setUser(data.user);
+      if (data.user) {
+        await supabase.from("profiles").upsert({
+          id: data.user.id,
+          phone: normalizedPhone,
+          display_name: displayName.trim(),
+        });
+        await fetchProfile(data.user.id);
+      }
     }
   }
 
   async function signOut() {
     await supabase.auth.signOut();
     setUser(null);
+    setSession(null);
     setProfile(null);
   }
 

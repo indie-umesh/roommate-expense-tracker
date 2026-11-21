@@ -9,7 +9,15 @@ if (!supabaseAnonKey) {
   );
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: true,
+    storage: window.localStorage,
+    storageKey: "roommate-expense-tracker-auth-v1",
+  },
+});
 
 /**
  * Normalizes a 10-digit Indian phone number to E.164 (+91XXXXXXXXXX)

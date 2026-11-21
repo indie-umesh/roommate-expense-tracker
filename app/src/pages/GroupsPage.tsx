@@ -73,27 +73,29 @@ export const GroupsPage: React.FC = () => {
   });
 
   return (
-    <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col">
-      {/* Top Bar */}
-      <header className="px-4 py-4 bg-slate-800/80 backdrop-blur border-b border-slate-800 flex items-center justify-between sticky top-0 z-10">
+    <div className="min-h-screen bg-[#f5f5f7] text-[#1d1d1f] flex flex-col">
+      {/* Top Header */}
+      <header className="px-5 py-4 bg-white/80 backdrop-blur-md border-b border-[#e5e5e7] flex items-center justify-between sticky top-0 z-10">
         <div>
-          <h1 className="font-bold text-lg text-white">Your Groups</h1>
-          <p className="text-xs text-slate-400">
-            Signed in as {profile?.display_name || "User"}
+          <h1 className="font-semibold text-lg text-[#1d1d1f] tracking-tight">
+            Roommate
+          </h1>
+          <p className="text-xs text-[#86868b]">
+            Signed in as <span className="font-medium text-[#1d1d1f]">{profile?.display_name || "User"}</span>
           </p>
         </div>
         <button
           onClick={() => signOut()}
-          className="p-2 text-slate-400 hover:text-red-400 rounded-lg hover:bg-slate-800 transition"
+          className="p-2 text-[#86868b] hover:text-[#1d1d1f] rounded-full hover:bg-[#f0f0f0] transition"
           title="Sign out"
         >
-          <LogOut className="w-5 h-5" />
+          <LogOut className="w-4 h-4" />
         </button>
       </header>
 
-      <main className="flex-1 p-4 max-w-lg w-full mx-auto space-y-4">
+      <main className="flex-1 p-5 max-w-lg w-full mx-auto space-y-4">
         {error && (
-          <div className="p-3 bg-red-950/60 border border-red-500/40 rounded-xl text-red-300 text-xs">
+          <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-2xl text-rose-700 text-xs font-medium">
             {error}
           </div>
         )}
@@ -106,7 +108,7 @@ export const GroupsPage: React.FC = () => {
               setIsJoining(false);
               setError(null);
             }}
-            className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-medium text-sm shadow-md shadow-blue-600/20 active:scale-95 transition"
+            className="flex items-center justify-center gap-2 py-3 px-4 rounded-full bg-[#0066cc] hover:bg-[#0071e3] text-white font-semibold text-sm shadow-sm active:scale-98 transition"
           >
             <Plus className="w-4 h-4" />
             New Group
@@ -117,9 +119,9 @@ export const GroupsPage: React.FC = () => {
               setIsCreating(false);
               setError(null);
             }}
-            className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-medium text-sm active:scale-95 transition"
+            className="flex items-center justify-center gap-2 py-3 px-4 rounded-full bg-white hover:bg-[#fafafc] text-[#1d1d1f] border border-[#d2d2d7] font-semibold text-sm active:scale-98 transition shadow-sm"
           >
-            <KeyRound className="w-4 h-4" />
+            <KeyRound className="w-4 h-4 text-[#86868b]" />
             Join Code
           </button>
         </div>
@@ -131,9 +133,9 @@ export const GroupsPage: React.FC = () => {
               e.preventDefault();
               if (groupName.trim()) createGroupMutation.mutate(groupName);
             }}
-            className="p-4 bg-slate-800 border border-slate-700 rounded-2xl space-y-3"
+            className="p-5 bg-white border border-[#e5e5e7] rounded-2xl space-y-3.5 shadow-sm"
           >
-            <h3 className="font-semibold text-sm text-white">Create New Group</h3>
+            <h3 className="font-semibold text-sm text-[#1d1d1f]">Create New Group</h3>
             <input
               type="text"
               required
@@ -141,20 +143,20 @@ export const GroupsPage: React.FC = () => {
               placeholder="e.g. Flat 302 Roommates"
               value={groupName}
               onChange={(e) => setGroupName(e.target.value)}
-              className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3.5 py-2.5 bg-[#fbfbfd] border border-[#d2d2d7] rounded-xl text-sm text-[#1d1d1f] placeholder-[#86868b] focus:outline-none focus:border-[#0066cc] focus:bg-white"
             />
-            <div className="flex gap-2 justify-end">
+            <div className="flex gap-2 justify-end pt-1">
               <button
                 type="button"
                 onClick={() => setIsCreating(false)}
-                className="px-3 py-1.5 text-xs text-slate-400 hover:text-slate-200"
+                className="px-4 py-2 text-xs font-medium text-[#86868b] hover:text-[#1d1d1f]"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={createGroupMutation.isPending}
-                className="px-4 py-1.5 text-xs bg-blue-600 hover:bg-blue-500 text-white font-medium rounded-lg disabled:opacity-50"
+                className="px-5 py-2 text-xs bg-[#0066cc] hover:bg-[#0071e3] text-white font-semibold rounded-full disabled:opacity-50"
               >
                 {createGroupMutation.isPending ? "Creating..." : "Create"}
               </button>
@@ -169,9 +171,9 @@ export const GroupsPage: React.FC = () => {
               e.preventDefault();
               if (inviteCode.trim()) joinGroupMutation.mutate(inviteCode);
             }}
-            className="p-4 bg-slate-800 border border-slate-700 rounded-2xl space-y-3"
+            className="p-5 bg-white border border-[#e5e5e7] rounded-2xl space-y-3.5 shadow-sm"
           >
-            <h3 className="font-semibold text-sm text-white">Enter Invite Code</h3>
+            <h3 className="font-semibold text-sm text-[#1d1d1f]">Enter Invite Code</h3>
             <input
               type="text"
               required
@@ -179,20 +181,20 @@ export const GroupsPage: React.FC = () => {
               placeholder="e.g. AB12CD"
               value={inviteCode}
               onChange={(e) => setInviteCode(e.target.value.toUpperCase())}
-              className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-sm text-white placeholder-slate-500 uppercase tracking-widest text-center focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3.5 py-2.5 bg-[#fbfbfd] border border-[#d2d2d7] rounded-xl text-sm text-[#1d1d1f] placeholder-[#86868b] uppercase tracking-widest text-center focus:outline-none focus:border-[#0066cc] focus:bg-white"
             />
-            <div className="flex gap-2 justify-end">
+            <div className="flex gap-2 justify-end pt-1">
               <button
                 type="button"
                 onClick={() => setIsJoining(false)}
-                className="px-3 py-1.5 text-xs text-slate-400 hover:text-slate-200"
+                className="px-4 py-2 text-xs font-medium text-[#86868b] hover:text-[#1d1d1f]"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={joinGroupMutation.isPending}
-                className="px-4 py-1.5 text-xs bg-blue-600 hover:bg-blue-500 text-white font-medium rounded-lg disabled:opacity-50"
+                className="px-5 py-2 text-xs bg-[#0066cc] hover:bg-[#0071e3] text-white font-semibold rounded-full disabled:opacity-50"
               >
                 {joinGroupMutation.isPending ? "Joining..." : "Join"}
               </button>
@@ -201,9 +203,9 @@ export const GroupsPage: React.FC = () => {
         )}
 
         {/* Group List */}
-        <div className="space-y-2 pt-2">
+        <div className="space-y-2.5 pt-2">
           {isLoading ? (
-            <div className="text-center py-12 text-slate-500 text-sm">
+            <div className="text-center py-12 text-[#86868b] text-sm">
               Loading groups...
             </div>
           ) : groups && groups.length > 0 ? (
@@ -211,29 +213,29 @@ export const GroupsPage: React.FC = () => {
               <div
                 key={group.id}
                 onClick={() => navigate(`/group/${group.id}`)}
-                className="p-4 bg-slate-800/90 border border-slate-700/70 hover:border-blue-500/50 rounded-2xl flex items-center justify-between cursor-pointer active:scale-[0.99] transition shadow-sm"
+                className="p-4 bg-white border border-[#e5e5e7] hover:border-[#0066cc]/40 rounded-2xl flex items-center justify-between cursor-pointer active:scale-[0.99] transition shadow-[0_1px_3px_rgba(0,0,0,0.03)]"
               >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center font-bold">
+                <div className="flex items-center gap-3.5">
+                  <div className="w-10 h-10 rounded-full bg-[#f0f5ff] text-[#0066cc] flex items-center justify-center font-bold">
                     <Users className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-slate-100 text-sm">
+                    <h3 className="font-semibold text-[#1d1d1f] text-[15px] tracking-tight">
                       {group.name}
                     </h3>
-                    <p className="text-xs text-slate-400 tracking-wider">
-                      Code: {group.invite_code}
+                    <p className="text-xs text-[#86868b] tracking-wider">
+                      Invite code: {group.invite_code}
                     </p>
                   </div>
                 </div>
-                <ArrowRight className="w-4 h-4 text-slate-500" />
+                <ArrowRight className="w-4 h-4 text-[#86868b]" />
               </div>
             ))
           ) : (
-            <div className="text-center py-12 bg-slate-800/40 rounded-2xl border border-dashed border-slate-800 p-6">
-              <Users className="w-10 h-10 mx-auto text-slate-600 mb-2" />
-              <p className="text-sm font-medium text-slate-300">No groups yet</p>
-              <p className="text-xs text-slate-500 mt-1">
+            <div className="text-center py-12 bg-white rounded-2xl border border-dashed border-[#d2d2d7] p-6">
+              <Users className="w-10 h-10 mx-auto text-[#86868b] mb-2.5 opacity-60" />
+              <p className="text-sm font-semibold text-[#1d1d1f]">No groups yet</p>
+              <p className="text-xs text-[#86868b] mt-1 max-w-xs mx-auto">
                 Create a group for your roommates or enter an invite code to join.
               </p>
             </div>

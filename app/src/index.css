@@ -1,7 +1,28 @@
 @import "tailwindcss";
 
 @layer base {
+  :root {
+    --color-primary: #0066cc;
+    --color-primary-focus: #0071e3;
+    --color-ink: #1d1d1f;
+    --color-body-muted: #86868b;
+    --color-canvas-parchment: #f5f5f7;
+    --color-canvas: #ffffff;
+    --color-hairline: #e5e5e7;
+    --color-divider-soft: #f0f0f0;
+  }
+
   body {
+    background-color: #f5f5f7;
+    color: #1d1d1f;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     -webkit-tap-highlight-color: transparent;
+    letter-spacing: -0.015em;
+  }
+
+  input, button, select, textarea {
+    font-family: inherit;
   }
 }
