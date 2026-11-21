@@ -25,7 +25,7 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#f5f5f7] flex items-center justify-center text-[#86868b] text-sm font-medium">
+      <div className="min-h-screen bg-[#0b0f19] flex items-center justify-center text-slate-400 text-sm font-medium">
         Loading...
       </div>
     );
@@ -43,7 +43,7 @@ const PublicOnlyRoute: React.FC<{ children: React.ReactNode }> = ({ children }) 
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#f5f5f7] flex items-center justify-center text-[#86868b] text-sm font-medium">
+      <div className="min-h-screen bg-[#0b0f19] flex items-center justify-center text-slate-400 text-sm font-medium">
         Loading...
       </div>
     );

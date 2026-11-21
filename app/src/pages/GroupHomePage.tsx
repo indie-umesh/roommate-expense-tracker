@@ -99,10 +99,10 @@ export const GroupHomePage: React.FC = () => {
       if (error) throw error;
       return (data || []).map((exp: any) => ({
         ...exp,
-        amount_paise: BigInt(exp.amount_paise),
+        amount_paise: exp.amount_paise ? BigInt(String(exp.amount_paise).split(".")[0]) : 0n,
         splits: (exp.splits || []).map((s: any) => ({
           ...s,
-          share_paise: BigInt(s.share_paise),
+          share_paise: s.share_paise ? BigInt(String(s.share_paise).split(".")[0]) : 0n,
         })),
       }));
     },
@@ -122,10 +122,10 @@ export const GroupHomePage: React.FC = () => {
       if (error) throw error;
       return (data || []).map((exp: any) => ({
         ...exp,
-        amount_paise: BigInt(exp.amount_paise),
+        amount_paise: exp.amount_paise ? BigInt(String(exp.amount_paise).split(".")[0]) : 0n,
         splits: (exp.splits || []).map((s: any) => ({
           ...s,
-          share_paise: BigInt(s.share_paise),
+          share_paise: s.share_paise ? BigInt(String(s.share_paise).split(".")[0]) : 0n,
         })),
       }));
     },
@@ -144,7 +144,7 @@ export const GroupHomePage: React.FC = () => {
       if (error) throw error;
       return (data || []).map((s: any) => ({
         ...s,
-        amount_paise: BigInt(s.amount_paise),
+        amount_paise: s.amount_paise ? BigInt(String(s.amount_paise).split(".")[0]) : 0n,
       }));
     },
     enabled: !!groupId,
@@ -163,7 +163,7 @@ export const GroupHomePage: React.FC = () => {
   const enteredFirstName = newRoommateFirstName.trim().toLowerCase();
   const duplicateCandidate = members.find((m) => {
     if (!enteredFirstName) return false;
-    const existingParts = m.display_name.trim().toLowerCase().split(/\s+/);
+    const existingParts = (m.display_name || "").trim().toLowerCase().split(/\s+/);
     return existingParts[0] === enteredFirstName;
   });
 
@@ -313,7 +313,7 @@ export const GroupHomePage: React.FC = () => {
                 <span>{members.length} mates</span>
                 <span>•</span>
                 <span className="text-emerald-400 font-semibold">
-                  Paydays: {members.filter((m) => m.payday_day).map((m) => `${m.display_name.split(" ")[0]} (${m.payday_day}th)`).join(", ") || "Active"}
+                  Paydays: {members.filter((m) => m.payday_day).map((m) => `${(m.display_name || "Mate").split(" ")[0]} (${m.payday_day}th)`).join(", ") || "Active"}
                 </span>
               </p>
             </div>
