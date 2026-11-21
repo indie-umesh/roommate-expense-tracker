@@ -32,41 +32,20 @@ export const GroupsPage: React.FC = () => {
     enabled: !!user,
   });
 
-  // Create Group Mutation
+  // Create Group Mutation via atomic RPC
   const createGroupMutation = useMutation({
     mutationFn: async (name: string) => {
-      if (!user) throw new Error("Not authenticated");
-      // Generate clean random 6-character code
-      const code = Math.random().toString(36).substring(2, 8).toUpperCase();
-
-      const { data: newGroup, error: groupError } = await supabase
-        .from("groups")
-        .insert({
-          name: name.trim(),
-          invite_code: code,
-          created_by: user.id,
-        })
-        .select()
-        .single();
-
-      if (groupError) throw groupError;
-
-      // Add creator as admin member
-      const { error: memberError } = await supabase.from("members").insert({
-        group_id: newGroup.id,
-        user_id: user.id,
-        display_name: profile?.display_name || "Admin",
-        role: "admin",
+      const { data, error } = await supabase.rpc("create_group", {
+        p_name: name.trim(),
       });
-
-      if (memberError) throw memberError;
-      return newGroup;
+      if (error) throw error;
+      return data as string; // returns new group_id
     },
-    onSuccess: (newGroup) => {
+    onSuccess: (newGroupId) => {
       queryClient.invalidateQueries({ queryKey: ["user-groups"] });
       setIsCreating(false);
       setGroupName("");
-      navigate(`/group/${newGroup.id}`);
+      navigate(`/group/${newGroupId}`);
     },
     onError: (err: any) => {
       setError(err?.message || "Failed to create group");
