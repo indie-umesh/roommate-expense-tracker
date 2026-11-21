@@ -31,7 +31,6 @@ export const ExcelSheetView: React.FC<ExcelSheetViewProps> = ({
     const first = m.display_name.trim().toLowerCase().split(/\s+/)[0];
     const isDupFirst = (nameCounts.get(first) || 0) > 1;
     if (isDupFirst) {
-      // If they have full name with surname, return it, else add role/id
       return m.display_name;
     }
     return m.display_name;
@@ -107,11 +106,11 @@ export const ExcelSheetView: React.FC<ExcelSheetViewProps> = ({
 
   if (expenses.length === 0) {
     return (
-      <div className="bg-white rounded-2xl border border-[#e5e5e7] p-10 text-center shadow-sm">
-        <Table className="w-10 h-10 text-[#86868b] mx-auto mb-2 opacity-40" />
-        <h4 className="font-semibold text-base text-[#1d1d1f]">No expenses in sheet yet</h4>
-        <p className="text-xs text-[#86868b] mt-1 max-w-sm mx-auto">
-          Add an expense using the + button to start populating this real-time ledger matrix.
+      <div className="bg-[#121826] rounded-2xl border border-white/10 p-10 text-center shadow-xl">
+        <Table className="w-10 h-10 text-slate-500 mx-auto mb-2 opacity-50" />
+        <h4 className="font-bold text-base text-white">No expenses in sheet yet</h4>
+        <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
+          Tap the + button to log an expense and view your live spreadsheet matrix.
         </p>
       </div>
     );
@@ -121,53 +120,53 @@ export const ExcelSheetView: React.FC<ExcelSheetViewProps> = ({
     <div className="space-y-4">
       {/* Top Ledger Snapshot Stats Ribbon */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className="p-3.5 bg-white border border-[#e5e5e7] rounded-2xl shadow-2xs">
-          <span className="text-[10px] font-bold text-[#86868b] uppercase tracking-wider block">
+        <div className="p-4 bg-[#121826] border border-white/10 rounded-2xl shadow-md">
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
             Total Spent
           </span>
-          <span className="text-lg md:text-xl font-black text-[#1d1d1f] tracking-tight block mt-0.5">
+          <span className="text-xl md:text-2xl font-black text-emerald-400 tracking-tight block mt-1">
             {formatINR(totalSpent)}
           </span>
         </div>
-        <div className="p-3.5 bg-white border border-[#e5e5e7] rounded-2xl shadow-2xs">
-          <span className="text-[10px] font-bold text-[#86868b] uppercase tracking-wider block">
+        <div className="p-4 bg-[#121826] border border-white/10 rounded-2xl shadow-md">
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
             Avg per Mate
           </span>
-          <span className="text-lg md:text-xl font-bold text-[#0066cc] tracking-tight block mt-0.5">
+          <span className="text-xl md:text-2xl font-bold text-indigo-400 tracking-tight block mt-1">
             {formatINR(avgPerMember)}
           </span>
         </div>
-        <div className="p-3.5 bg-white border border-[#e5e5e7] rounded-2xl shadow-2xs">
-          <span className="text-[10px] font-bold text-[#86868b] uppercase tracking-wider block">
-            Entries
+        <div className="p-4 bg-[#121826] border border-white/10 rounded-2xl shadow-md">
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+            Total Bills
           </span>
-          <span className="text-lg md:text-xl font-bold text-[#1d1d1f] tracking-tight block mt-0.5">
-            {filteredExpenses.length} bills
+          <span className="text-xl md:text-2xl font-black text-white tracking-tight block mt-1">
+            {filteredExpenses.length}
           </span>
         </div>
-        <div className="p-3.5 bg-white border border-[#e5e5e7] rounded-2xl shadow-2xs">
-          <span className="text-[10px] font-bold text-[#86868b] uppercase tracking-wider block">
+        <div className="p-4 bg-[#121826] border border-white/10 rounded-2xl shadow-md">
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
             Roommates
           </span>
-          <span className="text-lg md:text-xl font-bold text-[#1d1d1f] tracking-tight block mt-0.5">
-            {members.length} people
+          <span className="text-xl md:text-2xl font-black text-white tracking-tight block mt-1">
+            {members.length}
           </span>
         </div>
       </div>
 
       {/* Main Spreadsheet Card */}
-      <div className="bg-white rounded-[24px] border border-[#e5e5e7] shadow-sm overflow-hidden">
+      <div className="bg-[#121826] rounded-[24px] border border-white/10 shadow-xl overflow-hidden">
         {/* Top Filter & View Controls */}
-        <div className="p-3.5 md:p-4 bg-[#fbfbfd] border-b border-[#e5e5e7] flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+        <div className="p-3.5 md:p-4 bg-[#182238] border-b border-white/10 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
           {/* Search bar */}
           <div className="relative flex-1 max-w-sm">
-            <Search className="w-3.5 h-3.5 text-[#86868b] absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder="Search by details (e.g. Groceries, Milk, Wifi)..."
+              placeholder="Search expenses (e.g. Milk, Dinner)..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-8 pr-3 py-2 bg-white border border-[#d2d2d7] rounded-xl text-xs text-[#1d1d1f] placeholder-[#86868b] focus:outline-none focus:border-[#0066cc]"
+              className="w-full pl-9 pr-3.5 py-2 bg-[#121826] border border-white/10 rounded-xl text-xs text-white placeholder-slate-400 focus:outline-none focus:border-indigo-500"
             />
           </div>
 
@@ -176,7 +175,7 @@ export const ExcelSheetView: React.FC<ExcelSheetViewProps> = ({
             <select
               value={filterMemberId}
               onChange={(e) => setFilterMemberId(e.target.value)}
-              className="px-3 py-2 bg-white border border-[#d2d2d7] rounded-xl text-xs text-[#1d1d1f] font-medium focus:outline-none focus:border-[#0066cc]"
+              className="px-3 py-2 bg-[#121826] border border-white/10 rounded-xl text-xs text-slate-200 font-semibold focus:outline-none focus:border-indigo-500"
             >
               <option value="all">All Roommates</option>
               {members.map((m) => (
@@ -187,25 +186,25 @@ export const ExcelSheetView: React.FC<ExcelSheetViewProps> = ({
             </select>
 
             {/* Mobile View Toggle: Compact Cards vs Matrix Table */}
-            <div className="flex sm:hidden border border-[#d2d2d7] rounded-xl p-0.5 bg-white">
+            <div className="flex sm:hidden border border-white/10 rounded-xl p-0.5 bg-[#121826]">
               <button
                 onClick={() => setMobileMode("compact")}
-                className={`flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-semibold transition ${
+                className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold transition ${
                   mobileMode === "compact"
-                    ? "bg-[#0066cc] text-white"
-                    : "text-[#86868b]"
+                    ? "bg-indigo-600 text-white"
+                    : "text-slate-400"
                 }`}
-                title="Cards View (No horizontal scroll)"
+                title="Cards View (Zero horizontal scroll)"
               >
                 <LayoutList className="w-3.5 h-3.5" />
                 <span>Card</span>
               </button>
               <button
                 onClick={() => setMobileMode("table")}
-                className={`flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-semibold transition ${
+                className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold transition ${
                   mobileMode === "table"
-                    ? "bg-[#0066cc] text-white"
-                    : "text-[#86868b]"
+                    ? "bg-indigo-600 text-white"
+                    : "text-slate-400"
                 }`}
                 title="Matrix Table"
               >
@@ -217,46 +216,46 @@ export const ExcelSheetView: React.FC<ExcelSheetViewProps> = ({
             {/* Export CSV Button */}
             <button
               onClick={exportCSV}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-[#d2d2d7] bg-white hover:bg-[#f5f5f7] text-[#1d1d1f] text-xs font-semibold active:scale-95 transition cursor-pointer"
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-white text-xs font-bold active:scale-95 transition cursor-pointer"
               title="Download Excel / CSV"
             >
-              <Download className="w-3.5 h-3.5 text-[#0066cc]" />
-              <span>Export CSV</span>
+              <Download className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Export</span>
             </button>
           </div>
         </div>
 
         {/* MOBILE COMPACT CARDS VIEW (Clean, fast, ZERO horizontal scrolling on phones) */}
         {mobileMode === "compact" && (
-          <div className="block sm:hidden divide-y divide-[#f0f0f0]">
+          <div className="block sm:hidden divide-y divide-white/5">
             {filteredExpenses.map((expense) => {
               const payer = memberMap.get(expense.paid_by_member_id);
               return (
                 <div
                   key={expense.id}
                   onClick={() => onSelectExpense?.(expense.id)}
-                  className="p-3.5 hover:bg-[#fafafc] transition cursor-pointer active:bg-[#f0f0f5]"
+                  className="p-3.5 hover:bg-white/5 transition cursor-pointer active:bg-white/10"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-semibold text-[#86868b] bg-[#f5f5f7] px-2 py-0.5 rounded-md">
+                      <span className="text-[10px] font-bold text-slate-400 bg-white/5 px-2 py-0.5 rounded-md border border-white/5">
                         {new Date(expense.spent_on).toLocaleDateString("en-IN", {
                           day: "numeric",
                           month: "short",
                         })}
                       </span>
-                      <h4 className="font-semibold text-xs text-[#1d1d1f] line-clamp-1">
+                      <h4 className="font-bold text-xs text-white line-clamp-1">
                         {expense.details}
                       </h4>
                     </div>
-                    <span className="font-bold text-xs text-[#1d1d1f]">
+                    <span className="font-black text-xs text-emerald-400">
                       {formatINR(expense.amount_paise)}
                     </span>
                   </div>
 
-                  <div className="flex items-center justify-between mt-2 pt-1.5 text-[11px] gap-2">
-                    <span className="text-[#86868b] truncate">
-                      Paid: <span className="font-semibold text-[#0066cc]">{payer?.display_name || "Unknown"}</span>
+                  <div className="flex items-center justify-between mt-2 pt-1 text-[11px] gap-2">
+                    <span className="text-slate-400 truncate">
+                      Paid: <span className="font-bold text-indigo-400">{payer?.display_name || "Unknown"}</span>
                     </span>
 
                     {/* Roommate share chips */}
@@ -267,7 +266,7 @@ export const ExcelSheetView: React.FC<ExcelSheetViewProps> = ({
                         return (
                           <span
                             key={m.id}
-                            className="px-1.5 py-0.5 rounded-md bg-[#f5f5f7] text-[10px] font-medium text-[#1d1d1f]"
+                            className="px-1.5 py-0.5 rounded-md bg-white/5 border border-white/5 text-[10px] font-medium text-slate-300"
                           >
                             {m.display_name.slice(0, 1)}: {formatINR(split.share_paise)}
                           </span>
@@ -289,30 +288,30 @@ export const ExcelSheetView: React.FC<ExcelSheetViewProps> = ({
         >
           <table className="w-full text-left border-collapse text-xs">
             <thead>
-              <tr className="bg-[#f5f5f7] border-b border-[#e5e5e7] text-[#86868b] uppercase tracking-wider font-bold text-[10px]">
-                <th className="py-3 px-3.5 w-24 border-r border-[#e5e5e7] whitespace-nowrap">
+              <tr className="bg-[#182238] border-b border-white/10 text-slate-400 uppercase tracking-wider font-extrabold text-[10px]">
+                <th className="py-3.5 px-3.5 w-24 border-r border-white/10 whitespace-nowrap">
                   Date
                 </th>
-                <th className="py-3 px-3.5 border-r border-[#e5e5e7] min-w-[140px]">
+                <th className="py-3.5 px-3.5 border-r border-white/10 min-w-[140px]">
                   Expense
                 </th>
-                <th className="py-3 px-3.5 text-right w-24 md:w-28 border-r border-[#e5e5e7] font-extrabold text-[#1d1d1f] whitespace-nowrap">
+                <th className="py-3.5 px-3.5 text-right w-24 md:w-28 border-r border-white/10 font-black text-emerald-400 whitespace-nowrap">
                   Total (₹)
                 </th>
-                <th className="py-3 px-3.5 w-28 md:w-32 border-r border-[#e5e5e7] whitespace-nowrap">
+                <th className="py-3.5 px-3.5 w-28 md:w-32 border-r border-white/10 whitespace-nowrap">
                   Paid By
                 </th>
                 {members.map((m) => (
                   <th
                     key={m.id}
-                    className="py-3 px-3 text-right border-r border-[#e5e5e7] last:border-0 font-bold text-[#1d1d1f] min-w-[85px] whitespace-nowrap"
+                    className="py-3.5 px-3 text-right border-r border-white/10 last:border-0 font-bold text-white min-w-[85px] whitespace-nowrap"
                   >
                     {getMemberDisplayName(m)}
                   </th>
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#f0f0f0] text-[#1d1d1f]">
+            <tbody className="divide-y divide-white/5 text-slate-200">
               {filteredExpenses.map((expense) => {
                 const payer = memberMap.get(expense.paid_by_member_id);
                 const splitMap = new Map(
@@ -323,15 +322,15 @@ export const ExcelSheetView: React.FC<ExcelSheetViewProps> = ({
                   <tr
                     key={expense.id}
                     onClick={() => onSelectExpense?.(expense.id)}
-                    className="hover:bg-[#f8f9fc] transition-colors cursor-pointer group"
+                    className="hover:bg-white/5 transition-colors cursor-pointer group"
                   >
-                    <td className="py-2.5 px-3.5 font-medium text-[#86868b] border-r border-[#e5e5e7] text-[11px] whitespace-nowrap">
+                    <td className="py-2.5 px-3.5 font-medium text-slate-400 border-r border-white/5 text-[11px] whitespace-nowrap">
                       {new Date(expense.spent_on).toLocaleDateString("en-IN", {
                         day: "2-digit",
                         month: "short",
                       })}
                     </td>
-                    <td className="py-2.5 px-3.5 font-medium border-r border-[#e5e5e7]">
+                    <td className="py-2.5 px-3.5 font-semibold text-white border-r border-white/5">
                       <div className="flex items-center gap-1.5 line-clamp-1">
                         <span className="text-sm">
                           {expense.details.match(/^(\p{Emoji})/u)?.[0] || "🧾"}
@@ -339,11 +338,11 @@ export const ExcelSheetView: React.FC<ExcelSheetViewProps> = ({
                         <span>{expense.details.replace(/^(\p{Emoji}\s*)/u, "")}</span>
                       </div>
                     </td>
-                    <td className="py-2.5 px-3.5 text-right font-bold text-[#1d1d1f] border-r border-[#e5e5e7] whitespace-nowrap">
+                    <td className="py-2.5 px-3.5 text-right font-black text-emerald-400 border-r border-white/5 whitespace-nowrap">
                       {formatINR(expense.amount_paise)}
                     </td>
-                    <td className="py-2.5 px-3.5 border-r border-[#e5e5e7] whitespace-nowrap">
-                      <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#f0f5ff] text-[#0066cc]">
+                    <td className="py-2.5 px-3.5 border-r border-white/5 whitespace-nowrap">
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-bold bg-indigo-950/80 text-indigo-300 border border-indigo-500/30">
                         {payer ? getMemberDisplayName(payer) : "Unknown"}
                       </span>
                     </td>
@@ -352,12 +351,12 @@ export const ExcelSheetView: React.FC<ExcelSheetViewProps> = ({
                       return (
                         <td
                           key={m.id}
-                          className="py-2.5 px-3 text-right border-r border-[#e5e5e7] last:border-0 whitespace-nowrap font-medium text-[11px]"
+                          className="py-2.5 px-3 text-right border-r border-white/5 last:border-0 whitespace-nowrap font-medium text-[11px]"
                         >
                           {share !== undefined && share > 0n ? (
-                            <span className="text-[#1d1d1f]">{formatINR(share)}</span>
+                            <span className="text-white font-semibold">{formatINR(share)}</span>
                           ) : (
-                            <span className="text-[#d2d2d7]">—</span>
+                            <span className="text-slate-600">—</span>
                           )}
                         </td>
                       );
@@ -369,17 +368,17 @@ export const ExcelSheetView: React.FC<ExcelSheetViewProps> = ({
 
             {/* Summary Totals Footer Row */}
             <tfoot>
-              <tr className="bg-[#f8f9fb] border-t-2 border-[#d2d2d7] font-semibold text-[11px]">
-                <td className="py-3 px-3.5 border-r border-[#e5e5e7] text-[#86868b] uppercase text-[10px] font-bold">
+              <tr className="bg-[#182238] border-t-2 border-white/10 font-bold text-[11px]">
+                <td className="py-3 px-3.5 border-r border-white/10 text-slate-400 uppercase text-[10px]">
                   Summary
                 </td>
-                <td className="py-3 px-3.5 border-r border-[#e5e5e7] text-[#86868b]">
+                <td className="py-3 px-3.5 border-r border-white/10 text-slate-300">
                   Total Spent
                 </td>
-                <td className="py-3 px-3.5 text-right font-black text-[#1d1d1f] border-r border-[#e5e5e7] text-xs whitespace-nowrap">
+                <td className="py-3 px-3.5 text-right font-black text-emerald-400 border-r border-white/10 text-xs whitespace-nowrap">
                   {formatINR(totalSpent)}
                 </td>
-                <td className="py-3 px-3.5 border-r border-[#e5e5e7] text-[10px] text-[#86868b] whitespace-nowrap">
+                <td className="py-3 px-3.5 border-r border-white/10 text-[10px] text-slate-400 whitespace-nowrap">
                   Net Balances →
                 </td>
                 {members.map((m) => {
@@ -389,20 +388,20 @@ export const ExcelSheetView: React.FC<ExcelSheetViewProps> = ({
                   return (
                     <td
                       key={m.id}
-                      className="py-3 px-3 text-right border-r border-[#e5e5e7] last:border-0 whitespace-nowrap"
+                      className="py-3 px-3 text-right border-r border-white/10 last:border-0 whitespace-nowrap"
                     >
                       <span
                         className={`font-black block text-xs ${
                           net > 0n
-                            ? "text-[#00875a]"
+                            ? "text-emerald-400"
                             : net < 0n
-                            ? "text-[#de350b]"
-                            : "text-[#1d1d1f]"
+                            ? "text-rose-400"
+                            : "text-slate-300"
                         }`}
                       >
                         {net > 0n ? `+${formatINR(net)}` : formatINR(net)}
                       </span>
-                      <span className="text-[10px] text-[#86868b] block font-normal">
+                      <span className="text-[10px] text-slate-400 block font-normal">
                         pd: {formatINR(paid)}
                       </span>
                     </td>

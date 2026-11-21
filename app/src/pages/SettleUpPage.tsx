@@ -6,7 +6,8 @@ import { useAuth } from "../context/AuthContext";
 import { formatINR } from "../lib/money";
 import { simplifyDebts, calculateBalances } from "../lib/balances";
 import type { Member, Expense, Settlement } from "../lib/types";
-import { ChevronLeft, CheckCircle2, Loader2, ArrowRight } from "lucide-react";
+import { ChevronLeft, CheckCircle2, ArrowRight } from "lucide-react";
+import confetti from "canvas-confetti";
 
 export const SettleUpPage: React.FC = () => {
   const { groupId } = useParams<{ groupId: string }>();
@@ -14,8 +15,6 @@ export const SettleUpPage: React.FC = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
 
-  const [checkpointNote, setCheckpointNote] = useState("");
-  const [showCheckpointInput, setShowCheckpointInput] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   // Fetch members
@@ -73,14 +72,11 @@ export const SettleUpPage: React.FC = () => {
   });
 
   const memberMap = new Map(members.map((m) => [m.id, m]));
-  const balances = calculateBalances(
-    members.map((m) => m.id),
-    expenses,
-    settlements
-  );
+  const memberIds = members.map((m) => m.id);
+  const balances = calculateBalances(memberIds, expenses, settlements);
   const simplifiedTransfers = simplifyDebts(balances);
 
-  // Record Settlement Mutation
+  // Settle Mutation
   const recordSettlementMutation = useMutation({
     mutationFn: async ({
       fromMemberId,
@@ -102,65 +98,47 @@ export const SettleUpPage: React.FC = () => {
       if (error) throw error;
     },
     onSuccess: () => {
+      confetti({ particleCount: 70, spread: 60 });
       queryClient.invalidateQueries({ queryKey: ["group-settlements", groupId] });
       queryClient.invalidateQueries({ queryKey: ["group-expenses", groupId] });
+      queryClient.invalidateQueries({ queryKey: ["group-balances", groupId] });
     },
     onError: (err: any) => {
-      setError(err?.message || "Failed to record payment");
-    },
-  });
-
-  // Create Checkpoint Mutation
-  const createCheckpointMutation = useMutation({
-    mutationFn: async (note: string) => {
-      const { error } = await supabase.from("checkpoints").insert({
-        group_id: groupId,
-        note: note.trim() || "Month settled checkpoint",
-        created_by: user?.id,
-      });
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      setShowCheckpointInput(false);
-      setCheckpointNote("");
-      navigate(`/group/${groupId}`);
-    },
-    onError: (err: any) => {
-      setError(err?.message || "Failed to create checkpoint");
+      setError(err?.message || "Failed to record settlement");
     },
   });
 
   return (
-    <div className="min-h-screen bg-[#f5f5f7] text-[#1d1d1f] flex flex-col">
-      <header className="px-4 py-3.5 bg-white/80 backdrop-blur-md border-b border-[#e5e5e7] flex items-center justify-between sticky top-0 z-10">
+    <div className="min-h-screen bg-[#0b0f19] text-white flex flex-col">
+      <header className="px-4 py-3.5 bg-[#121826]/85 backdrop-blur-md border-b border-white/10 flex items-center justify-between sticky top-0 z-10">
         <button
           onClick={() => navigate(`/group/${groupId}`)}
-          className="p-1 -ml-1 text-[#86868b] hover:text-[#1d1d1f]"
+          className="p-1 -ml-1 text-slate-400 hover:text-white"
         >
           <ChevronLeft className="w-6 h-6" />
         </button>
-        <h1 className="font-semibold text-base text-[#1d1d1f] tracking-tight">Settle Up</h1>
+        <h1 className="font-bold text-base text-white tracking-tight">Settle Up</h1>
         <div className="w-6" />
       </header>
 
       <main className="flex-1 p-4 max-w-lg w-full mx-auto space-y-4">
         {error && (
-          <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-2xl text-rose-700 text-xs font-medium">
+          <div className="p-3.5 bg-rose-950/60 border border-rose-500/40 rounded-2xl text-rose-300 text-xs font-semibold">
             {error}
           </div>
         )}
 
-        <div className="p-5 bg-white border border-[#e5e5e7] rounded-[22px] shadow-sm">
-          <h2 className="text-base font-semibold text-[#1d1d1f] mb-1">
+        <div className="p-6 bg-[#121826] border border-white/10 rounded-[28px] shadow-xl">
+          <h2 className="text-base font-black text-white mb-1">
             Minimal Payments
           </h2>
-          <p className="text-xs text-[#86868b] mb-4">
-            Optimized minimal transactions required to balance all roommates to zero.
+          <p className="text-xs text-slate-400 mb-5">
+            Optimized minimal payments required to balance all roommates to zero.
           </p>
 
           {simplifiedTransfers.length === 0 ? (
-            <div className="text-center py-8 text-[#00875a] text-sm font-semibold">
-              ✓ All accounts are balanced!
+            <div className="text-center py-10 text-emerald-400 text-sm font-black">
+              ✓ All accounts are balanced! Zero debt.
             </div>
           ) : (
             <div className="space-y-3">
@@ -170,15 +148,15 @@ export const SettleUpPage: React.FC = () => {
                 return (
                   <div
                     key={idx}
-                    className="p-4 bg-[#fbfbfd] border border-[#e5e5e7] rounded-2xl flex items-center justify-between"
+                    className="p-4 bg-[#182238] border border-white/10 rounded-2xl flex items-center justify-between shadow-md"
                   >
                     <div>
-                      <div className="flex items-center gap-1.5 text-xs text-[#86868b]">
-                        <span className="font-semibold text-[#1d1d1f]">{fromName}</span>
-                        <ArrowRight className="w-3.5 h-3.5 text-[#86868b]" />
-                        <span className="font-semibold text-[#0066cc]">{toName}</span>
+                      <div className="flex items-center gap-1.5 text-xs text-slate-400">
+                        <span className="font-bold text-rose-400">{fromName}</span>
+                        <ArrowRight className="w-3.5 h-3.5 text-slate-500" />
+                        <span className="font-bold text-emerald-400">{toName}</span>
                       </div>
-                      <span className="text-lg font-bold text-[#1d1d1f] mt-1 block tracking-tight">
+                      <span className="text-2xl font-black text-white mt-1 block tracking-tight">
                         {formatINR(t.amountPaise)}
                       </span>
                     </div>
@@ -192,66 +170,14 @@ export const SettleUpPage: React.FC = () => {
                         })
                       }
                       disabled={recordSettlementMutation.isPending}
-                      className="px-4 py-2 rounded-full bg-[#00875a] hover:bg-[#00704a] active:scale-95 text-white font-semibold text-xs transition flex items-center gap-1.5 shadow-sm"
+                      className="px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 text-slate-950 font-black text-xs rounded-full shadow-md transition active:scale-95 cursor-pointer flex items-center gap-1.5"
                     >
-                      <CheckCircle2 className="w-3.5 h-3.5" />
+                      <CheckCircle2 className="w-4 h-4" />
                       Mark Paid
                     </button>
                   </div>
                 );
               })}
-            </div>
-          )}
-        </div>
-
-        {/* Checkpoint Section */}
-        <div className="p-5 bg-white border border-[#e5e5e7] rounded-[22px] space-y-3 shadow-sm">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-sm font-semibold text-[#1d1d1f]">Monthly Checkpoint</h3>
-              <p className="text-xs text-[#86868b]">
-                Record a marker that everything has been settled up to this date.
-              </p>
-            </div>
-            {!showCheckpointInput && (
-              <button
-                onClick={() => setShowCheckpointInput(true)}
-                className="px-4 py-1.5 bg-[#f5f5f7] hover:bg-[#e5e5e7] text-xs font-semibold rounded-full text-[#1d1d1f] transition"
-              >
-                Add
-              </button>
-            )}
-          </div>
-
-          {showCheckpointInput && (
-            <div className="space-y-2.5 pt-3 border-t border-[#f0f0f0]">
-              <input
-                type="text"
-                placeholder="e.g. Settled up for November 2026"
-                value={checkpointNote}
-                onChange={(e) => setCheckpointNote(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-[#fbfbfd] border border-[#d2d2d7] rounded-xl text-xs text-[#1d1d1f] placeholder-[#86868b] focus:outline-none focus:border-[#0066cc]"
-              />
-              <div className="flex justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={() => setShowCheckpointInput(false)}
-                  className="px-3.5 py-1.5 text-xs text-[#86868b] hover:text-[#1d1d1f]"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="button"
-                  disabled={createCheckpointMutation.isPending}
-                  onClick={() => createCheckpointMutation.mutate(checkpointNote)}
-                  className="px-4 py-1.5 bg-[#0066cc] hover:bg-[#0071e3] text-xs font-semibold rounded-full text-white flex items-center gap-1.5"
-                >
-                  {createCheckpointMutation.isPending && (
-                    <Loader2 className="w-3 h-3 animate-spin" />
-                  )}
-                  Save Checkpoint
-                </button>
-              </div>
             </div>
           )}
         </div>

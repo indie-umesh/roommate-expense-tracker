@@ -19,7 +19,7 @@ export const AddExpensePage: React.FC = () => {
   const [details, setDetails] = useState("");
   const [paidByMemberId, setPaidByMemberId] = useState<string>("");
   const [selectedMemberIds, setSelectedMemberIds] = useState<string[]>([]);
-  const [spentOn, setSpentOn] = useState<string>(
+  const [spentOn] = useState<string>(
     new Date().toISOString().split("T")[0]
   );
   const [error, setError] = useState<string | null>(null);
@@ -55,7 +55,6 @@ export const AddExpensePage: React.FC = () => {
     }
   }, [members, user]);
 
-  // Autofocus amount on mount for instant keypad entry
   useEffect(() => {
     amountInputRef.current?.focus();
   }, []);
@@ -70,20 +69,19 @@ export const AddExpensePage: React.FC = () => {
     }
   }
 
-  // Create expense mutation using server-side RPC
   const createExpenseMutation = useMutation({
     mutationFn: async () => {
       if (!amountRupees || parseFloat(amountRupees) <= 0) {
-        throw new Error("Please enter a valid amount");
+        throw new Error("Enter a valid amount");
       }
       if (!details.trim()) {
-        throw new Error("Please enter what this expense was for");
+        throw new Error("Enter expense details");
       }
       if (!paidByMemberId) {
-        throw new Error("Please select who paid");
+        throw new Error("Select who paid");
       }
       if (selectedMemberIds.length === 0) {
-        throw new Error("Must select at least one roommate to split");
+        throw new Error("Select at least one participant");
       }
 
       const paise = rupeesToPaise(amountRupees);
@@ -106,38 +104,37 @@ export const AddExpensePage: React.FC = () => {
       navigate(`/group/${groupId}`);
     },
     onError: (err: any) => {
-      setError(err?.message || "Failed to record expense");
+      setError(err?.message || "Failed to create expense");
     },
   });
 
   return (
-    <div className="min-h-screen bg-[#f5f5f7] text-[#1d1d1f] flex flex-col">
-      {/* Top Bar */}
-      <header className="px-4 py-3.5 bg-white/80 backdrop-blur-md border-b border-[#e5e5e7] flex items-center justify-between sticky top-0 z-10">
+    <div className="min-h-screen bg-[#0b0f19] text-white flex flex-col pb-8">
+      <header className="px-4 py-3.5 bg-[#121826]/85 backdrop-blur-md border-b border-white/10 flex items-center justify-between sticky top-0 z-10">
         <button
           onClick={() => navigate(`/group/${groupId}`)}
-          className="p-1 -ml-1 text-[#86868b] hover:text-[#1d1d1f]"
+          className="p-1 -ml-1 text-slate-400 hover:text-white"
         >
           <X className="w-6 h-6" />
         </button>
-        <h1 className="font-semibold text-base text-[#1d1d1f] tracking-tight">Add Expense</h1>
+        <h1 className="font-bold text-base text-white tracking-tight">Add Expense</h1>
         <div className="w-6" />
       </header>
 
       <main className="flex-1 p-4 max-w-lg w-full mx-auto space-y-5">
         {error && (
-          <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-2xl text-rose-700 text-xs font-medium">
+          <div className="p-3.5 bg-rose-950/60 border border-rose-500/40 rounded-2xl text-rose-300 text-xs font-semibold">
             {error}
           </div>
         )}
 
-        {/* 1. Large Hero Amount Input */}
-        <div className="bg-white p-6 rounded-[22px] border border-[#e5e5e7] text-center shadow-sm">
-          <label className="block text-xs uppercase tracking-wider text-[#86868b] font-semibold mb-2">
-            Amount
+        {/* Large Hero Amount Input */}
+        <div className="bg-[#121826] p-6 rounded-[28px] border border-white/10 text-center shadow-xl">
+          <label className="block text-xs uppercase tracking-wider text-slate-400 font-bold mb-2">
+            Amount Spent
           </label>
           <div className="flex items-center justify-center">
-            <span className="text-3xl font-semibold text-[#86868b] mr-1">₹</span>
+            <span className="text-3xl font-black text-emerald-400 mr-1.5">₹</span>
             <input
               ref={amountInputRef}
               type="number"
@@ -146,14 +143,14 @@ export const AddExpensePage: React.FC = () => {
               placeholder="0"
               value={amountRupees}
               onChange={(e) => setAmountRupees(e.target.value)}
-              className="text-4xl font-bold text-[#1d1d1f] bg-transparent outline-none max-w-[200px] text-center placeholder-[#d2d2d7] tracking-tight"
+              className="text-4xl font-black text-white bg-transparent outline-none max-w-[200px] text-center placeholder-slate-600 tracking-tight"
             />
           </div>
         </div>
 
-        {/* 2. Details (Single Line Description) */}
+        {/* Details */}
         <div>
-          <label className="block text-xs font-semibold text-[#1d1d1f] mb-1.5">
+          <label className="block text-xs font-bold text-slate-400 mb-1.5">
             What was it for?
           </label>
           <input
@@ -161,14 +158,14 @@ export const AddExpensePage: React.FC = () => {
             placeholder="e.g. Milk & Groceries, Wifi, Rent"
             value={details}
             onChange={(e) => setDetails(e.target.value)}
-            className="w-full px-4 py-3 bg-white border border-[#d2d2d7] rounded-xl text-[#1d1d1f] placeholder-[#86868b] text-sm focus:outline-none focus:border-[#0066cc] focus:ring-2 focus:ring-[#0066cc]/15 transition"
+            className="w-full px-4 py-3 bg-[#121826] border border-white/10 rounded-xl text-white placeholder-slate-500 text-sm focus:outline-none focus:border-indigo-500 transition"
           />
         </div>
 
-        {/* 3. Paid By (Defaults to Me) */}
+        {/* Paid By */}
         <div>
-          <label className="block text-xs font-semibold text-[#1d1d1f] mb-1.5">
-            Paid by
+          <label className="block text-xs font-bold text-slate-400 mb-1.5">
+            Who Paid?
           </label>
           <div className="flex flex-wrap gap-2">
             {members.map((member) => {
@@ -179,10 +176,10 @@ export const AddExpensePage: React.FC = () => {
                   key={member.id}
                   type="button"
                   onClick={() => setPaidByMemberId(member.id)}
-                  className={`px-4 py-2 rounded-full text-xs font-semibold transition active:scale-95 ${
+                  className={`px-4 py-2 rounded-full text-xs font-bold transition active:scale-95 cursor-pointer ${
                     isSelected
-                      ? "bg-[#0066cc] text-white shadow-sm"
-                      : "bg-white text-[#1d1d1f] border border-[#d2d2d7] hover:bg-[#fafafc]"
+                      ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/30"
+                      : "bg-[#121826] text-slate-300 border border-white/10 hover:bg-white/10"
                   }`}
                 >
                   {isMe ? `You (${member.display_name})` : member.display_name}
@@ -192,16 +189,16 @@ export const AddExpensePage: React.FC = () => {
           </div>
         </div>
 
-        {/* 4. Split Among (Default = Everyone Selected; Tap to Toggle) */}
+        {/* Split Among */}
         <div>
           <div className="flex justify-between items-center mb-1.5">
-            <label className="text-xs font-semibold text-[#1d1d1f]">
+            <label className="text-xs font-bold text-slate-400">
               Split equally among ({selectedMemberIds.length})
             </label>
             <button
               type="button"
               onClick={() => setSelectedMemberIds(members.map((m) => m.id))}
-              className="text-[11px] text-[#0066cc] hover:underline font-medium"
+              className="text-[11px] text-indigo-400 hover:underline font-bold"
             >
               Select all
             </button>
@@ -214,56 +211,36 @@ export const AddExpensePage: React.FC = () => {
                   key={member.id}
                   type="button"
                   onClick={() => toggleMemberSplit(member.id)}
-                  className={`p-3 rounded-2xl text-xs font-medium flex items-center justify-between border transition active:scale-98 ${
+                  className={`p-3 rounded-2xl text-xs font-semibold flex items-center justify-between border transition active:scale-98 cursor-pointer ${
                     isChecked
-                      ? "bg-white border-[#0066cc] text-[#1d1d1f] shadow-sm"
-                      : "bg-[#fbfbfd] border-[#e5e5e7] text-[#86868b]"
+                      ? "bg-indigo-950/70 border-indigo-500/60 text-indigo-200"
+                      : "bg-[#121826] border-white/10 text-slate-400"
                   }`}
                 >
                   <span className="truncate">{member.display_name}</span>
-                  <div
-                    className={`w-4 h-4 rounded-full flex items-center justify-center ${
-                      isChecked
-                        ? "bg-[#0066cc] text-white"
-                        : "border border-[#d2d2d7]"
-                    }`}
-                  >
-                    {isChecked && <Check className="w-2.5 h-2.5 stroke-[3]" />}
-                  </div>
+                  {isChecked && (
+                    <div className="w-4 h-4 rounded-full bg-indigo-500 text-white flex items-center justify-center shrink-0">
+                      <Check className="w-2.5 h-2.5 stroke-[3]" />
+                    </div>
+                  )}
                 </button>
               );
             })}
           </div>
         </div>
 
-        {/* 5. Date */}
-        <div>
-          <label className="block text-xs font-semibold text-[#1d1d1f] mb-1.5">
-            Date
-          </label>
-          <input
-            type="date"
-            value={spentOn}
-            onChange={(e) => setSpentOn(e.target.value)}
-            className="w-full px-4 py-2.5 bg-white border border-[#d2d2d7] rounded-xl text-[#1d1d1f] text-sm focus:outline-none focus:border-[#0066cc]"
-          />
-        </div>
-
-        {/* Save Button */}
-        <div className="pt-2">
-          <button
-            type="button"
-            disabled={createExpenseMutation.isPending}
-            onClick={() => createExpenseMutation.mutate()}
-            className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-full bg-[#0066cc] hover:bg-[#0071e3] active:scale-[0.98] text-white font-semibold text-[15px] shadow-[0_4px_16px_rgba(0,102,204,0.35)] transition disabled:opacity-50"
-          >
-            {createExpenseMutation.isPending ? (
-              <Loader2 className="w-5 h-5 animate-spin" />
-            ) : (
-              "Save Expense"
-            )}
-          </button>
-        </div>
+        <button
+          type="button"
+          disabled={createExpenseMutation.isPending}
+          onClick={() => createExpenseMutation.mutate()}
+          className="w-full mt-4 py-3.5 px-4 rounded-full bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 active:scale-[0.98] text-slate-950 font-black text-sm shadow-[0_4px_20px_rgba(16,185,129,0.4)] transition disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
+        >
+          {createExpenseMutation.isPending ? (
+            <Loader2 className="w-5 h-5 animate-spin" />
+          ) : (
+            "Split & Save"
+          )}
+        </button>
       </main>
     </div>
   );
