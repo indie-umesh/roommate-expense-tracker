@@ -151,33 +151,35 @@ export const ExpenseDetailPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#f5f5f7] text-[#1d1d1f] flex flex-col">
-      <header className="px-4 py-3.5 bg-white/80 backdrop-blur-md border-b border-[#e5e5e7] flex items-center justify-between sticky top-0 z-10">
-        <button
-          onClick={() => navigate(`/group/${groupId}`)}
-          className="p-1 -ml-1 text-[#86868b] hover:text-[#1d1d1f]"
-        >
-          <ChevronLeft className="w-6 h-6" />
-        </button>
-        <h1 className="font-semibold text-base text-[#1d1d1f] tracking-tight">Expense Details</h1>
-        {!isEditing ? (
+      <header className="px-4 md:px-8 py-3.5 bg-white/80 backdrop-blur-md border-b border-[#e5e5e7] sticky top-0 z-10">
+        <div className="max-w-3xl mx-auto flex items-center justify-between">
           <button
-            onClick={() => setIsEditing(true)}
-            className="p-1 text-[#0066cc] font-medium text-xs flex items-center gap-1"
+            onClick={() => navigate(`/group/${groupId}`)}
+            className="p-1 -ml-1 text-[#86868b] hover:text-[#1d1d1f] hover:bg-[#f0f0f2] rounded-full transition"
           >
-            <Edit2 className="w-3.5 h-3.5" />
-            Edit
+            <ChevronLeft className="w-6 h-6" />
           </button>
-        ) : (
-          <button
-            onClick={() => setIsEditing(false)}
-            className="p-1 text-[#86868b] text-xs"
-          >
-            Cancel
-          </button>
-        )}
+          <h1 className="font-semibold text-base text-[#1d1d1f] tracking-tight">Expense Details</h1>
+          {!isEditing ? (
+            <button
+              onClick={() => setIsEditing(true)}
+              className="p-1 text-[#0066cc] font-medium text-xs flex items-center gap-1 cursor-pointer"
+            >
+              <Edit2 className="w-3.5 h-3.5" />
+              Edit
+            </button>
+          ) : (
+            <button
+              onClick={() => setIsEditing(false)}
+              className="p-1 text-[#86868b] text-xs cursor-pointer"
+            >
+              Cancel
+            </button>
+          )}
+        </div>
       </header>
 
-      <main className="flex-1 p-4 max-w-lg w-full mx-auto space-y-4">
+      <main className="flex-1 p-4 md:p-6 max-w-md md:max-w-2xl lg:max-w-3xl w-full mx-auto space-y-4">
         {error && (
           <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-2xl text-rose-700 text-xs font-medium">
             {error}

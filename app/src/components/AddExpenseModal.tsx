@@ -43,17 +43,52 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
   );
   const [error, setError] = useState<string | null>(null);
 
+  // Deduplicate members list in case database has stale ghost duplicates
+  const uniqueMembers = React.useMemo(() => {
+    const seen = new Set<string>();
+    const result: Member[] = [];
+    for (const m of members) {
+      if (!seen.has(m.id)) {
+        seen.add(m.id);
+        result.push(m);
+      }
+    }
+    return result;
+  }, [members]);
+
+  // Name counts for disambiguation
+  const nameCounts = React.useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const m of uniqueMembers) {
+      const lower = m.display_name.toLowerCase();
+      counts.set(lower, (counts.get(lower) || 0) + 1);
+    }
+    return counts;
+  }, [uniqueMembers]);
+
+  function getMemberLabel(m: Member) {
+    const isMe = m.user_id === user?.id;
+    const isDuplicate = (nameCounts.get(m.display_name.toLowerCase()) || 0) > 1;
+    if (isMe) {
+      return `You (${m.display_name})`;
+    }
+    if (isDuplicate) {
+      return `${m.display_name} (${m.role === "admin" ? "Admin" : m.id.slice(0, 4)})`;
+    }
+    return m.display_name;
+  }
+
   // Setup defaults
   useEffect(() => {
     if (isOpen) {
-      if (members.length > 0) {
-        const myMember = members.find((m) => m.user_id === user?.id);
+      if (uniqueMembers.length > 0) {
+        const myMember = uniqueMembers.find((m) => m.user_id === user?.id);
         if (myMember) {
           setPaidByMemberId(myMember.id);
         } else {
-          setPaidByMemberId(members[0].id);
+          setPaidByMemberId(uniqueMembers[0].id);
         }
-        setSelectedMemberIds(members.map((m) => m.id));
+        setSelectedMemberIds(uniqueMembers.map((m) => m.id));
       }
       setTimeout(() => inputRef.current?.focus(), 150);
     } else {
@@ -61,7 +96,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
       setDetails("");
       setError(null);
     }
-  }, [isOpen, members, user]);
+  }, [isOpen, uniqueMembers, user]);
 
   function handleQuickAmount(add: number) {
     const current = parseFloat(amountRupees) || 0;
@@ -138,12 +173,12 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
             className="fixed inset-0 bg-black/40 backdrop-blur-sm"
           />
 
-          {/* Modal / Bottom Sheet */}
+          {/* Modal Card / Bottom Sheet */}
           <motion.div
-            initial={{ y: "100%" }}
-            animate={{ y: 0 }}
-            exit={{ y: "100%" }}
-            transition={{ type: "spring", damping: 26, stiffness: 300 }}
+            initial={{ y: "100%", opacity: 0.8 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: "100%", opacity: 0 }}
+            transition={{ type: "spring", damping: 28, stiffness: 320 }}
             className="relative bg-white w-full max-w-lg rounded-t-[28px] sm:rounded-[28px] p-6 shadow-2xl z-10 max-h-[92vh] overflow-y-auto"
           >
             {/* Header */}
@@ -170,7 +205,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
 
             <div className="space-y-4 pt-4">
               {/* Amount Display */}
-              <div className="bg-[#f5f5f7] p-4 rounded-2xl text-center">
+              <div className="bg-[#f5f5f7] p-5 rounded-2xl text-center">
                 <div className="flex items-center justify-center">
                   <span className="text-3xl font-semibold text-[#86868b] mr-1">₹</span>
                   <input
@@ -204,7 +239,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
               <div>
                 <input
                   type="text"
-                  placeholder="What was it for? (e.g. Swiggy, Milk, Electricity)"
+                  placeholder="What was it for? (e.g. Swiggy, Groceries, Milk)"
                   value={details}
                   onChange={(e) => setDetails(e.target.value)}
                   className="w-full px-4 py-3 bg-[#fbfbfd] border border-[#d2d2d7] rounded-xl text-sm text-[#1d1d1f] placeholder-[#86868b] focus:outline-none focus:border-[#0066cc]"
@@ -230,9 +265,8 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                   Paid By
                 </label>
                 <div className="flex flex-wrap gap-1.5">
-                  {members.map((member) => {
+                  {uniqueMembers.map((member) => {
                     const isSelected = paidByMemberId === member.id;
-                    const isMe = member.user_id === user?.id;
                     return (
                       <button
                         key={member.id}
@@ -244,7 +278,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                             : "bg-[#f5f5f7] text-[#1d1d1f] hover:bg-[#e5e5e7]"
                         }`}
                       >
-                        {isMe ? `You (${member.display_name})` : member.display_name}
+                        {getMemberLabel(member)}
                       </button>
                     );
                   })}
@@ -259,14 +293,14 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                   </label>
                   <button
                     type="button"
-                    onClick={() => setSelectedMemberIds(members.map((m) => m.id))}
+                    onClick={() => setSelectedMemberIds(uniqueMembers.map((m) => m.id))}
                     className="text-[11px] text-[#0066cc] font-medium hover:underline"
                   >
                     Select all
                   </button>
                 </div>
                 <div className="grid grid-cols-2 gap-2">
-                  {members.map((member) => {
+                  {uniqueMembers.map((member) => {
                     const isChecked = selectedMemberIds.includes(member.id);
                     return (
                       <button
@@ -279,7 +313,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                             : "bg-[#fbfbfd] border-[#e5e5e7] text-[#86868b]"
                         }`}
                       >
-                        <span className="truncate">{member.display_name}</span>
+                        <span className="truncate">{getMemberLabel(member)}</span>
                         {isChecked && (
                           <div className="w-4 h-4 rounded-full bg-[#0066cc] text-white flex items-center justify-center">
                             <Check className="w-2.5 h-2.5 stroke-[3]" />

@@ -15,8 +15,8 @@ export const BottomNav: React.FC<BottomNavProps> = ({
   onOpenAddModal,
 }) => {
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-40 max-w-lg mx-auto pointer-events-none px-4 pb-4">
-      <div className="pointer-events-auto bg-white/90 backdrop-blur-xl border border-[#e5e5e7] rounded-full p-2 shadow-[0_8px_32px_rgba(0,0,0,0.12)] flex items-center justify-between">
+    <div className="fixed bottom-0 left-0 right-0 z-40 max-w-lg mx-auto pointer-events-none px-4 pb-4 md:hidden">
+      <div className="pointer-events-auto bg-white/95 backdrop-blur-xl border border-[#e5e5e7] rounded-full p-2 shadow-[0_8px_32px_rgba(0,0,0,0.15)] flex items-center justify-between">
         {/* Tab 1: Activity */}
         <button
           onClick={() => onChangeTab("activity")}
