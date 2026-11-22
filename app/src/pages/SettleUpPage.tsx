@@ -171,7 +171,7 @@ export const SettleUpPage: React.FC = () => {
               className="btn-primary py-1.5 px-3 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 shadow-xs cursor-pointer self-start sm:self-auto"
             >
               <Plus className="w-3.5 h-3.5" />
-              <span>Custom Reimbursement</span>
+              <span>Record Payment</span>
             </button>
           </div>
 
@@ -242,20 +242,20 @@ export const SettleUpPage: React.FC = () => {
           )}
         </div>
 
-        {/* Settlement & Reimbursement History */}
+        {/* Payment History */}
         <div className="card-clean p-6 space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <History className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
               <h3 className="font-bold text-sm text-[var(--text-primary)]">
-                Settlement & Reimbursement History ({settlements.length})
+                Payment History ({settlements.length})
               </h3>
             </div>
           </div>
 
           {settlements.length === 0 ? (
             <div className="text-center py-8 text-xs text-[var(--text-muted)]">
-              No settlements or reimbursements recorded yet.
+              No payments recorded yet.
             </div>
           ) : (
             <div className="divide-y divide-slate-100 dark:divide-white/10">

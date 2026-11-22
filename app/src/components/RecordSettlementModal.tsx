@@ -23,10 +23,10 @@ interface RecordSettlementModalProps {
 
 const QUICK_AMOUNTS = [50, 100, 200, 500, 1000];
 const QUICK_NOTES = [
-  "Reimbursement for wrong entry",
-  "Settled via GPay / UPI",
-  "Cash adjustment",
-  "Bill adjustment",
+  "GPay / UPI",
+  "Cash diya",
+  "Hisaab clear",
+  "Galat bill adjust",
 ];
 
 export const RecordSettlementModal: React.FC<RecordSettlementModalProps> = ({
@@ -56,7 +56,7 @@ export const RecordSettlementModal: React.FC<RecordSettlementModalProps> = ({
   );
   const [error, setError] = useState<string | null>(null);
 
-  // Initialize or reset form state whenever modal opens or props change
+  // Initialize form state
   useEffect(() => {
     if (isOpen) {
       setError(null);
@@ -81,7 +81,6 @@ export const RecordSettlementModal: React.FC<RecordSettlementModalProps> = ({
     initialNote,
   ]);
 
-  // Adjust toMemberId if from and to become identical
   function handleSelectFrom(id: string) {
     setFromMemberId(id);
     if (toMemberId === id) {
@@ -107,16 +106,16 @@ export const RecordSettlementModal: React.FC<RecordSettlementModalProps> = ({
     mutationFn: async () => {
       const amt = parseFloat(amountRupees);
       if (isNaN(amt) || amt <= 0) {
-        throw new Error("Please enter a valid settlement or reimbursement amount");
+        throw new Error("Kripya sahi amount dalein (jaise ₹100)");
       }
       if (!fromMemberId) {
-        throw new Error("Select who is paying / reimbursing");
+        throw new Error("Select karein kisne paise diye");
       }
       if (!toMemberId) {
-        throw new Error("Select who is receiving the payment");
+        throw new Error("Select karein kisko paise mile");
       }
       if (fromMemberId === toMemberId) {
-        throw new Error("Payer and receiver cannot be the same roommate");
+        throw new Error("Dene wala aur lene wala same roommate nahi ho sakta");
       }
 
       const paise = rupeesToPaise(amountRupees);
@@ -142,7 +141,7 @@ export const RecordSettlementModal: React.FC<RecordSettlementModalProps> = ({
       onClose();
     },
     onError: (err: any) => {
-      setError(err?.message || "Failed to record settlement");
+      setError(err?.message || "Payment record karne me error aaya");
     },
   });
 
@@ -183,10 +182,10 @@ export const RecordSettlementModal: React.FC<RecordSettlementModalProps> = ({
                 </span>
                 <div>
                   <h3 className="font-bold text-base text-[var(--text-primary)] tracking-tight">
-                    Record Reimbursement / Settlement
+                    Record Payment
                   </h3>
                   <p className="text-[11px] text-[var(--text-muted)] font-normal">
-                    Adjust balances or record an offline refund / payment
+                    Cash, UPI ya GPay se hisaab clear karein
                   </p>
                 </div>
               </div>
@@ -218,11 +217,11 @@ export const RecordSettlementModal: React.FC<RecordSettlementModalProps> = ({
               }}
               className="mt-4 space-y-4"
             >
-              {/* Transfer Flow (Who pays whom) */}
+              {/* Who pays whom */}
               <div className="space-y-3 p-3.5 bg-slate-50 dark:bg-white/[0.03] border border-slate-200/80 dark:border-white/10 rounded-xl">
                 <div>
                   <label className="block text-[11px] font-bold text-rose-600 dark:text-rose-400 uppercase tracking-wider mb-1.5">
-                    1. Who is paying / reimbursing?
+                    1. Kisne paise diye? (Payer)
                   </label>
                   <div className="flex flex-wrap gap-1.5">
                     {members.map((m) => {
@@ -255,7 +254,7 @@ export const RecordSettlementModal: React.FC<RecordSettlementModalProps> = ({
 
                 <div>
                   <label className="block text-[11px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider mb-1.5">
-                    2. Who is receiving?
+                    2. Kisko paise mile? (Receiver)
                   </label>
                   <div className="flex flex-wrap gap-1.5">
                     {members.map((m) => {
@@ -329,13 +328,13 @@ export const RecordSettlementModal: React.FC<RecordSettlementModalProps> = ({
               {/* Reason / Note Input */}
               <div>
                 <label className="block text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-1.5">
-                  Reason / Adjustment Note (Optional)
+                  Note (Optional)
                 </label>
                 <input
                   type="text"
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
-                  placeholder="e.g. Reimbursement for wrong bill, Cash settlement"
+                  placeholder="e.g. GPay, Cash, Galat bill adjustment"
                   className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-emerald-500 transition"
                 />
 
@@ -377,14 +376,13 @@ export const RecordSettlementModal: React.FC<RecordSettlementModalProps> = ({
                   {recordSettlementMutation.isPending ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      <span>Recording Settlement...</span>
+                      <span>Saving Payment...</span>
                     </>
                   ) : (
                     <>
                       <Check className="w-4 h-4" />
                       <span>
-                        Record {parsedAmount > 0 ? `₹${parsedAmount}` : ""}{" "}
-                        Reimbursement
+                        Confirm {parsedAmount > 0 ? `₹${parsedAmount}` : ""} Payment
                       </span>
                     </>
                   )}

@@ -11,7 +11,10 @@ import {
   Edit2,
   Check,
   ShieldCheck,
-  ArrowLeftRight,
+  CreditCard,
+  Ban,
+  AlertTriangle,
+  Loader2,
 } from "lucide-react";
 
 export const ExpenseDetailPage: React.FC = () => {
@@ -21,8 +24,9 @@ export const ExpenseDetailPage: React.FC = () => {
   const queryClient = useQueryClient();
 
   const [isEditing, setIsEditing] = useState(false);
-  const [showReimburseModal, setShowReimburseModal] = useState(false);
-  const [reimburseParams, setReimburseParams] = useState<{
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [paymentParams, setPaymentParams] = useState<{
     fromMemberId?: string;
     toMemberId?: string;
     amountPaise?: bigint;
@@ -133,6 +137,27 @@ export const ExpenseDetailPage: React.FC = () => {
     },
     onError: (err: any) => {
       setError(err?.message || "Failed to update expense");
+    },
+  });
+
+  // Cancel Bill Mutation (Audit-logged soft cancellation, zeroes out debts)
+  const cancelBillMutation = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase
+        .from("expenses")
+        .update({ deleted_at: new Date().toISOString() })
+        .eq("id", expenseId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["group-expenses", groupId] });
+      queryClient.invalidateQueries({ queryKey: ["group-balances", groupId] });
+      queryClient.invalidateQueries({ queryKey: ["group-settlements", groupId] });
+      navigate(`/group/${groupId}`);
+    },
+    onError: (err: any) => {
+      setError(err?.message || "Failed to cancel bill");
+      setShowCancelConfirm(false);
     },
   });
 
@@ -276,22 +301,33 @@ export const ExpenseDetailPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="pt-2 flex justify-end gap-2">
+            <div className="pt-3 border-t border-slate-100 dark:border-white/10 flex items-center justify-between">
               <button
                 type="button"
-                onClick={() => setIsEditing(false)}
-                className="px-4 py-2 rounded-lg text-xs font-medium text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer"
+                onClick={() => setShowCancelConfirm(true)}
+                className="text-xs text-rose-600 hover:text-rose-700 dark:text-rose-400 font-semibold flex items-center gap-1 cursor-pointer"
               >
-                Cancel
+                <Ban className="w-3.5 h-3.5" />
+                <span>Cancel this Bill</span>
               </button>
-              <button
-                type="button"
-                onClick={() => updateMutation.mutate()}
-                disabled={updateMutation.isPending}
-                className="px-5 py-2 rounded-lg btn-primary text-xs font-medium shadow-xs disabled:opacity-50"
-              >
-                {updateMutation.isPending ? "Saving..." : "Save Changes"}
-              </button>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setIsEditing(false)}
+                  className="px-4 py-2 rounded-lg text-xs font-medium text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={() => updateMutation.mutate()}
+                  disabled={updateMutation.isPending}
+                  className="px-5 py-2 rounded-lg btn-primary text-xs font-medium shadow-xs disabled:opacity-50"
+                >
+                  {updateMutation.isPending ? "Saving..." : "Save Changes"}
+                </button>
+              </div>
             </div>
           </div>
         ) : (
@@ -335,14 +371,14 @@ export const ExpenseDetailPage: React.FC = () => {
                     return (
                       <div
                         key={split.member_id}
-                        className="flex items-center justify-between text-xs py-1.5 px-2 rounded-lg bg-slate-50/50 dark:bg-white/[0.02]"
+                        className="flex items-center justify-between text-xs py-2 px-2.5 rounded-xl bg-slate-50/70 dark:bg-white/[0.02] border border-slate-100 dark:border-white/5"
                       >
                         <div className="flex items-center gap-2">
                           <span className="text-[var(--text-primary)] font-medium">
                             {m?.display_name || "Roommate"}
                           </span>
                           {isMe && (
-                            <span className="text-[10px] text-[var(--text-muted)]">(You)</span>
+                            <span className="text-[10px] text-[var(--text-muted)] font-medium">(You)</span>
                           )}
                           {isPayer && (
                             <span className="text-[10px] bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 px-1.5 py-0.5 rounded font-semibold">
@@ -352,24 +388,24 @@ export const ExpenseDetailPage: React.FC = () => {
                         </div>
 
                         <div className="flex items-center gap-2">
-                          <span className="font-semibold text-[var(--text-primary)]">
+                          <span className="font-bold text-[var(--text-primary)]">
                             {formatINR(split.share_paise)}
                           </span>
                           {!isPayer && (
                             <button
                               onClick={() => {
-                                setReimburseParams({
+                                setPaymentParams({
                                   fromMemberId: split.member_id,
                                   toMemberId: expense.paid_by_member_id,
                                   amountPaise: split.share_paise,
-                                  initialNote: `Reimbursement for: ${expense.details}`,
-                                  contextTitle: `Reimburse ${m?.display_name || "Roommate"}'s share for ${expense.details}`,
+                                  initialNote: `Paid for: ${expense.details}`,
+                                  contextTitle: `Pay ${m?.display_name || "Roommate"}'s share for ${expense.details}`,
                                 });
-                                setShowReimburseModal(true);
+                                setShowPaymentModal(true);
                               }}
-                              className="px-2.5 py-1 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-[11px] font-semibold transition cursor-pointer flex items-center gap-1 active:scale-[0.98]"
+                              className="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:hover:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 text-[11px] font-semibold transition cursor-pointer flex items-center gap-1 active:scale-[0.98]"
                             >
-                              <span>Reimburse Share</span>
+                              <span>Mark as Paid</span>
                             </button>
                           )}
                         </div>
@@ -378,30 +414,41 @@ export const ExpenseDetailPage: React.FC = () => {
                   })}
                 </div>
 
-                {/* Direct Transaction Reimbursement Bar */}
+                {/* Settle / Pay Bill Action Bar */}
                 <div className="pt-3 border-t border-slate-100 dark:border-white/10 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
                   <span className="text-[11px] text-[var(--text-muted)]">
-                    Need to refund or adjust this transaction?
+                    Directly pay or clear balance for this bill:
                   </span>
-                  <button
-                    onClick={() => {
-                      setReimburseParams({
-                        fromMemberId:
-                          myMember?.id !== expense.paid_by_member_id
-                            ? myMember?.id
-                            : undefined,
-                        toMemberId: expense.paid_by_member_id,
-                        amountPaise: expense.amount_paise,
-                        initialNote: `Reimbursement for: ${expense.details}`,
-                        contextTitle: `Reimburse transaction: ${expense.details}`,
-                      });
-                      setShowReimburseModal(true);
-                    }}
-                    className="px-3.5 py-2 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer active:scale-[0.98]"
-                  >
-                    <ArrowLeftRight className="w-3.5 h-3.5" />
-                    <span>Reimburse / Adjust this Bill</span>
-                  </button>
+                  <div className="flex items-center gap-2">
+                    {canEdit && (
+                      <button
+                        onClick={() => setShowCancelConfirm(true)}
+                        className="px-3 py-1.5 rounded-xl text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 text-xs font-semibold flex items-center gap-1 transition cursor-pointer"
+                      >
+                        <Ban className="w-3.5 h-3.5" />
+                        <span>Cancel Bill</span>
+                      </button>
+                    )}
+                    <button
+                      onClick={() => {
+                        setPaymentParams({
+                          fromMemberId:
+                            myMember?.id !== expense.paid_by_member_id
+                              ? myMember?.id
+                              : undefined,
+                          toMemberId: expense.paid_by_member_id,
+                          amountPaise: expense.amount_paise,
+                          initialNote: `Paid for: ${expense.details}`,
+                          contextTitle: `Pay for: ${expense.details}`,
+                        });
+                        setShowPaymentModal(true);
+                      }}
+                      className="px-3.5 py-2 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer active:scale-[0.98]"
+                    >
+                      <CreditCard className="w-3.5 h-3.5" />
+                      <span>Record Payment for this Bill</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -413,13 +460,13 @@ export const ExpenseDetailPage: React.FC = () => {
               </div>
               <div className="space-y-0.5">
                 <h4 className="font-semibold text-xs text-[var(--text-primary)] flex items-center gap-1.5">
-                  <span>Tamper-Proof Flat Ledger</span>
+                  <span>Honest Flat Ledger</span>
                   <span className="text-[10px] bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-2 py-0.2 rounded-full font-bold">
-                    Immutable
+                    100% Transparent
                   </span>
                 </h4>
                 <p className="text-[11px] text-[var(--text-muted)] leading-relaxed">
-                  Bills cannot be deleted by any roommate. Every entry logged remains transparent on the shared matrix to maintain 100% honesty and trust.
+                  Har kharcha aur payment permanently record hoti hai. Agar koi entry galat ho toh use theek ya cancel kiya ja sakta hai, audit record hamesha safe rehta hai.
                 </p>
               </div>
             </div>
@@ -427,18 +474,61 @@ export const ExpenseDetailPage: React.FC = () => {
         )}
       </main>
 
-      {/* Record Reimbursement / Settlement Modal */}
+      {/* Record Payment Modal */}
       <RecordSettlementModal
         groupId={groupId!}
         members={members}
-        isOpen={showReimburseModal}
-        onClose={() => setShowReimburseModal(false)}
-        initialFromMemberId={reimburseParams.fromMemberId}
-        initialToMemberId={reimburseParams.toMemberId}
-        initialAmountPaise={reimburseParams.amountPaise}
-        initialNote={reimburseParams.initialNote}
-        contextTitle={reimburseParams.contextTitle}
+        isOpen={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        initialFromMemberId={paymentParams.fromMemberId}
+        initialToMemberId={paymentParams.toMemberId}
+        initialAmountPaise={paymentParams.amountPaise}
+        initialNote={paymentParams.initialNote}
+        contextTitle={paymentParams.contextTitle}
       />
+
+      {/* Cancel Bill Confirmation Dialog */}
+      {showCancelConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="bg-white dark:bg-[#111827] text-[var(--text-primary)] max-w-sm w-full p-6 rounded-2xl shadow-2xl border border-slate-200 dark:border-white/10 space-y-4">
+            <div className="w-10 h-10 rounded-xl bg-rose-100 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 flex items-center justify-center">
+              <AlertTriangle className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="text-base font-bold text-[var(--text-primary)]">
+                Cancel this Bill?
+              </h3>
+              <p className="text-xs text-[var(--text-muted)] mt-1.5 leading-relaxed">
+                Agar yeh kharcha galat add ho gaya tha ya personal tha, toh ise cancel karne par sabhi roommates ka hissa ₹0 ho jayega.
+              </p>
+            </div>
+            <div className="flex items-center justify-end gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setShowCancelConfirm(false)}
+                className="px-4 py-2 rounded-xl text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer"
+              >
+                Keep Bill
+              </button>
+              <button
+                type="button"
+                onClick={() => cancelBillMutation.mutate()}
+                disabled={cancelBillMutation.isPending}
+                className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold flex items-center gap-1.5 shadow-sm cursor-pointer disabled:opacity-50"
+              >
+                {cancelBillMutation.isPending ? (
+                  <>
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    <span>Cancelling...</span>
+                  </>
+                ) : (
+                  <span>Yes, Cancel Bill</span>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -765,7 +765,7 @@ export const GroupHomePage: React.FC = () => {
           </motion.div>
         )}
 
-        {/* TAB 3: SETTLE UP (MINIMAL TRANSFERS & REIMBURSEMENTS) */}
+        {/* TAB 3: SETTLE UP (MINIMAL TRANSFERS & PAYMENTS) */}
         {activeTab === "settle" && (
           <motion.div
             initial={{ opacity: 0, y: 4 }}
@@ -790,7 +790,7 @@ export const GroupHomePage: React.FC = () => {
                   className="btn-primary py-2 px-3.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 shadow-xs cursor-pointer shrink-0"
                 >
                   <Plus className="w-4 h-4" />
-                  <span>Custom Reimbursement / Settle</span>
+                  <span>Record Payment (Cash / UPI)</span>
                 </button>
               </div>
 
@@ -851,7 +851,7 @@ export const GroupHomePage: React.FC = () => {
                             }}
                             className="w-full py-1.5 text-[11px] font-medium text-[var(--text-muted)] hover:text-indigo-600 dark:hover:text-indigo-400 transition cursor-pointer"
                           >
-                            Adjust amount or add note →
+                            Custom amount or add note →
                           </button>
                         </div>
                       </div>
@@ -861,13 +861,13 @@ export const GroupHomePage: React.FC = () => {
               )}
             </div>
 
-            {/* Settlement & Reimbursement History */}
+            {/* Payment History */}
             <div className="card-clean p-6 md:p-8 space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <History className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
                   <h3 className="font-bold text-sm md:text-base text-[var(--text-primary)]">
-                    Settlement & Reimbursement History ({settlements.length})
+                    Payment History ({settlements.length})
                   </h3>
                 </div>
                 <button
@@ -878,13 +878,13 @@ export const GroupHomePage: React.FC = () => {
                   className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 cursor-pointer"
                 >
                   <Plus className="w-3.5 h-3.5" />
-                  <span>Record Adjustment</span>
+                  <span>Record Payment</span>
                 </button>
               </div>
 
               {settlements.length === 0 ? (
                 <div className="text-center py-8 text-xs text-[var(--text-muted)]">
-                  No settlements or reimbursements recorded yet.
+                  No payments recorded yet.
                 </div>
               ) : (
                 <div className="divide-y divide-slate-100 dark:divide-white/10">
