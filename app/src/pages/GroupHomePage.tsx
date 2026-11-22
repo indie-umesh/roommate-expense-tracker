@@ -1258,30 +1258,42 @@ export const GroupHomePage: React.FC = () => {
                     {/* Balance check */}
                     {(() => {
                       const bal = balances.find((b) => b.memberId === deletingMember.id)?.netPaise ?? 0n;
-                      if (bal === 0n) {
+                      const hasBills = expenses.some(
+                        (e) =>
+                          e.paid_by_member_id === deletingMember.id ||
+                          e.splits?.some((s) => s.member_id === deletingMember.id)
+                      );
+                      const isLocked = bal !== 0n || hasBills;
+
+                      if (isLocked) {
                         return (
-                          <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/40 rounded-xl text-xs text-emerald-700 dark:text-emerald-300">
-                            ✓ Balance is ₹0 (Zero debt). This roommate can be safely removed from future expenses.
-                          </div>
-                        );
-                      } else if (bal > 0n) {
-                        return (
-                          <div className="p-3 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/40 rounded-xl text-xs text-amber-700 dark:text-amber-300 space-y-1">
-                            <strong>Notice:</strong> Flat owes this roommate <strong>{formatINR(bal)}</strong>. Removing them will clear their flat records and membership.
-                          </div>
-                        );
-                      } else {
-                        return (
-                          <div className="p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/40 rounded-xl text-xs text-rose-700 dark:text-rose-300 space-y-1">
-                            <strong>Warning:</strong> This roommate owes the flat <strong>{formatINR(-bal)}</strong>. Removing them will clear their debts from flat records.
+                          <div className="space-y-2">
+                            <div className="p-3.5 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/40 rounded-xl text-xs text-rose-700 dark:text-rose-300 space-y-1">
+                              <span className="font-bold block">🔒 Account Settle Nahi Hai</span>
+                              <p className="leading-relaxed">
+                                Jab tak poora hisaab settle na ho aur balance ₹0 na ho, tab tak koi bhi roommate delete nahi ho sakta.
+                              </p>
+                              <div className="mt-2 font-semibold">
+                                {bal > 0n
+                                  ? `Flat owes them: ${formatINR(bal)}`
+                                  : bal < 0n
+                                  ? `Roommate owes: ${formatINR(-bal)}`
+                                  : "Active bills pending in flat ledger"}
+                              </div>
+                            </div>
+                            <p className="text-[11px] text-[var(--text-muted)] leading-relaxed">
+                              Pehle "Settle Up" me jaakar inka hisaab clear karein. Uske baad hi inko flat se remove kiya ja sakega.
+                            </p>
                           </div>
                         );
                       }
-                    })()}
 
-                    <p className="text-xs text-[var(--text-muted)] leading-relaxed">
-                      Are you sure you want to remove <strong>{deletingMember.display_name}</strong> from this flat?
-                    </p>
+                      return (
+                        <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/40 rounded-xl text-xs text-emerald-700 dark:text-emerald-300">
+                          ✓ Balance is ₹0 (Zero debt). Inka koi pending bill nahi hai, inko safely remove kiya ja sakta hai.
+                        </div>
+                      );
+                    })()}
 
                     <div className="flex items-center justify-end gap-2 pt-2">
                       <button
@@ -1291,21 +1303,50 @@ export const GroupHomePage: React.FC = () => {
                       >
                         Cancel
                       </button>
-                      <button
-                        type="button"
-                        onClick={() => deleteMemberMutation.mutate({ memberId: deletingMember.id, force: true })}
-                        disabled={deleteMemberMutation.isPending}
-                        className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold flex items-center gap-1.5 shadow-sm cursor-pointer disabled:opacity-50"
-                      >
-                        {deleteMemberMutation.isPending ? (
-                          <>
-                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                            <span>Removing...</span>
-                          </>
-                        ) : (
-                          <span>Yes, Remove Roommate</span>
-                        )}
-                      </button>
+                      {(() => {
+                        const bal = balances.find((b) => b.memberId === deletingMember.id)?.netPaise ?? 0n;
+                        const hasBills = expenses.some(
+                          (e) =>
+                            e.paid_by_member_id === deletingMember.id ||
+                            e.splits?.some((s) => s.member_id === deletingMember.id)
+                        );
+                        const isLocked = bal !== 0n || hasBills;
+
+                        if (isLocked) {
+                          return (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setDeletingMember(null);
+                                setActiveTab("settle");
+                              }}
+                              className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold cursor-pointer shadow-sm"
+                            >
+                              Go to Settle Up →
+                            </button>
+                          );
+                        }
+
+                        return (
+                          <button
+                            type="button"
+                            onClick={() =>
+                              deleteMemberMutation.mutate({ memberId: deletingMember.id, force: false })
+                            }
+                            disabled={deleteMemberMutation.isPending}
+                            className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold flex items-center gap-1.5 shadow-sm cursor-pointer disabled:opacity-50"
+                          >
+                            {deleteMemberMutation.isPending ? (
+                              <>
+                                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                <span>Removing...</span>
+                              </>
+                            ) : (
+                              <span>Yes, Remove Roommate</span>
+                            )}
+                          </button>
+                        );
+                      })()}
                     </div>
                   </div>
                 </div>
