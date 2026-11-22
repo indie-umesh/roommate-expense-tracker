@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-quer
 import { supabase } from "./lib/supabase";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { ThemeProvider } from "./context/ThemeContext";
+import { LanguageProvider } from "./context/LanguageContext";
 import { AuthPage } from "./pages/AuthPage";
 import { GroupsPage } from "./pages/GroupsPage";
 import { GroupHomePage } from "./pages/GroupHomePage";
@@ -98,8 +99,9 @@ export function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <AuthProvider>
-          <BrowserRouter>
+        <LanguageProvider>
+          <AuthProvider>
+            <BrowserRouter>
             <Routes>
               <Route path="/" element={<RootRedirect />} />
               <Route
@@ -170,8 +172,9 @@ export function App() {
             </Routes>
           </BrowserRouter>
         </AuthProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
+      </LanguageProvider>
+    </ThemeProvider>
+  </QueryClientProvider>
   );
 }
 

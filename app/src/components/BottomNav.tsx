@@ -1,5 +1,6 @@
 import React from "react";
 import { Plus, Home, Table, CreditCard, Users } from "lucide-react";
+import { useLanguage } from "../context/LanguageContext";
 
 export type NavTab = "activity" | "sheet" | "settle" | "members";
 
@@ -14,6 +15,8 @@ export const BottomNav: React.FC<BottomNavProps> = ({
   onChangeTab,
   onOpenAddModal,
 }) => {
+  const { t } = useLanguage();
+
   return (
     <div className="fixed bottom-0 left-0 right-0 z-40 max-w-md mx-auto pointer-events-none px-4 pb-4 md:hidden">
       <div className="pointer-events-auto bg-white/95 dark:bg-[#121826]/95 backdrop-blur-xl border border-slate-200/80 dark:border-white/10 rounded-2xl p-2 shadow-lg flex items-center justify-between">
@@ -27,7 +30,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
           }`}
         >
           <Home className="w-5 h-5" />
-          <span className="text-[10px] font-medium tracking-tight">Home</span>
+          <span className="text-[10px] font-medium tracking-tight">{t("home")}</span>
         </button>
 
         {/* Tab 2: Sheet */}
@@ -40,7 +43,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
           }`}
         >
           <Table className="w-5 h-5" />
-          <span className="text-[10px] font-medium tracking-tight">Sheet</span>
+          <span className="text-[10px] font-medium tracking-tight">{t("sheet")}</span>
         </button>
 
         {/* Center Raised Action Button: + Add */}
@@ -48,7 +51,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
           <button
             onClick={onOpenAddModal}
             className="w-13 h-13 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white flex items-center justify-center border-4 border-white dark:border-[#090d16] shadow-md transition active:scale-95 cursor-pointer"
-            title="Add Expense"
+            title={t("add_expense")}
           >
             <Plus className="w-6 h-6 stroke-[2.5]" />
           </button>
@@ -64,7 +67,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
           }`}
         >
           <CreditCard className="w-5 h-5" />
-          <span className="text-[10px] font-medium tracking-tight">Settle</span>
+          <span className="text-[10px] font-medium tracking-tight">{t("settle")}</span>
         </button>
 
         {/* Tab 4: Members */}
@@ -77,7 +80,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
           }`}
         >
           <Users className="w-5 h-5" />
-          <span className="text-[10px] font-medium tracking-tight">Mates</span>
+          <span className="text-[10px] font-medium tracking-tight">{t("roommates")}</span>
         </button>
       </div>
     </div>

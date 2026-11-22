@@ -7,6 +7,8 @@ import { formatINR } from "../lib/money";
 import { calculateBalances } from "../lib/balances";
 import type { Group, Member, Expense, Settlement } from "../lib/types";
 import { RemoveMemberModal } from "../components/RemoveMemberModal";
+import { SettingsModal } from "../components/SettingsModal";
+import { useLanguage } from "../context/LanguageContext";
 import {
   ChevronLeft,
   Share2,
@@ -22,13 +24,16 @@ import {
   X,
   CreditCard,
   Lock,
+  Globe,
 } from "lucide-react";
 
 export const MembersPage: React.FC = () => {
   const { groupId } = useParams<{ groupId: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { t, currentLanguage } = useLanguage();
   const queryClient = useQueryClient();
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   // Add roommate state
   const [isAddingMember, setIsAddingMember] = useState(false);
@@ -298,8 +303,15 @@ export const MembersPage: React.FC = () => {
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
-          <h1 className="font-bold text-base text-[var(--text-primary)] tracking-tight">Roommates & Details</h1>
-          <div className="w-9" />
+          <h1 className="font-bold text-base text-[var(--text-primary)] tracking-tight">{t("roommates")}</h1>
+          <button
+            onClick={() => setIsSettingsOpen(true)}
+            className="h-9 px-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-white/10 transition cursor-pointer flex items-center gap-1.5 shrink-0"
+            title="Settings & Language"
+          >
+            <Globe className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400 shrink-0" />
+            <span className="text-xs font-bold uppercase">{currentLanguage.code}</span>
+          </button>
         </div>
       </header>
 
@@ -750,6 +762,11 @@ export const MembersPage: React.FC = () => {
           </div>
         </div>
       </main>
+
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+      />
     </div>
   );
 };

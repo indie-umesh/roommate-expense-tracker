@@ -4,6 +4,7 @@ import { MemoryRouter, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "../../context/ThemeContext";
 import { AuthProvider } from "../../context/AuthContext";
+import { LanguageProvider } from "../../context/LanguageContext";
 import { AuthPage } from "../../pages/AuthPage";
 import { GroupsPage } from "../../pages/GroupsPage";
 import { GroupHomePage } from "../../pages/GroupHomePage";
@@ -15,11 +16,13 @@ describe("Component SSR & Render Integrity", () => {
     const html = renderToString(
       <QueryClientProvider client={queryClient}>
         <ThemeProvider>
-          <AuthProvider>
-            <MemoryRouter>
-              <AuthPage />
-            </MemoryRouter>
-          </AuthProvider>
+          <LanguageProvider>
+            <AuthProvider>
+              <MemoryRouter>
+                <AuthPage />
+              </MemoryRouter>
+            </AuthProvider>
+          </LanguageProvider>
         </ThemeProvider>
       </QueryClientProvider>
     );
@@ -30,11 +33,13 @@ describe("Component SSR & Render Integrity", () => {
     const html = renderToString(
       <QueryClientProvider client={queryClient}>
         <ThemeProvider>
-          <AuthProvider>
-            <MemoryRouter>
-              <GroupsPage />
-            </MemoryRouter>
-          </AuthProvider>
+          <LanguageProvider>
+            <AuthProvider>
+              <MemoryRouter>
+                <GroupsPage />
+              </MemoryRouter>
+            </AuthProvider>
+          </LanguageProvider>
         </ThemeProvider>
       </QueryClientProvider>
     );
@@ -45,13 +50,15 @@ describe("Component SSR & Render Integrity", () => {
     const html = renderToString(
       <QueryClientProvider client={queryClient}>
         <ThemeProvider>
-          <AuthProvider>
-            <MemoryRouter initialEntries={["/group/6ba81de6-91e2-4f49-8a12-4524da7f9250"]}>
-              <Routes>
-                <Route path="/group/:groupId" element={<GroupHomePage />} />
-              </Routes>
-            </MemoryRouter>
-          </AuthProvider>
+          <LanguageProvider>
+            <AuthProvider>
+              <MemoryRouter initialEntries={["/group/6ba81de6-91e2-4f49-8a12-4524da7f9250"]}>
+                <Routes>
+                  <Route path="/group/:groupId" element={<GroupHomePage />} />
+                </Routes>
+              </MemoryRouter>
+            </AuthProvider>
+          </LanguageProvider>
         </ThemeProvider>
       </QueryClientProvider>
     );

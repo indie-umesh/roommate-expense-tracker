@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
+import { useLanguage } from "../context/LanguageContext";
 import { formatINR } from "../lib/money";
 import { simplifyDebts, calculateBalances } from "../lib/balances";
 import type { Group, Member, Expense, Settlement } from "../lib/types";
@@ -13,6 +14,7 @@ import { ExcelSheetView } from "../components/ExcelSheetView";
 import { AddExpenseModal } from "../components/AddExpenseModal";
 import { RecordSettlementModal } from "../components/RecordSettlementModal";
 import { RemoveMemberModal } from "../components/RemoveMemberModal";
+import { SettingsModal } from "../components/SettingsModal";
 import confetti from "canvas-confetti";
 import {
   Receipt,
@@ -40,6 +42,8 @@ import {
   X,
   History,
   Lock,
+  Globe,
+  Settings,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -48,7 +52,9 @@ export const GroupHomePage: React.FC = () => {
   const navigate = useNavigate();
   const { user, profile, signOut } = useAuth();
   const { theme, toggleTheme } = useTheme();
+  const { t, currentLanguage } = useLanguage();
   const queryClient = useQueryClient();
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const [activeTab, setActiveTab] = useState<NavTab>("activity");
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -394,7 +400,7 @@ export const GroupHomePage: React.FC = () => {
               }`}
             >
               <Home className="w-3.5 h-3.5" />
-              <span>Overview</span>
+              <span>{t("overview")}</span>
             </button>
             <button
               onClick={() => setActiveTab("sheet")}
@@ -405,7 +411,7 @@ export const GroupHomePage: React.FC = () => {
               }`}
             >
               <Table className="w-3.5 h-3.5" />
-              <span>Spreadsheet Matrix</span>
+              <span>{t("spreadsheet")}</span>
             </button>
             <button
               onClick={() => setActiveTab("settle")}
@@ -416,7 +422,7 @@ export const GroupHomePage: React.FC = () => {
               }`}
             >
               <CreditCard className="w-3.5 h-3.5" />
-              <span>Settle Up</span>
+              <span>{t("settle")}</span>
             </button>
             <button
               onClick={() => setActiveTab("members")}
@@ -427,12 +433,22 @@ export const GroupHomePage: React.FC = () => {
               }`}
             >
               <Users className="w-3.5 h-3.5" />
-              <span>Roommates</span>
+              <span>{t("roommates")}</span>
             </button>
           </div>
 
           {/* Right: Actions with Uniform Height & Balance */}
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+            {/* Language & Settings Selector Button */}
+            <button
+              onClick={() => setIsSettingsOpen(true)}
+              className="h-9 px-2 sm:px-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-white/10 transition cursor-pointer flex items-center gap-1.5 shrink-0"
+              title="Settings & Language"
+            >
+              <Globe className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400 shrink-0" />
+              <span className="text-xs font-bold uppercase tracking-tight">{currentLanguage.code}</span>
+            </button>
+
             {/* Invite Code Pill */}
             <button
               onClick={copyCode}
@@ -442,7 +458,7 @@ export const GroupHomePage: React.FC = () => {
               {copiedCode ? (
                 <>
                   <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                  <span className="text-emerald-600 font-bold">Copied</span>
+                  <span className="text-emerald-600 font-bold">{t("copied")}</span>
                 </>
               ) : (
                 <>
@@ -458,7 +474,7 @@ export const GroupHomePage: React.FC = () => {
               className="hidden md:flex h-9 items-center gap-1.5 px-3.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold shadow-xs transition active:scale-[0.98] cursor-pointer shrink-0 whitespace-nowrap"
             >
               <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
-              <span>Add Expense</span>
+              <span>{t("add_expense")}</span>
             </button>
 
             {/* Theme Toggle Button */}
@@ -472,6 +488,15 @@ export const GroupHomePage: React.FC = () => {
               ) : (
                 <Sun className="w-4 h-4 text-amber-400" />
               )}
+            </button>
+
+            {/* Settings Quick Cog */}
+            <button
+              onClick={() => setIsSettingsOpen(true)}
+              className="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition cursor-pointer flex items-center justify-center border border-slate-200/80 dark:border-white/10 shrink-0"
+              title="Settings"
+            >
+              <Settings className="w-4 h-4" />
             </button>
 
             {/* Logout Button */}
@@ -1388,6 +1413,12 @@ export const GroupHomePage: React.FC = () => {
         initialFromMemberId={settlementModalInitial.fromMemberId}
         initialToMemberId={settlementModalInitial.toMemberId}
         initialAmountPaise={settlementModalInitial.amountPaise}
+      />
+
+      {/* Settings & Language Switcher Modal */}
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
       />
     </div>
   );

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../lib/supabase";
 import { formatINR } from "../lib/money";
+import { useLanguage } from "../context/LanguageContext";
 import type { Member, Expense } from "../lib/types";
 import type { MemberBalance } from "../lib/balances";
 import {
@@ -36,6 +37,7 @@ export const RemoveMemberModal: React.FC<RemoveMemberModalProps> = ({
   onGoToSettleUp,
 }) => {
   const queryClient = useQueryClient();
+  const { t } = useLanguage();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const deleteMemberMutation = useMutation({
@@ -98,12 +100,14 @@ export const RemoveMemberModal: React.FC<RemoveMemberModalProps> = ({
             </div>
             <div>
               <h3 className="font-bold text-base text-[var(--text-primary)] leading-tight">
-                {isLocked ? `Cannot Remove ${member.display_name}` : `Remove ${member.display_name}?`}
+                {isLocked
+                  ? t("cannot_remove_title", { name: member.display_name })
+                  : t("remove_title", { name: member.display_name })}
               </h3>
               <p className="text-xs text-[var(--text-muted)] mt-1 font-medium">
                 {isLocked
-                  ? "🔒 Account settle nahi hai • Unsettled dues pending"
-                  : member.user_id ? "Active registered roommate" : "Unclaimed ghost roommate"}
+                  ? t("account_not_settled")
+                  : member.user_id ? t("active_registered") : t("unclaimed_roommate")}
               </p>
             </div>
           </div>
@@ -130,32 +134,32 @@ export const RemoveMemberModal: React.FC<RemoveMemberModalProps> = ({
               <div className="p-4 bg-rose-50/80 dark:bg-rose-950/30 border border-rose-200/80 dark:border-rose-900/40 rounded-xl space-y-2">
                 <div className="flex items-center gap-1.5 text-rose-700 dark:text-rose-300 font-bold text-xs">
                   <AlertTriangle className="w-4 h-4 shrink-0" />
-                  <span>Roommate Remove Karne Ki Permission Blocked Hai</span>
+                  <span>{t("removal_blocked")}</span>
                 </div>
                 <p className="text-xs text-rose-800/90 dark:text-rose-200/90 leading-relaxed font-normal">
-                  Jab tak inka poora hisaab <strong>₹0 (Zero)</strong> nahi ho jata aur sabhi bills settle nahi ho jate, tab tak inko flat se remove nahi kiya ja sakta.
+                  {t("removal_blocked_desc")}
                 </p>
               </div>
 
               {/* Exact Financial Status Breakdown */}
               <div className="p-3.5 bg-slate-50 dark:bg-white/[0.03] border border-slate-200 dark:border-white/10 rounded-xl space-y-2">
                 <span className="text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider block">
-                  Pending Dues Status
+                  {t("pending_dues_status")}
                 </span>
 
                 <div className="flex items-center justify-between text-xs py-1 border-b border-slate-100 dark:border-white/5">
-                  <span className="text-[var(--text-muted)]">Net Balance:</span>
+                  <span className="text-[var(--text-muted)]">{t("net_balance")}:</span>
                   <span className="font-bold">
                     {bal > 0n ? (
                       <span className="text-emerald-600 dark:text-emerald-400">
-                        Flat owes them {formatINR(bal)}
+                        {t("flat_owes_them", { amount: formatINR(bal) })}
                       </span>
                     ) : bal < 0n ? (
                       <span className="text-rose-600 dark:text-rose-400">
-                        Owes flat {formatINR(-bal)}
+                        {t("owes_flat", { amount: formatINR(-bal) })}
                       </span>
                     ) : (
-                      <span className="text-[var(--text-muted)]">₹0 (Zero debt)</span>
+                      <span className="text-[var(--text-muted)]">{t("zero_debt")}</span>
                     )}
                   </span>
                 </div>
@@ -164,7 +168,7 @@ export const RemoveMemberModal: React.FC<RemoveMemberModalProps> = ({
                   <div className="flex items-center justify-between text-xs py-1 border-b border-slate-100 dark:border-white/5">
                     <span className="text-[var(--text-muted)] flex items-center gap-1">
                       <Receipt className="w-3.5 h-3.5" />
-                      <span>Bills paid by them:</span>
+                      <span>{t("bills_paid")}</span>
                     </span>
                     <span className="font-semibold text-[var(--text-primary)]">
                       {memberExpensesPaid.length} active {memberExpensesPaid.length === 1 ? "bill" : "bills"}
@@ -174,7 +178,7 @@ export const RemoveMemberModal: React.FC<RemoveMemberModalProps> = ({
 
                 {memberSplits.length > 0 && (
                   <div className="flex items-center justify-between text-xs py-1">
-                    <span className="text-[var(--text-muted)]">Split shares in ledger:</span>
+                    <span className="text-[var(--text-muted)]">{t("split_shares")}</span>
                     <span className="font-semibold text-[var(--text-primary)]">
                       {memberSplits.length} active {memberSplits.length === 1 ? "bill" : "bills"}
                     </span>
@@ -184,11 +188,11 @@ export const RemoveMemberModal: React.FC<RemoveMemberModalProps> = ({
 
               {/* Next Steps Guidance */}
               <div className="text-[11px] text-[var(--text-muted)] leading-relaxed space-y-1 bg-amber-50/60 dark:bg-amber-950/20 border border-amber-200/60 dark:border-amber-900/30 p-3 rounded-xl">
-                <span className="font-bold text-amber-800 dark:text-amber-300 block">💡 Inko remove kaise karein?</span>
+                <span className="font-bold text-amber-800 dark:text-amber-300 block">💡 {t("how_to_remove")}</span>
                 <p className="text-amber-900/80 dark:text-amber-200/80">
-                  1. "Settle Up" par jaakar inka hisaab chukayein ya payment record karein.<br />
-                  2. Agar koi bill galat log ho gaya tha, toh bill detail me jaakar "Cancel Bill" karein.<br />
-                  3. Dues ₹0 hone ke baad hi safe removal unlock hogi.
+                  {t("how_to_remove_step1")}<br />
+                  {t("how_to_remove_step2")}<br />
+                  {t("how_to_remove_step3")}
                 </p>
               </div>
             </div>
@@ -197,14 +201,14 @@ export const RemoveMemberModal: React.FC<RemoveMemberModalProps> = ({
               <div className="p-3.5 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/40 rounded-xl text-xs text-emerald-800 dark:text-emerald-300 flex items-start gap-2">
                 <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600 dark:text-emerald-400 mt-0.5" />
                 <div>
-                  <span className="font-bold block">Account 100% Settled Hai (₹0 Balance)</span>
+                  <span className="font-bold block">{t("settled_clean")}</span>
                   <p className="mt-0.5 leading-relaxed text-emerald-700 dark:text-emerald-300/90 font-normal">
-                    Inka koi bhi active bill ya hisaab pending nahi hai. Inko safely remove kiya ja sakta hai.
+                    {t("settled_clean_desc")}
                   </p>
                 </div>
               </div>
               <p className="text-xs text-[var(--text-muted)] leading-relaxed">
-                Kya aap sach me <strong>{member.display_name}</strong> ko flat se remove karna chahte hain?
+                {t("confirm_remove_prompt", { name: member.display_name })}
               </p>
             </div>
           )}
@@ -217,7 +221,7 @@ export const RemoveMemberModal: React.FC<RemoveMemberModalProps> = ({
             onClick={handleClose}
             className="px-4 py-2 rounded-xl text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-slate-100 dark:hover:bg-white/5 transition cursor-pointer"
           >
-            {isLocked ? "Close / Samajh Gaya" : "Cancel"}
+            {isLocked ? t("close_understood") : t("cancel")}
           </button>
 
           {isLocked ? (
@@ -229,7 +233,7 @@ export const RemoveMemberModal: React.FC<RemoveMemberModalProps> = ({
               }}
               className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer shadow-sm active:scale-[0.98]"
             >
-              <span>Go to Settle Up</span>
+              <span>{t("go_to_settle_up")}</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           ) : (
@@ -247,7 +251,7 @@ export const RemoveMemberModal: React.FC<RemoveMemberModalProps> = ({
               ) : (
                 <>
                   <Trash2 className="w-3.5 h-3.5" />
-                  <span>Yes, Remove Roommate</span>
+                  <span>{t("yes_remove")}</span>
                 </>
               )}
             </button>
