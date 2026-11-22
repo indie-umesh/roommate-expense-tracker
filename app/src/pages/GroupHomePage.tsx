@@ -34,6 +34,11 @@ import {
   ChevronUp,
   LogOut,
   Sparkles,
+  Phone,
+  QrCode,
+  FileText,
+  Edit2,
+  X,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -49,9 +54,23 @@ export const GroupHomePage: React.FC = () => {
   const [copiedCode, setCopiedCode] = useState(false);
   const [newRoommateFirstName, setNewRoommateFirstName] = useState("");
   const [newRoommateSurname, setNewRoommateSurname] = useState("");
+  const [newRoommatePhone, setNewRoommatePhone] = useState("");
+  const [newRoommateUpiId, setNewRoommateUpiId] = useState("");
+  const [newRoommateNotes, setNewRoommateNotes] = useState("");
   const [showAddRoommate, setShowAddRoommate] = useState(false);
   const [showDeletedBills, setShowDeletedBills] = useState(false);
   const [addRoommateError, setAddRoommateError] = useState<string | null>(null);
+
+  // Edit roommate state
+  const [editingMember, setEditingMember] = useState<Member | null>(null);
+  const [editDisplayName, setEditDisplayName] = useState("");
+  const [editPhone, setEditPhone] = useState("");
+  const [editUpiId, setEditUpiId] = useState("");
+  const [editNotes, setEditNotes] = useState("");
+
+  // Delete roommate state
+  const [deletingMember, setDeletingMember] = useState<Member | null>(null);
+  const [copiedUpiId, setCopiedUpiId] = useState<string | null>(null);
 
   // Fetch group details
   const { data: group } = useQuery<Group>({
@@ -219,14 +238,27 @@ export const GroupHomePage: React.FC = () => {
     },
   });
 
-  // Add Member Mutation with Duplicate Name Safeguard
+  // Add Member Mutation with Full Details
   const addMemberMutation = useMutation({
-    mutationFn: async ({ name }: { name: string }) => {
+    mutationFn: async ({
+      name,
+      phone,
+      upiId,
+      notes,
+    }: {
+      name: string;
+      phone?: string;
+      upiId?: string;
+      notes?: string;
+    }) => {
       const { error } = await supabase.from("members").insert({
         group_id: groupId,
         user_id: null,
         display_name: name.trim(),
         role: "member",
+        phone: phone?.trim() || null,
+        upi_id: upiId?.trim() || null,
+        notes: notes?.trim() || null,
       });
       if (error) throw error;
     },
@@ -234,8 +266,73 @@ export const GroupHomePage: React.FC = () => {
       queryClient.invalidateQueries({ queryKey: ["group-members", groupId] });
       setNewRoommateFirstName("");
       setNewRoommateSurname("");
+      setNewRoommatePhone("");
+      setNewRoommateUpiId("");
+      setNewRoommateNotes("");
       setShowAddRoommate(false);
       setAddRoommateError(null);
+    },
+    onError: (err: any) => {
+      setAddRoommateError(err?.message || "Failed to add roommate");
+    },
+  });
+
+  // Edit Member Mutation
+  const editMemberMutation = useMutation({
+    mutationFn: async ({
+      memberId,
+      displayName,
+      phone,
+      upiId,
+      notes,
+    }: {
+      memberId: string;
+      displayName: string;
+      phone?: string;
+      upiId?: string;
+      notes?: string;
+    }) => {
+      const { error } = await supabase
+        .from("members")
+        .update({
+          display_name: displayName.trim(),
+          phone: phone?.trim() || null,
+          upi_id: upiId?.trim() || null,
+          notes: notes?.trim() || null,
+        })
+        .eq("id", memberId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["group-members", groupId] });
+      setEditingMember(null);
+      setAddRoommateError(null);
+    },
+    onError: (err: any) => {
+      setAddRoommateError(err?.message || "Failed to update roommate");
+    },
+  });
+
+  // Delete Member Mutation via atomic remove_member RPC
+  const deleteMemberMutation = useMutation({
+    mutationFn: async (memberId: string) => {
+      const { data, error } = await supabase.rpc("remove_member", {
+        p_member_id: memberId,
+      });
+      if (error) throw error;
+      if (data && !data.success) {
+        throw new Error(data.error || "Cannot remove roommate");
+      }
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["group-members", groupId] });
+      queryClient.invalidateQueries({ queryKey: ["group-balances", groupId] });
+      setDeletingMember(null);
+      setAddRoommateError(null);
+    },
+    onError: (err: any) => {
+      setAddRoommateError(err?.message || "Failed to remove roommate");
     },
   });
 
@@ -266,7 +363,44 @@ export const GroupHomePage: React.FC = () => {
     }
 
     setAddRoommateError(null);
-    addMemberMutation.mutate({ name: fullName });
+    addMemberMutation.mutate({
+      name: fullName,
+      phone: newRoommatePhone,
+      upiId: newRoommateUpiId,
+      notes: newRoommateNotes,
+    });
+  }
+
+  function handleStartEdit(m: Member) {
+    setEditingMember(m);
+    setEditDisplayName(m.display_name);
+    setEditPhone(m.phone || "");
+    setEditUpiId(m.upi_id || "");
+    setEditNotes(m.notes || "");
+    setAddRoommateError(null);
+  }
+
+  function handleEditRoommateSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!editingMember) return;
+    if (!editDisplayName.trim()) {
+      setAddRoommateError("Please enter a name.");
+      return;
+    }
+
+    editMemberMutation.mutate({
+      memberId: editingMember.id,
+      displayName: editDisplayName,
+      phone: editPhone,
+      upiId: editUpiId,
+      notes: editNotes,
+    });
+  }
+
+  function copyUpi(upi: string) {
+    navigator.clipboard.writeText(upi);
+    setCopiedUpiId(upi);
+    setTimeout(() => setCopiedUpiId(null), 2000);
   }
 
   function copyCode() {
@@ -855,13 +989,20 @@ export const GroupHomePage: React.FC = () => {
               {showAddRoommate && (
                 <form
                   onSubmit={handleAddRoommateSubmit}
-                  className="card-clean p-5 space-y-3.5"
+                  className="card-clean p-5 space-y-4 border-indigo-200 dark:border-indigo-800/40"
                 >
-                  <div className="flex items-center justify-between">
-                    <h4 className="font-semibold text-sm text-[var(--text-primary)]">Add New Roommate</h4>
-                    <span className="text-[11px] text-[var(--text-muted)]">
-                      They can claim this spot when they sign up!
-                    </span>
+                  <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-white/10">
+                    <h4 className="font-bold text-sm text-[var(--text-primary)]">Add Roommate Details</h4>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowAddRoommate(false);
+                        setAddRoommateError(null);
+                      }}
+                      className="text-[var(--text-muted)] hover:text-[var(--text-primary)] p-1 rounded"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
                   </div>
 
                   {addRoommateError && (
@@ -882,7 +1023,7 @@ export const GroupHomePage: React.FC = () => {
                     </div>
                   )}
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                     <div>
                       <label className="block text-[11px] font-semibold text-[var(--text-muted)] mb-1">
                         First Name *
@@ -891,7 +1032,7 @@ export const GroupHomePage: React.FC = () => {
                         type="text"
                         required
                         autoFocus
-                        placeholder="e.g. Aman, Ritesh"
+                        placeholder="e.g. Aman, Umesh"
                         value={newRoommateFirstName}
                         onChange={(e) => {
                           setNewRoommateFirstName(e.target.value);
@@ -907,7 +1048,7 @@ export const GroupHomePage: React.FC = () => {
                       </label>
                       <input
                         type="text"
-                        placeholder="e.g. Sharma, G."
+                        placeholder="e.g. Sharma, Verma"
                         value={newRoommateSurname}
                         onChange={(e) => {
                           setNewRoommateSurname(e.target.value);
@@ -920,9 +1061,52 @@ export const GroupHomePage: React.FC = () => {
                         }`}
                       />
                     </div>
+
+                    <div>
+                      <label className="block text-[11px] font-semibold text-[var(--text-muted)] mb-1 flex items-center gap-1">
+                        <Phone className="w-3 h-3 text-[var(--text-muted)]" />
+                        <span>Mobile Number (Optional)</span>
+                      </label>
+                      <input
+                        type="tel"
+                        maxLength={10}
+                        placeholder="9876543210"
+                        value={newRoommatePhone}
+                        onChange={(e) => setNewRoommatePhone(e.target.value.replace(/\D/g, ""))}
+                        className="w-full px-3 py-2 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg text-xs text-[var(--text-primary)] focus:outline-none focus:border-indigo-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-semibold text-[var(--text-muted)] mb-1 flex items-center gap-1">
+                        <QrCode className="w-3 h-3 text-[var(--text-muted)]" />
+                        <span>UPI ID / VPA (Optional)</span>
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="e.g. name@okhdfcbank"
+                        value={newRoommateUpiId}
+                        onChange={(e) => setNewRoommateUpiId(e.target.value.trim().toLowerCase())}
+                        className="w-full px-3 py-2 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg text-xs text-[var(--text-primary)] focus:outline-none focus:border-indigo-500"
+                      />
+                    </div>
+
+                    <div className="sm:col-span-2">
+                      <label className="block text-[11px] font-semibold text-[var(--text-muted)] mb-1 flex items-center gap-1">
+                        <FileText className="w-3 h-3 text-[var(--text-muted)]" />
+                        <span>Room / Notes (Optional)</span>
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="e.g. Master Bedroom, Room 201"
+                        value={newRoommateNotes}
+                        onChange={(e) => setNewRoommateNotes(e.target.value)}
+                        className="w-full px-3 py-2 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg text-xs text-[var(--text-primary)] focus:outline-none focus:border-indigo-500"
+                      />
+                    </div>
                   </div>
 
-                  <div className="flex justify-end gap-2.5 pt-2">
+                  <div className="flex justify-end gap-2.5 pt-2 border-t border-slate-100 dark:border-white/10">
                     <button
                       type="button"
                       onClick={() => {
@@ -944,37 +1128,229 @@ export const GroupHomePage: React.FC = () => {
                 </form>
               )}
 
+              {/* Edit Roommate Inline Modal/Card */}
+              {editingMember && (
+                <form
+                  onSubmit={handleEditRoommateSubmit}
+                  className="card-clean p-5 space-y-4 border-indigo-300 dark:border-indigo-700/60"
+                >
+                  <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-white/10">
+                    <div>
+                      <h4 className="font-bold text-sm text-[var(--text-primary)]">Edit Roommate Details</h4>
+                      <p className="text-[11px] text-[var(--text-muted)]">Update name, phone number, UPI ID, or room notes.</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setEditingMember(null)}
+                      className="text-[var(--text-muted)] hover:text-[var(--text-primary)] p-1 rounded"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    <div>
+                      <label className="block text-[11px] font-semibold text-[var(--text-muted)] mb-1">
+                        Full Name *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={editDisplayName}
+                        onChange={(e) => setEditDisplayName(e.target.value)}
+                        className="w-full px-3 py-2 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg text-xs text-[var(--text-primary)] focus:outline-none focus:border-indigo-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-semibold text-[var(--text-muted)] mb-1 flex items-center gap-1">
+                        <Phone className="w-3 h-3 text-[var(--text-muted)]" />
+                        <span>Mobile Number</span>
+                      </label>
+                      <input
+                        type="tel"
+                        maxLength={10}
+                        placeholder="9876543210"
+                        value={editPhone}
+                        onChange={(e) => setEditPhone(e.target.value.replace(/\D/g, ""))}
+                        className="w-full px-3 py-2 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg text-xs text-[var(--text-primary)] focus:outline-none focus:border-indigo-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-semibold text-[var(--text-muted)] mb-1 flex items-center gap-1">
+                        <QrCode className="w-3 h-3 text-[var(--text-muted)]" />
+                        <span>UPI ID / VPA</span>
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="e.g. name@oksbi"
+                        value={editUpiId}
+                        onChange={(e) => setEditUpiId(e.target.value.trim().toLowerCase())}
+                        className="w-full px-3 py-2 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg text-xs text-[var(--text-primary)] focus:outline-none focus:border-indigo-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-semibold text-[var(--text-muted)] mb-1 flex items-center gap-1">
+                        <FileText className="w-3 h-3 text-[var(--text-muted)]" />
+                        <span>Room / Notes</span>
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="e.g. Master Bedroom"
+                        value={editNotes}
+                        onChange={(e) => setEditNotes(e.target.value)}
+                        className="w-full px-3 py-2 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg text-xs text-[var(--text-primary)] focus:outline-none focus:border-indigo-500"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end gap-2 pt-2 border-t border-slate-100 dark:border-white/10">
+                    <button
+                      type="button"
+                      onClick={() => setEditingMember(null)}
+                      className="px-3.5 py-1.5 text-xs font-medium text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={editMemberMutation.isPending}
+                      className="px-4 py-1.5 btn-primary text-xs font-medium rounded-lg shadow-xs"
+                    >
+                      {editMemberMutation.isPending ? "Saving..." : "Update Details"}
+                    </button>
+                  </div>
+                </form>
+              )}
+
+              {/* Delete Roommate Alert Card */}
+              {deletingMember && (
+                <div className="card-clean p-5 border-rose-300 dark:border-rose-900/60 bg-rose-50/50 dark:bg-rose-950/20 space-y-3">
+                  <div className="flex items-center gap-2 text-rose-600 dark:text-rose-400 font-bold text-sm">
+                    <Trash2 className="w-4 h-4" />
+                    <span>Remove Roommate: {deletingMember.display_name}?</span>
+                  </div>
+                  <p className="text-xs text-[var(--text-muted)]">
+                    Are you sure you want to remove <strong>{deletingMember.display_name}</strong> from this flat? Roommates with logged expenses or splits cannot be removed until those are settled.
+                  </p>
+                  <div className="flex justify-end gap-2 pt-1">
+                    <button
+                      type="button"
+                      onClick={() => setDeletingMember(null)}
+                      className="px-3.5 py-1.5 text-xs font-medium text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => deleteMemberMutation.mutate(deletingMember.id)}
+                      disabled={deleteMemberMutation.isPending}
+                      className="px-4 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-xs font-medium shadow-xs disabled:opacity-50 cursor-pointer"
+                    >
+                      {deleteMemberMutation.isPending ? "Removing..." : "Yes, Remove"}
+                    </button>
+                  </div>
+                </div>
+              )}
+
               {/* Responsive Roommate Cards Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
                 {members.map((member) => (
                   <div
                     key={member.id}
-                    className="card-clean p-4 flex items-center justify-between"
+                    className="card-clean p-4 flex flex-col justify-between gap-3 hover:border-slate-300 dark:hover:border-white/20 transition"
                   >
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-white/5 border border-indigo-100 dark:border-white/10 text-indigo-600 dark:text-indigo-400 font-bold text-xs flex items-center justify-center shrink-0">
-                        {member.display_name.slice(0, 2).toUpperCase()}
+                    <div>
+                      {/* Top Row: Avatar + Name + Badges + Actions */}
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-white/5 border border-indigo-100 dark:border-white/10 text-indigo-600 dark:text-indigo-400 font-bold text-xs flex items-center justify-center shrink-0">
+                            {member.display_name.slice(0, 2).toUpperCase()}
+                          </div>
+                          <div>
+                            <h4 className="font-semibold text-sm text-[var(--text-primary)] flex items-center gap-1.5">
+                              <span>{member.display_name}</span>
+                              {member.user_id === user?.id && (
+                                <span className="text-[10px] font-semibold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-200 dark:border-indigo-500/30 px-1.5 py-0.2 rounded-md">
+                                  You
+                                </span>
+                              )}
+                            </h4>
+                            <p className="text-[11px] text-[var(--text-muted)] mt-0.5">
+                              {member.role === "admin" ? "Admin" : "Roommate"} • {member.user_id ? "Active member" : "Unclaimed ghost spot"}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Action Menu: Edit & Delete */}
+                        <div className="flex items-center gap-1">
+                          <button
+                            onClick={() => handleStartEdit(member)}
+                            className="p-1.5 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-100 dark:hover:bg-white/10 rounded-md transition cursor-pointer"
+                            title="Edit details"
+                          >
+                            <Edit2 className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            onClick={() => setDeletingMember(member)}
+                            className="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-md transition cursor-pointer"
+                            title="Remove roommate"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
                       </div>
-                      <div>
-                        <h4 className="font-semibold text-sm text-[var(--text-primary)] flex items-center gap-1.5">
-                          <span>{member.display_name}</span>
-                          {member.user_id === user?.id && (
-                            <span className="text-[10px] font-semibold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-200 dark:border-indigo-500/30 px-1.5 py-0.2 rounded-md">
-                              You
-                            </span>
-                          )}
-                        </h4>
-                        <p className="text-[11px] text-[var(--text-muted)] mt-0.5">
-                          {member.user_id ? "Active member" : "Unclaimed ghost spot"}
-                        </p>
+
+                      {/* Roommate Details Section (Phone, UPI, Notes) */}
+                      <div className="mt-3 pt-3 border-t border-slate-100 dark:border-white/5 space-y-1.5">
+                        {member.phone ? (
+                          <div className="flex items-center gap-2 text-xs text-[var(--text-muted)]">
+                            <Phone className="w-3.5 h-3.5 shrink-0 text-slate-400" />
+                            <a
+                              href={`tel:${member.phone}`}
+                              className="hover:underline text-[var(--text-primary)] font-medium"
+                            >
+                              +91 {member.phone}
+                            </a>
+                          </div>
+                        ) : (
+                          <div className="text-[11px] text-slate-400 dark:text-slate-600 italic">
+                            No phone number added
+                          </div>
+                        )}
+
+                        {member.upi_id && (
+                          <div className="flex items-center justify-between text-xs text-[var(--text-muted)] bg-slate-50 dark:bg-white/5 p-1.5 px-2 rounded-lg">
+                            <div className="flex items-center gap-1.5 truncate">
+                              <CreditCard className="w-3 h-3 text-emerald-500 shrink-0" />
+                              <span className="font-mono text-[11px] text-[var(--text-primary)] truncate">
+                                {member.upi_id}
+                              </span>
+                            </div>
+                            <button
+                              onClick={() => copyUpi(member.upi_id!)}
+                              className="p-1 hover:text-indigo-600 dark:hover:text-indigo-400 cursor-pointer shrink-0"
+                              title="Copy UPI ID"
+                            >
+                              {copiedUpiId === member.upi_id ? (
+                                <Check className="w-3.5 h-3.5 text-emerald-600" />
+                              ) : (
+                                <Copy className="w-3.5 h-3.5 text-slate-400" />
+                              )}
+                            </button>
+                          </div>
+                        )}
+
+                        {member.notes && (
+                          <div className="flex items-center gap-1.5 text-[11px] text-[var(--text-muted)]">
+                            <FileText className="w-3 h-3 text-slate-400 shrink-0" />
+                            <span className="line-clamp-1">{member.notes}</span>
+                          </div>
+                        )}
                       </div>
                     </div>
-
-                    {member.role === "admin" && (
-                      <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-[var(--text-muted)] font-semibold">
-                        Admin
-                      </span>
-                    )}
                   </div>
                 ))}
               </div>

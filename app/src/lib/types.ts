@@ -20,6 +20,9 @@ export interface Member {
   display_name: string;
   role: "admin" | "member";
   payday_day: number | null;
+  phone?: string | null;
+  upi_id?: string | null;
+  notes?: string | null;
   created_at: string;
 }
 
