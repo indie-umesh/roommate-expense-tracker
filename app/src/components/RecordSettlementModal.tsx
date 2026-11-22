@@ -4,7 +4,7 @@ import { supabase } from "../lib/supabase";
 import { useAuth } from "../context/AuthContext";
 import { rupeesToPaise, paiseToRupees } from "../lib/money";
 import type { Member } from "../lib/types";
-import { X, Check, Loader2, ArrowRight, ArrowLeftRight } from "lucide-react";
+import { X, Check, Loader2, ArrowRight, ArrowLeftRight, Receipt } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
 
@@ -16,6 +16,8 @@ interface RecordSettlementModalProps {
   initialFromMemberId?: string;
   initialToMemberId?: string;
   initialAmountPaise?: bigint;
+  initialNote?: string;
+  contextTitle?: string;
   onSuccess?: () => void;
 }
 
@@ -35,6 +37,8 @@ export const RecordSettlementModal: React.FC<RecordSettlementModalProps> = ({
   initialFromMemberId,
   initialToMemberId,
   initialAmountPaise,
+  initialNote,
+  contextTitle,
   onSuccess,
 }) => {
   const { user } = useAuth();
@@ -66,10 +70,16 @@ export const RecordSettlementModal: React.FC<RecordSettlementModalProps> = ({
       } else {
         setAmountRupees("");
       }
-      setNote("");
+      setNote(initialNote || "");
       setSettledOn(new Date().toISOString().split("T")[0]);
     }
-  }, [isOpen, initialFromMemberId, initialToMemberId, initialAmountPaise]);
+  }, [
+    isOpen,
+    initialFromMemberId,
+    initialToMemberId,
+    initialAmountPaise,
+    initialNote,
+  ]);
 
   // Adjust toMemberId if from and to become identical
   function handleSelectFrom(id: string) {
@@ -187,6 +197,13 @@ export const RecordSettlementModal: React.FC<RecordSettlementModalProps> = ({
                 <X className="w-5 h-5" />
               </button>
             </div>
+
+            {contextTitle && (
+              <div className="mt-3 p-3 bg-indigo-50/80 dark:bg-indigo-950/40 border border-indigo-200/80 dark:border-indigo-800/40 rounded-xl flex items-center gap-2.5 text-xs text-indigo-700 dark:text-indigo-300 font-medium">
+                <Receipt className="w-4 h-4 shrink-0 text-indigo-600 dark:text-indigo-400" />
+                <span className="line-clamp-1">{contextTitle}</span>
+              </div>
+            )}
 
             {error && (
               <div className="mt-3 p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-500/30 rounded-xl text-rose-700 dark:text-rose-300 text-xs font-semibold">

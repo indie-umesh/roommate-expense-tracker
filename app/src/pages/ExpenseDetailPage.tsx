@@ -5,7 +5,14 @@ import { supabase } from "../lib/supabase";
 import { useAuth } from "../context/AuthContext";
 import { formatINR, paiseToRupees, rupeesToPaise } from "../lib/money";
 import type { Member, Expense } from "../lib/types";
-import { ChevronLeft, Edit2, Check, ShieldCheck } from "lucide-react";
+import { RecordSettlementModal } from "../components/RecordSettlementModal";
+import {
+  ChevronLeft,
+  Edit2,
+  Check,
+  ShieldCheck,
+  ArrowLeftRight,
+} from "lucide-react";
 
 export const ExpenseDetailPage: React.FC = () => {
   const { groupId, expenseId } = useParams<{ groupId: string; expenseId: string }>();
@@ -14,6 +21,14 @@ export const ExpenseDetailPage: React.FC = () => {
   const queryClient = useQueryClient();
 
   const [isEditing, setIsEditing] = useState(false);
+  const [showReimburseModal, setShowReimburseModal] = useState(false);
+  const [reimburseParams, setReimburseParams] = useState<{
+    fromMemberId?: string;
+    toMemberId?: string;
+    amountPaise?: bigint;
+    initialNote?: string;
+    contextTitle?: string;
+  }>({});
 
   // Edit form state
   const [editAmount, setEditAmount] = useState("");
@@ -307,27 +322,86 @@ export const ExpenseDetailPage: React.FC = () => {
               </div>
 
               {/* Split Breakdown */}
-              <div className="border-t border-slate-100 dark:border-white/10 pt-4 space-y-2">
+              <div className="border-t border-slate-100 dark:border-white/10 pt-4 space-y-3">
                 <span className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider block">
                   Split Among {expense.splits?.length || 0} Roommates
                 </span>
                 <div className="space-y-2">
                   {expense.splits?.map((split) => {
                     const m = memberMap.get(split.member_id);
+                    const isPayer = split.member_id === expense.paid_by_member_id;
+                    const isMe = split.member_id === myMember?.id;
+
                     return (
                       <div
                         key={split.member_id}
-                        className="flex items-center justify-between text-xs py-1"
+                        className="flex items-center justify-between text-xs py-1.5 px-2 rounded-lg bg-slate-50/50 dark:bg-white/[0.02]"
                       >
-                        <span className="text-[var(--text-primary)] font-medium">
-                          {m?.display_name || "Roommate"}
-                        </span>
-                        <span className="font-semibold text-[var(--text-primary)]">
-                          {formatINR(split.share_paise)}
-                        </span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-[var(--text-primary)] font-medium">
+                            {m?.display_name || "Roommate"}
+                          </span>
+                          {isMe && (
+                            <span className="text-[10px] text-[var(--text-muted)]">(You)</span>
+                          )}
+                          {isPayer && (
+                            <span className="text-[10px] bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 px-1.5 py-0.5 rounded font-semibold">
+                              Paid
+                            </span>
+                          )}
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <span className="font-semibold text-[var(--text-primary)]">
+                            {formatINR(split.share_paise)}
+                          </span>
+                          {!isPayer && (
+                            <button
+                              onClick={() => {
+                                setReimburseParams({
+                                  fromMemberId: split.member_id,
+                                  toMemberId: expense.paid_by_member_id,
+                                  amountPaise: split.share_paise,
+                                  initialNote: `Reimbursement for: ${expense.details}`,
+                                  contextTitle: `Reimburse ${m?.display_name || "Roommate"}'s share for ${expense.details}`,
+                                });
+                                setShowReimburseModal(true);
+                              }}
+                              className="px-2.5 py-1 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-[11px] font-semibold transition cursor-pointer flex items-center gap-1 active:scale-[0.98]"
+                            >
+                              <span>Reimburse Share</span>
+                            </button>
+                          )}
+                        </div>
                       </div>
                     );
                   })}
+                </div>
+
+                {/* Direct Transaction Reimbursement Bar */}
+                <div className="pt-3 border-t border-slate-100 dark:border-white/10 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
+                  <span className="text-[11px] text-[var(--text-muted)]">
+                    Need to refund or adjust this transaction?
+                  </span>
+                  <button
+                    onClick={() => {
+                      setReimburseParams({
+                        fromMemberId:
+                          myMember?.id !== expense.paid_by_member_id
+                            ? myMember?.id
+                            : undefined,
+                        toMemberId: expense.paid_by_member_id,
+                        amountPaise: expense.amount_paise,
+                        initialNote: `Reimbursement for: ${expense.details}`,
+                        contextTitle: `Reimburse transaction: ${expense.details}`,
+                      });
+                      setShowReimburseModal(true);
+                    }}
+                    className="px-3.5 py-2 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer active:scale-[0.98]"
+                  >
+                    <ArrowLeftRight className="w-3.5 h-3.5" />
+                    <span>Reimburse / Adjust this Bill</span>
+                  </button>
                 </div>
               </div>
             </div>
@@ -352,6 +426,19 @@ export const ExpenseDetailPage: React.FC = () => {
           </>
         )}
       </main>
+
+      {/* Record Reimbursement / Settlement Modal */}
+      <RecordSettlementModal
+        groupId={groupId!}
+        members={members}
+        isOpen={showReimburseModal}
+        onClose={() => setShowReimburseModal(false)}
+        initialFromMemberId={reimburseParams.fromMemberId}
+        initialToMemberId={reimburseParams.toMemberId}
+        initialAmountPaise={reimburseParams.amountPaise}
+        initialNote={reimburseParams.initialNote}
+        contextTitle={reimburseParams.contextTitle}
+      />
     </div>
   );
 };
