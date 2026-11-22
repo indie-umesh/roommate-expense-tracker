@@ -3,7 +3,10 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../context/AuthContext";
-import type { Group, Member } from "../lib/types";
+import { formatINR } from "../lib/money";
+import { calculateBalances } from "../lib/balances";
+import type { Group, Member, Expense, Settlement } from "../lib/types";
+import { RemoveMemberModal } from "../components/RemoveMemberModal";
 import {
   ChevronLeft,
   Share2,
@@ -18,7 +21,7 @@ import {
   Trash2,
   X,
   CreditCard,
-  Loader2,
+  Lock,
 } from "lucide-react";
 
 export const MembersPage: React.FC = () => {
@@ -78,6 +81,54 @@ export const MembersPage: React.FC = () => {
     },
     enabled: !!groupId,
   });
+
+  // Fetch active expenses with splits for balance & settlement lock checks
+  const { data: expenses = [] } = useQuery<Expense[]>({
+    queryKey: ["group-expenses", groupId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("expenses")
+        .select(`*, splits:expense_splits(*)`)
+        .eq("group_id", groupId)
+        .is("deleted_at", null)
+        .order("spent_on", { ascending: false })
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return (data || []).map((exp: any) => ({
+        ...exp,
+        amount_paise: exp.amount_paise ? BigInt(String(exp.amount_paise).split(".")[0]) : 0n,
+        splits: (exp.splits || []).map((s: any) => ({
+          ...s,
+          share_paise: s.share_paise ? BigInt(String(s.share_paise).split(".")[0]) : 0n,
+        })),
+      }));
+    },
+    enabled: !!groupId,
+  });
+
+  // Fetch settlements for balance calculations
+  const { data: settlements = [] } = useQuery<Settlement[]>({
+    queryKey: ["group-settlements", groupId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("settlements")
+        .select("*")
+        .eq("group_id", groupId)
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return (data || []).map((s: any) => ({
+        ...s,
+        amount_paise: s.amount_paise ? BigInt(String(s.amount_paise).split(".")[0]) : 0n,
+      }));
+    },
+    enabled: !!groupId,
+  });
+
+  const balances = calculateBalances(
+    members.map((m) => m.id),
+    expenses,
+    settlements
+  );
 
   // Realtime duplicate detection for add
   const enteredFirst = newFirstName.trim().toLowerCase();
@@ -159,32 +210,6 @@ export const MembersPage: React.FC = () => {
     },
     onError: (err: any) => {
       setError(err?.message || "Failed to update roommate details");
-    },
-  });
-
-  // Delete Member Mutation via atomic remove_member RPC
-  const deleteMemberMutation = useMutation({
-    mutationFn: async ({ memberId, force = true }: { memberId: string; force?: boolean }) => {
-      const { data, error } = await supabase.rpc("remove_member", {
-        p_member_id: memberId,
-        p_force: force,
-      });
-      if (error) throw error;
-      if (data && !data.success) {
-        throw new Error(data.error || "Cannot remove roommate");
-      }
-      return data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["group-members", groupId] });
-      queryClient.invalidateQueries({ queryKey: ["group-balances", groupId] });
-      queryClient.invalidateQueries({ queryKey: ["group-expenses", groupId] });
-      queryClient.invalidateQueries({ queryKey: ["group-settlements", groupId] });
-      setDeletingMember(null);
-      setError(null);
-    },
-    onError: (err: any) => {
-      setError(err?.message || "Failed to remove roommate");
     },
   });
 
@@ -565,64 +590,16 @@ export const MembersPage: React.FC = () => {
             </form>
           )}
 
-          {/* Customized Delete Roommate Confirmation Modal */}
-          {deletingMember && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-              <div className="card-clean max-w-md w-full p-6 space-y-4 border-rose-300 dark:border-rose-900/60 shadow-2xl">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-rose-100 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0">
-                    <Trash2 className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-base text-[var(--text-primary)]">
-                      Remove {deletingMember.display_name}?
-                    </h3>
-                    <p className="text-xs text-[var(--text-muted)]">
-                      {deletingMember.user_id ? "Active registered roommate" : "Unclaimed ghost spot"}
-                    </p>
-                  </div>
-                </div>
-
-                {error && (
-                  <div className="p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/40 rounded-xl text-xs text-rose-700 dark:text-rose-300 font-medium leading-relaxed">
-                    {error}
-                  </div>
-                )}
-
-                <p className="text-xs text-[var(--text-muted)] leading-relaxed">
-                  Jab tak poora hisaab settle na ho, tab tak koi bhi roommate delete nahi ho sakta. Roommate remove karne ke liye inka balance ₹0 hona zaroori hai.
-                </p>
-
-                <div className="flex items-center justify-end gap-2 pt-2">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setDeletingMember(null);
-                      setError(null);
-                    }}
-                    className="px-4 py-2 rounded-xl text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => deleteMemberMutation.mutate({ memberId: deletingMember.id, force: false })}
-                    disabled={deleteMemberMutation.isPending}
-                    className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold flex items-center gap-1.5 shadow-sm cursor-pointer disabled:opacity-50"
-                  >
-                    {deleteMemberMutation.isPending ? (
-                      <>
-                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                        <span>Checking...</span>
-                      </>
-                    ) : (
-                      <span>Yes, Remove Roommate</span>
-                    )}
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
+          {/* Customized Beimaani-Proof Delete Roommate Confirmation Modal */}
+          <RemoveMemberModal
+            isOpen={!!deletingMember}
+            onClose={() => setDeletingMember(null)}
+            member={deletingMember}
+            groupId={groupId!}
+            balances={balances}
+            expenses={expenses}
+            onGoToSettleUp={() => navigate(`/group/${groupId}/settle`)}
+          />
 
           {/* Roommates Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
@@ -635,6 +612,14 @@ export const MembersPage: React.FC = () => {
                 .toUpperCase();
 
               const isMe = member.user_id === user?.id;
+
+              const bal = balances.find((b) => b.memberId === member.id)?.netPaise ?? 0n;
+              const hasBills = expenses.some(
+                (e) =>
+                  e.paid_by_member_id === member.id ||
+                  e.splits?.some((s) => s.member_id === member.id)
+              );
+              const isLocked = bal !== 0n || hasBills;
 
               return (
                 <div
@@ -649,7 +634,7 @@ export const MembersPage: React.FC = () => {
                           {initials}
                         </div>
                         <div>
-                          <div className="flex items-center gap-1.5">
+                          <div className="flex items-center gap-1.5 flex-wrap">
                             <h4 className="font-bold text-sm text-[var(--text-primary)]">
                               {member.display_name}
                             </h4>
@@ -659,9 +644,32 @@ export const MembersPage: React.FC = () => {
                               </span>
                             )}
                           </div>
-                          <span className="text-[11px] text-[var(--text-muted)]">
+                          <span className="text-[11px] text-[var(--text-muted)] block">
                             {member.role === "admin" ? "Admin" : "Roommate"} • {member.user_id ? "Active" : "Unclaimed"}
                           </span>
+
+                          {/* Financial Dues & Settlement Status Badge */}
+                          <div className="mt-1 flex items-center gap-1.5 flex-wrap">
+                            {bal !== 0n ? (
+                              <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-md flex items-center gap-1 ${
+                                bal > 0n
+                                  ? "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/40"
+                                  : "bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800/40"
+                              }`}>
+                                <Lock className="w-2.5 h-2.5" />
+                                <span>{bal > 0n ? `Flat owes ${formatINR(bal)}` : `Owes ${formatINR(-bal)}`}</span>
+                              </span>
+                            ) : hasBills ? (
+                              <span className="text-[10px] font-medium bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-800/40 px-2 py-0.5 rounded-md flex items-center gap-1">
+                                <Lock className="w-2.5 h-2.5" />
+                                <span>Active in ledger</span>
+                              </span>
+                            ) : (
+                              <span className="text-[10px] font-medium bg-emerald-50/60 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded-md">
+                                ✓ Settled (₹0)
+                              </span>
+                            )}
+                          </div>
                         </div>
                       </div>
 
@@ -676,10 +684,14 @@ export const MembersPage: React.FC = () => {
                         </button>
                         <button
                           onClick={() => setDeletingMember(member)}
-                          className="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-md transition cursor-pointer"
-                          title="Remove roommate"
+                          className={`p-1.5 rounded-md transition cursor-pointer ${
+                            isLocked
+                              ? "text-amber-500 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950/40"
+                              : "text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40"
+                          }`}
+                          title={isLocked ? "Cannot remove: Account not settled (Click to view warning)" : "Remove roommate"}
                         >
-                          <Trash2 className="w-3.5 h-3.5" />
+                          {isLocked ? <Lock className="w-3.5 h-3.5" /> : <Trash2 className="w-3.5 h-3.5" />}
                         </button>
                       </div>
                     </div>
