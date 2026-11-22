@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { formatINR } from "../lib/money";
 import { useLanguage } from "../context/LanguageContext";
+import { formatDateLocale } from "../lib/i18n";
 import type { Member, Expense } from "../lib/types";
 import { Table, LayoutList, Search, Download } from "lucide-react";
 
@@ -15,7 +16,7 @@ export const ExcelSheetView: React.FC<ExcelSheetViewProps> = ({
   expenses,
   onSelectExpense,
 }) => {
-  const { t } = useLanguage();
+  const { t, currentLanguage } = useLanguage();
   const [searchQuery, setSearchQuery] = useState("");
   const [filterMemberId, setFilterMemberId] = useState<string>("all");
   const [mobileMode, setMobileMode] = useState<"compact" | "table">("compact");
@@ -61,10 +62,10 @@ export const ExcelSheetView: React.FC<ExcelSheetViewProps> = ({
   // Export to CSV function
   function exportCSV() {
     const headers = [
-      "Date",
-      "Details",
-      "Total (INR)",
-      "Paid By",
+      t("date"),
+      t("what_for"),
+      t("total_inr"),
+      t("who_paid"),
       ...members.map((m) => getMemberDisplayName(m)),
     ];
 
@@ -98,9 +99,9 @@ export const ExcelSheetView: React.FC<ExcelSheetViewProps> = ({
     return (
       <div className="card-clean p-10 text-center">
         <Table className="w-10 h-10 text-[var(--text-muted)] mx-auto mb-2 opacity-50" />
-        <h4 className="font-semibold text-base text-[var(--text-primary)]">No expenses in sheet yet</h4>
+        <h4 className="font-semibold text-base text-[var(--text-primary)]">{t("no_expenses_sheet")}</h4>
         <p className="text-xs text-[var(--text-muted)] mt-1 max-w-sm mx-auto">
-          Tap the + button to log an expense and view your live spreadsheet matrix.
+          {t("no_expenses_sheet_desc")}
         </p>
       </div>
     );
@@ -184,10 +185,10 @@ export const ExcelSheetView: React.FC<ExcelSheetViewProps> = ({
                     ? "bg-indigo-600 text-white"
                     : "text-[var(--text-muted)]"
                 }`}
-                title="Cards View"
+                title={t("card_view")}
               >
                 <LayoutList className="w-3.5 h-3.5" />
-                <span>Card</span>
+                <span>{t("card_view")}</span>
               </button>
               <button
                 onClick={() => setMobileMode("table")}
@@ -196,10 +197,10 @@ export const ExcelSheetView: React.FC<ExcelSheetViewProps> = ({
                     ? "bg-indigo-600 text-white"
                     : "text-[var(--text-muted)]"
                 }`}
-                title="Matrix Table"
+                title={t("table_view")}
               >
                 <Table className="w-3.5 h-3.5" />
-                <span>Table</span>
+                <span>{t("table_view")}</span>
               </button>
             </div>
 
@@ -229,7 +230,7 @@ export const ExcelSheetView: React.FC<ExcelSheetViewProps> = ({
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <span className="text-[10px] font-medium text-[var(--text-muted)] bg-slate-100 dark:bg-white/5 px-2 py-0.5 rounded border border-slate-200 dark:border-white/5">
-                        {new Date(expense.spent_on).toLocaleDateString("en-IN", {
+                        {formatDateLocale(expense.spent_on, currentLanguage.code, {
                           day: "numeric",
                           month: "short",
                         })}
@@ -245,10 +246,10 @@ export const ExcelSheetView: React.FC<ExcelSheetViewProps> = ({
 
                   <div className="mt-2 flex items-center justify-between text-[11px] text-[var(--text-muted)]">
                     <div>
-                      Paid by: <span className="font-medium text-[var(--text-primary)]">{payer?.display_name || "Unknown"}</span>
+                      {t("paid_by")}: <span className="font-medium text-[var(--text-primary)]">{payer?.display_name || t("roommates")}</span>
                     </div>
                     <div>
-                      {expense.splits?.length || 0} mates split
+                      {t("split_count", { count: expense.splits?.length || 0 })}
                     </div>
                   </div>
 
@@ -301,7 +302,7 @@ export const ExcelSheetView: React.FC<ExcelSheetViewProps> = ({
                     className="hover:bg-slate-50/80 dark:hover:bg-white/[0.03] transition cursor-pointer"
                   >
                     <td className="py-3 px-4 whitespace-nowrap text-[var(--text-muted)] text-[11px]">
-                      {new Date(exp.spent_on).toLocaleDateString("en-IN", {
+                      {formatDateLocale(exp.spent_on, currentLanguage.code, {
                         day: "numeric",
                         month: "short",
                         year: "numeric",
@@ -315,7 +316,7 @@ export const ExcelSheetView: React.FC<ExcelSheetViewProps> = ({
                     </td>
                     <td className="py-3 px-4 whitespace-nowrap">
                       <span className="font-medium text-[var(--text-primary)] bg-slate-100 dark:bg-white/5 px-2 py-0.5 rounded text-[11px]">
-                        {payer?.display_name || "Unknown"}
+                        {payer?.display_name || t("roommates")}
                       </span>
                     </td>
                     {members.map((m) => {

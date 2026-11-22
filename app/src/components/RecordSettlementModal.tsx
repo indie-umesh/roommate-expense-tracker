@@ -108,16 +108,16 @@ export const RecordSettlementModal: React.FC<RecordSettlementModalProps> = ({
     mutationFn: async () => {
       const amt = parseFloat(amountRupees);
       if (isNaN(amt) || amt <= 0) {
-        throw new Error("Kripya sahi amount dalein (jaise ₹100)");
+        throw new Error(t("enter_amount_err"));
       }
       if (!fromMemberId) {
-        throw new Error("Select karein kisne paise diye");
+        throw new Error(t("select_payer_err"));
       }
       if (!toMemberId) {
-        throw new Error("Select karein kisko paise mile");
+        throw new Error(t("who_received_settle"));
       }
       if (fromMemberId === toMemberId) {
-        throw new Error("Dene wala aur lene wala same roommate nahi ho sakta");
+        throw new Error(t("same_person_err"));
       }
 
       const paise = rupeesToPaise(amountRupees);
@@ -143,7 +143,7 @@ export const RecordSettlementModal: React.FC<RecordSettlementModalProps> = ({
       onClose();
     },
     onError: (err: any) => {
-      setError(err?.message || "Payment record karne me error aaya");
+      setError(err?.message || t("failed_record_payment"));
     },
   });
 

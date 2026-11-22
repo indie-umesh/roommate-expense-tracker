@@ -230,7 +230,7 @@ export const MembersPage: React.FC = () => {
 
     if (duplicateCandidate && !surname) {
       setError(
-        `A roommate named "${duplicateCandidate.display_name}" already exists! Please add a surname or initial to tell them apart.`
+        t("duplicate_roommate_warning", { name: duplicateCandidate.display_name })
       );
       return;
     }
@@ -402,7 +402,7 @@ export const MembersPage: React.FC = () => {
                 <div className="p-3 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-500/30 rounded-xl text-amber-800 dark:text-amber-300 text-xs font-medium flex items-start gap-2">
                   <AlertCircle className="w-4 h-4 shrink-0 text-amber-500 mt-0.5" />
                   <div>
-                    A roommate named "<strong>{duplicateCandidate.display_name}</strong>" is already in this flat. Please enter a <strong>Surname or Initial</strong> to keep records distinct.
+                    {t("duplicate_roommate_warning", { name: duplicateCandidate.display_name })}
                   </div>
                 </div>
               )}

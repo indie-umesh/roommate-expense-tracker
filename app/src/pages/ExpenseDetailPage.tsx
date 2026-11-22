@@ -5,6 +5,7 @@ import { supabase } from "../lib/supabase";
 import { useAuth } from "../context/AuthContext";
 import { useLanguage } from "../context/LanguageContext";
 import { formatINR, paiseToRupees, rupeesToPaise } from "../lib/money";
+import { formatDateLocale } from "../lib/i18n";
 import type { Member, Expense } from "../lib/types";
 import { RecordSettlementModal } from "../components/RecordSettlementModal";
 import {
@@ -22,7 +23,7 @@ export const ExpenseDetailPage: React.FC = () => {
   const { groupId, expenseId } = useParams<{ groupId: string; expenseId: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { t } = useLanguage();
+  const { t, currentLanguage } = useLanguage();
   const queryClient = useQueryClient();
 
   const [isEditing, setIsEditing] = useState(false);
@@ -95,7 +96,12 @@ export const ExpenseDetailPage: React.FC = () => {
 
   const memberMap = new Map(members.map((m) => [m.id, m]));
   const myMember = members.find((m) => m.user_id === user?.id);
-  const payerName = expense ? memberMap.get(expense.paid_by_member_id)?.display_name || "Unknown" : "Unknown";
+  const payerMember = expense ? memberMap.get(expense.paid_by_member_id) : undefined;
+  const payerName = payerMember
+    ? payerMember.user_id === user?.id
+      ? `${payerMember.display_name} (${t("you")})`
+      : payerMember.display_name
+    : t("roommates");
 
   // Only the person who paid this bill (or admin) can edit details/corrections
   const canEdit = expense && myMember && (
@@ -342,7 +348,8 @@ export const ExpenseDetailPage: React.FC = () => {
                     {expense.details}
                   </h2>
                   <p className="text-xs text-[var(--text-muted)] mt-1 font-normal">
-                    {t("logged_on")} {new Date(expense.spent_on).toLocaleDateString("en-IN", {
+                    {t("logged_on")}{" "}
+                    {formatDateLocale(expense.spent_on, currentLanguage.code, {
                       day: "numeric",
                       month: "long",
                       year: "numeric",

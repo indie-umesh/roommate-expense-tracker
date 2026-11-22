@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../context/AuthContext";
 import { useLanguage } from "../context/LanguageContext";
+import { translateCategory } from "../lib/i18n";
 import { rupeesToPaise } from "../lib/money";
 import type { Member } from "../lib/types";
 import {
@@ -261,7 +262,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
   function getMemberLabel(m: Member) {
     const isMe = m.user_id === user?.id;
     if (isMe) {
-      return `You (${m.display_name.split(" ")[0]})`;
+      return `${m.display_name.split(" ")[0]} (${t("you")})`;
     }
     return m.display_name;
   }
@@ -522,7 +523,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                             {cat.emoji}
                           </span>
                           <span className="text-xs font-semibold text-[var(--text-primary)]">
-                            {cat.label}
+                            {translateCategory(cat.label, t)}
                           </span>
                         </div>
 
@@ -534,7 +535,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                                 : "bg-slate-100 dark:bg-white/5 text-[var(--text-muted)]"
                             }`}
                           >
-                            {cat.isCustom ? "Custom" : "Default"}
+                            {cat.isCustom ? t("custom_badge") : t("default_badge")}
                           </span>
                           <button
                             type="button"
@@ -633,7 +634,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                           >
                             <span className="flex items-center gap-2">
                               <span>{cat.emoji}</span>
-                              <span className="font-semibold">{cat.label}</span>
+                              <span className="font-semibold">{translateCategory(cat.label, t)}</span>
                             </span>
                             <span className="text-[10px] text-indigo-600 dark:text-indigo-400 font-medium">
                               {t("done")}
@@ -651,7 +652,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                         >
                           <Plus className="w-3.5 h-3.5" />
                           <span>
-                            Use & save "{getCategoryEmoji(details.trim())} {details.trim()}"
+                            {t("save")} "{getCategoryEmoji(details.trim())} {details.trim()}"
                           </span>
                         </button>
                       )}
@@ -672,7 +673,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                         }`}
                       >
                         <span>{tag.emoji}</span>
-                        <span>{tag.label}</span>
+                        <span>{translateCategory(tag.label, t)}</span>
                       </button>
                     ))}
 

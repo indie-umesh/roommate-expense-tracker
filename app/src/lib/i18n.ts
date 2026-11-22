@@ -207,6 +207,30 @@ export const TRANSLATIONS: Record<LanguageCode, Record<string, string>> = {
     back_to_sign_in: "Back to Sign In",
     no_account: "New flatmate? Create Account",
     already_account: "Already registered? Sign In",
+
+    // UI Enhancements & Categories
+    custom_badge: "Custom",
+    default_badge: "Default",
+    card_view: "Cards",
+    table_view: "Table",
+    no_expenses_sheet: "No expenses in sheet yet",
+    no_expenses_sheet_desc: "Tap the + button to log an expense and view your live spreadsheet matrix.",
+    spreadsheet_desc: "Instant matrix view with individual shares and totals.",
+    back_to_feed: "Back to Feed",
+    duplicate_roommate_warning: "Notice: A roommate named \"{name}\" is already in this flat. Please provide a surname or initial.",
+    failed_record_payment: "Failed to record payment. Please check details.",
+    reset_defaults: "Reset Defaults",
+    cat_swiggy: "Swiggy / Food Delivery",
+    cat_zomato: "Zomato / Dining",
+    cat_groceries: "Groceries",
+    cat_milk: "Milk / Dairy",
+    cat_bills: "Wifi / Electricity Bills",
+    cat_cook: "Maid / Cook",
+    cat_rent: "Room Rent",
+    cat_cafe: "Chai / Cafe",
+    cat_snacks: "Snacks",
+    cat_cab: "Cab / Travel",
+    cat_water: "Drinking Water",
   },
 
   hinglish: {
@@ -372,6 +396,29 @@ export const TRANSLATIONS: Record<LanguageCode, Record<string, string>> = {
     back_to_sign_in: "Login Screen Par Jayein",
     no_account: "Naye flatmate hain? Account banayein",
     already_account: "Pehle se account hai? Login karein",
+
+    custom_badge: "Custom",
+    default_badge: "Default",
+    card_view: "Card View",
+    table_view: "Matrix Table",
+    no_expenses_sheet: "Sheet me abhi koi kharcha nahi hai",
+    no_expenses_sheet_desc: "+ dabakar pehla kharcha jodein aur spreadsheet dekhein.",
+    spreadsheet_desc: "Sabhi roommates ka live hisaab aur hissa matrix.",
+    back_to_feed: "Wapas Feed Par Jayein",
+    duplicate_roommate_warning: "Dhyan dein: \"{name}\" naam ka roommate pehle se juda hua hai. Kripya surname ya initial dalein.",
+    failed_record_payment: "Payment record nahi ho payi. Details check karein.",
+    reset_defaults: "Defaults Reset Karein",
+    cat_swiggy: "Swiggy / Khana",
+    cat_zomato: "Zomato / Restaurant",
+    cat_groceries: "Ration / Groceries",
+    cat_milk: "Doodh (Milk)",
+    cat_bills: "Wifi / Bijli Bill",
+    cat_cook: "Maid / Cook",
+    cat_rent: "Kamre Ka Kiraya (Rent)",
+    cat_cafe: "Chai / Cafe",
+    cat_snacks: "Snacks / Munchies",
+    cat_cab: "Cab / Auto / Petrol",
+    cat_water: "Paani (Water Camper)",
   },
 
   hi: {
@@ -1859,3 +1906,47 @@ export const TRANSLATIONS: Record<LanguageCode, Record<string, string>> = {
     already_account: "Уже зарегистрированы? Войти",
   },
 };
+
+export const LOCALE_MAP: Record<LanguageCode, string> = {
+  en: "en-IN",
+  hinglish: "en-IN",
+  hi: "hi-IN",
+  es: "es-ES",
+  fr: "fr-FR",
+  de: "de-DE",
+  ja: "ja-JP",
+  zh: "zh-CN",
+  pt: "pt-BR",
+  ar: "ar-SA",
+  ru: "ru-RU",
+};
+
+export function formatDateLocale(
+  dateStr: string | Date,
+  lang: LanguageCode = "en",
+  options?: Intl.DateTimeFormatOptions
+): string {
+  try {
+    const d = typeof dateStr === "string" ? new Date(dateStr) : dateStr;
+    const locale = LOCALE_MAP[lang] || "en-IN";
+    return d.toLocaleDateString(locale, options || { day: "numeric", month: "short", year: "numeric" });
+  } catch {
+    return String(dateStr);
+  }
+}
+
+export function translateCategory(label: string, t: (key: string) => string): string {
+  const norm = label.toLowerCase().trim();
+  if (norm.includes("swiggy")) return t("cat_swiggy");
+  if (norm.includes("zomato")) return t("cat_zomato");
+  if (norm.includes("grocer") || norm.includes("ration") || norm.includes("sabzi")) return t("cat_groceries");
+  if (norm.includes("milk") || norm.includes("doodh") || norm.includes("dairy")) return t("cat_milk");
+  if (norm.includes("wifi") || norm.includes("bill") || norm.includes("bijli")) return t("cat_bills");
+  if (norm.includes("maid") || norm.includes("cook") || norm.includes("safai")) return t("cat_cook");
+  if (norm.includes("rent") || norm.includes("kiraya") || norm.includes("room")) return t("cat_rent");
+  if (norm.includes("chai") || norm.includes("cafe") || norm.includes("tea") || norm.includes("coffee")) return t("cat_cafe");
+  if (norm.includes("snack") || norm.includes("munch")) return t("cat_snacks");
+  if (norm.includes("cab") || norm.includes("travel") || norm.includes("auto") || norm.includes("uber") || norm.includes("ola")) return t("cat_cab");
+  if (norm.includes("water") || norm.includes("pani")) return t("cat_water");
+  return label;
+}

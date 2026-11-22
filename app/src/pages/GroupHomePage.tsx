@@ -7,6 +7,7 @@ import { useTheme } from "../context/ThemeContext";
 import { useLanguage } from "../context/LanguageContext";
 import { formatINR } from "../lib/money";
 import { simplifyDebts, calculateBalances } from "../lib/balances";
+import { formatDateLocale } from "../lib/i18n";
 import type { Group, Member, Expense, Settlement } from "../lib/types";
 import { BottomNav } from "../components/BottomNav";
 import type { NavTab } from "../components/BottomNav";
@@ -380,10 +381,10 @@ export const GroupHomePage: React.FC = () => {
                 {group?.name || "Indore Flat"}
               </h1>
               <p className="text-[11px] sm:text-xs text-[var(--text-muted)] font-normal truncate whitespace-nowrap mt-0.5 flex items-center">
-                <span>{members.length} {members.length === 1 ? "roommate" : "roommates"}</span>
+                <span>{members.length === 1 ? t("roommate_count_one") : t("roommate_count_other", { count: members.length })}</span>
                 <span className="mx-1.5 opacity-40">·</span>
                 <span className="truncate">
-                  Signed in as <strong className="text-indigo-600 dark:text-indigo-400 font-semibold">{profile?.display_name || "User"}</strong>
+                  {t("signed_in_as")} <strong className="text-indigo-600 dark:text-indigo-400 font-semibold">{profile?.display_name || "User"}</strong>
                 </span>
               </p>
             </div>
@@ -694,8 +695,8 @@ export const GroupHomePage: React.FC = () => {
                                 {expense.details}
                               </h4>
                               <p className="text-[11px] text-[var(--text-muted)] mt-0.5 font-medium">
-                                {isPayerMe ? t("you") : payer?.display_name || "Roommate"} {t("paid_by")} •{" "}
-                                {new Date(expense.spent_on).toLocaleDateString("en-IN", {
+                                {isPayerMe ? t("you") : payer?.display_name || t("roommates")} {t("paid_by")} •{" "}
+                                {formatDateLocale(expense.spent_on, currentLanguage.code, {
                                   month: "short",
                                   day: "numeric",
                                 })}
@@ -744,16 +745,16 @@ export const GroupHomePage: React.FC = () => {
           >
             <div className="flex items-center justify-between px-1">
               <div>
-                <h2 className="font-bold text-base md:text-lg text-[var(--text-primary)]">Spreadsheet View</h2>
+                <h2 className="font-bold text-base md:text-lg text-[var(--text-primary)]">{t("spreadsheet")}</h2>
                 <p className="text-xs text-[var(--text-muted)]">
-                  Instant matrix view with individual shares and totals.
+                  {t("spreadsheet_desc")}
                 </p>
               </div>
               <button
                 onClick={() => setActiveTab("activity")}
                 className="text-xs text-indigo-600 dark:text-indigo-400 font-semibold hover:underline cursor-pointer"
               >
-                Back to Feed
+                {t("back_to_feed")}
               </button>
             </div>
 
@@ -909,7 +910,7 @@ export const GroupHomePage: React.FC = () => {
                           </div>
                           <div className="flex flex-wrap items-center gap-2">
                             <span className="text-[11px] text-[var(--text-muted)]">
-                              {new Date(s.settled_on).toLocaleDateString("en-IN", {
+                              {formatDateLocale(s.settled_on, currentLanguage.code, {
                                 day: "numeric",
                                 month: "short",
                                 year: "numeric",
@@ -1025,9 +1026,7 @@ export const GroupHomePage: React.FC = () => {
                     <div className="p-3 bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-500/40 rounded-xl text-amber-800 dark:text-amber-300 text-xs font-semibold flex items-start gap-2">
                       <AlertCircle className="w-4 h-4 shrink-0 text-amber-500 mt-0.5" />
                       <div>
-                        Notice: A roommate named "
-                        <span className="underline">{duplicateCandidate.display_name}</span>" is
-                        already in this flat. Please provide a <strong>Surname or Initial</strong> below.
+                        {t("duplicate_roommate_warning", { name: duplicateCandidate.display_name })}
                       </div>
                     </div>
                   )}

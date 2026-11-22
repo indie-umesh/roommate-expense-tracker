@@ -6,6 +6,7 @@ import { useAuth } from "../context/AuthContext";
 import { useLanguage } from "../context/LanguageContext";
 import { formatINR } from "../lib/money";
 import { simplifyDebts, calculateBalances } from "../lib/balances";
+import { formatDateLocale } from "../lib/i18n";
 import type { Member, Expense, Settlement } from "../lib/types";
 import { RecordSettlementModal } from "../components/RecordSettlementModal";
 import {
@@ -21,7 +22,7 @@ export const SettleUpPage: React.FC = () => {
   const { groupId } = useParams<{ groupId: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { t } = useLanguage();
+  const { t, currentLanguage } = useLanguage();
   const queryClient = useQueryClient();
 
   const [error, setError] = useState<string | null>(null);
@@ -281,7 +282,7 @@ export const SettleUpPage: React.FC = () => {
                       </div>
                       <div className="flex flex-wrap items-center gap-2">
                         <span className="text-[11px] text-[var(--text-muted)]">
-                          {new Date(s.settled_on).toLocaleDateString("en-IN", {
+                          {formatDateLocale(s.settled_on, currentLanguage.code, {
                             day: "numeric",
                             month: "short",
                             year: "numeric",
