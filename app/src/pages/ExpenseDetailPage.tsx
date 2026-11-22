@@ -5,7 +5,7 @@ import { supabase } from "../lib/supabase";
 import { useAuth } from "../context/AuthContext";
 import { formatINR, paiseToRupees, rupeesToPaise } from "../lib/money";
 import type { Member, Expense } from "../lib/types";
-import { ChevronLeft, Trash2, Edit2, Check, AlertTriangle } from "lucide-react";
+import { ChevronLeft, Edit2, Check, ShieldCheck } from "lucide-react";
 
 export const ExpenseDetailPage: React.FC = () => {
   const { groupId, expenseId } = useParams<{ groupId: string; expenseId: string }>();
@@ -13,7 +13,6 @@ export const ExpenseDetailPage: React.FC = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
 
-  const [confirmDelete, setConfirmDelete] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
   // Edit form state
@@ -77,7 +76,8 @@ export const ExpenseDetailPage: React.FC = () => {
   const myMember = members.find((m) => m.user_id === user?.id);
   const payerName = expense ? memberMap.get(expense.paid_by_member_id)?.display_name || "Unknown" : "Unknown";
 
-  const canDelete = expense && myMember && (
+  // Only the person who paid this bill (or admin) can edit details/corrections
+  const canEdit = expense && myMember && (
     expense.paid_by_member_id === myMember.id || myMember.role === "admin"
   );
 
@@ -121,23 +121,6 @@ export const ExpenseDetailPage: React.FC = () => {
     },
   });
 
-  // Soft Delete Mutation with Dispute Prevention
-  const deleteMutation = useMutation({
-    mutationFn: async () => {
-      const { error } = await supabase
-        .from("expenses")
-        .update({ deleted_at: new Date().toISOString() })
-        .eq("id", expenseId);
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["group-expenses", groupId] });
-      queryClient.invalidateQueries({ queryKey: ["group-deleted-expenses", groupId] });
-      queryClient.invalidateQueries({ queryKey: ["group-balances", groupId] });
-      navigate(`/group/${groupId}`);
-    },
-  });
-
   function toggleParticipant(memberId: string) {
     if (editParticipants.includes(memberId)) {
       if (editParticipants.length > 1) {
@@ -167,21 +150,25 @@ export const ExpenseDetailPage: React.FC = () => {
             <ChevronLeft className="w-5 h-5" />
           </button>
           <h1 className="font-bold text-base text-[var(--text-primary)] tracking-tight">Expense Details</h1>
-          {!isEditing ? (
-            <button
-              onClick={() => setIsEditing(true)}
-              className="btn-surface h-9 px-3 rounded-xl font-medium text-xs flex items-center gap-1.5 cursor-pointer shadow-xs"
-            >
-              <Edit2 className="w-3.5 h-3.5" />
-              <span>Edit</span>
-            </button>
+          {canEdit ? (
+            !isEditing ? (
+              <button
+                onClick={() => setIsEditing(true)}
+                className="btn-surface h-9 px-3 rounded-xl font-medium text-xs flex items-center gap-1.5 cursor-pointer shadow-xs"
+              >
+                <Edit2 className="w-3.5 h-3.5" />
+                <span>Edit</span>
+              </button>
+            ) : (
+              <button
+                onClick={() => setIsEditing(false)}
+                className="h-9 px-3 rounded-xl text-xs font-medium text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer flex items-center"
+              >
+                Cancel
+              </button>
+            )
           ) : (
-            <button
-              onClick={() => setIsEditing(false)}
-              className="h-9 px-3 rounded-xl text-xs font-medium text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer flex items-center"
-            >
-              Cancel
-            </button>
+            <div className="w-9" />
           )}
         </div>
       </header>
@@ -345,55 +332,23 @@ export const ExpenseDetailPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Dispute-Proof Delete Section */}
-            {canDelete && (
-              <div className="card-clean p-5 space-y-3">
-                {!confirmDelete ? (
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h4 className="font-semibold text-xs text-[var(--text-primary)]">
-                        Delete this expense?
-                      </h4>
-                      <p className="text-[11px] text-[var(--text-muted)] mt-0.5">
-                        Archived with audit trail so no roommate loses track.
-                      </p>
-                    </div>
-                    <button
-                      onClick={() => setConfirmDelete(true)}
-                      className="px-3.5 py-1.5 rounded-lg border border-rose-200 dark:border-rose-900/60 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 text-xs font-medium flex items-center gap-1.5 transition cursor-pointer"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                      <span>Delete</span>
-                    </button>
-                  </div>
-                ) : (
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-2 text-rose-600 dark:text-rose-400 text-xs font-semibold">
-                      <AlertTriangle className="w-4 h-4" />
-                      <span>Confirm Expense Deletion</span>
-                    </div>
-                    <p className="text-xs text-[var(--text-muted)]">
-                      This will remove the expense from all roommate balances and archive it.
-                    </p>
-                    <div className="flex justify-end gap-2 pt-1">
-                      <button
-                        onClick={() => setConfirmDelete(false)}
-                        className="px-3 py-1.5 text-xs font-medium text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer"
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        onClick={() => deleteMutation.mutate()}
-                        disabled={deleteMutation.isPending}
-                        className="px-4 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs font-medium transition cursor-pointer shadow-xs disabled:opacity-50"
-                      >
-                        {deleteMutation.isPending ? "Deleting..." : "Yes, Delete Expense"}
-                      </button>
-                    </div>
-                  </div>
-                )}
+            {/* Permanent & Immutable Ledger Guarantee (Beimaani-Proof) */}
+            <div className="card-clean p-4 bg-slate-50/80 dark:bg-white/[0.03] border-slate-200/80 dark:border-white/10 flex items-start gap-3">
+              <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">
+                <ShieldCheck className="w-5 h-5" />
               </div>
-            )}
+              <div className="space-y-0.5">
+                <h4 className="font-semibold text-xs text-[var(--text-primary)] flex items-center gap-1.5">
+                  <span>Tamper-Proof Flat Ledger</span>
+                  <span className="text-[10px] bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-2 py-0.2 rounded-full font-bold">
+                    Immutable
+                  </span>
+                </h4>
+                <p className="text-[11px] text-[var(--text-muted)] leading-relaxed">
+                  Bills cannot be deleted by any roommate. Every entry logged remains transparent on the shared matrix to maintain 100% honesty and trust.
+                </p>
+              </div>
+            </div>
           </>
         )}
       </main>

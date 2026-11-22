@@ -27,11 +27,8 @@ import {
   Plus,
   AlertCircle,
   Trash2,
-  RotateCcw,
   Sun,
   Moon,
-  ChevronDown,
-  ChevronUp,
   LogOut,
   Sparkles,
   Phone,
@@ -58,7 +55,6 @@ export const GroupHomePage: React.FC = () => {
   const [newRoommateUpiId, setNewRoommateUpiId] = useState("");
   const [newRoommateNotes, setNewRoommateNotes] = useState("");
   const [showAddRoommate, setShowAddRoommate] = useState(false);
-  const [showDeletedBills, setShowDeletedBills] = useState(false);
   const [addRoommateError, setAddRoommateError] = useState<string | null>(null);
 
   // Edit roommate state
@@ -113,29 +109,6 @@ export const GroupHomePage: React.FC = () => {
         .is("deleted_at", null)
         .order("spent_on", { ascending: false })
         .order("created_at", { ascending: false });
-      if (error) throw error;
-      return (data || []).map((exp: any) => ({
-        ...exp,
-        amount_paise: exp.amount_paise ? BigInt(String(exp.amount_paise).split(".")[0]) : 0n,
-        splits: (exp.splits || []).map((s: any) => ({
-          ...s,
-          share_paise: s.share_paise ? BigInt(String(s.share_paise).split(".")[0]) : 0n,
-        })),
-      }));
-    },
-    enabled: !!groupId,
-  });
-
-  // Fetch soft-deleted expenses for the Dispute-Proof Archive
-  const { data: deletedExpenses = [] } = useQuery<Expense[]>({
-    queryKey: ["group-deleted-expenses", groupId],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("expenses")
-        .select(`*, splits:expense_splits(*)`)
-        .eq("group_id", groupId)
-        .not("deleted_at", "is", null)
-        .order("deleted_at", { ascending: false });
       if (error) throw error;
       return (data || []).map((exp: any) => ({
         ...exp,
@@ -214,26 +187,6 @@ export const GroupHomePage: React.FC = () => {
       });
       queryClient.invalidateQueries({ queryKey: ["group-settlements", groupId] });
       queryClient.invalidateQueries({ queryKey: ["group-expenses", groupId] });
-      queryClient.invalidateQueries({ queryKey: ["group-balances", groupId] });
-    },
-  });
-
-  // Restore Deleted Expense Mutation (1-Click Undo)
-  const restoreExpenseMutation = useMutation({
-    mutationFn: async (expenseId: string) => {
-      const { error } = await supabase
-        .from("expenses")
-        .update({ deleted_at: null })
-        .eq("id", expenseId);
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      confetti({
-        particleCount: 60,
-        spread: 50,
-      });
-      queryClient.invalidateQueries({ queryKey: ["group-expenses", groupId] });
-      queryClient.invalidateQueries({ queryKey: ["group-deleted-expenses", groupId] });
       queryClient.invalidateQueries({ queryKey: ["group-balances", groupId] });
     },
   });
@@ -685,61 +638,6 @@ export const GroupHomePage: React.FC = () => {
                     Invite via WhatsApp
                   </button>
                 </div>
-
-                {/* Dispute Prevention: Deleted Bills Archive */}
-                {deletedExpenses.length > 0 && (
-                  <div className="card-clean p-5 border-amber-500/30 space-y-3">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Trash2 className="w-4 h-4 text-amber-500" />
-                        <span className="text-xs font-semibold text-[var(--text-primary)]">
-                          Deleted Bills Archive ({deletedExpenses.length})
-                        </span>
-                      </div>
-                      <button
-                        onClick={() => setShowDeletedBills(!showDeletedBills)}
-                        className="text-xs text-amber-600 dark:text-amber-400 font-semibold hover:underline flex items-center gap-1 cursor-pointer"
-                      >
-                        <span>{showDeletedBills ? "Hide" : "Review"}</span>
-                        {showDeletedBills ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-                      </button>
-                    </div>
-
-                    {showDeletedBills && (
-                      <div className="space-y-2 pt-2 border-t border-slate-100 dark:border-white/10">
-                        <p className="text-[11px] text-[var(--text-muted)]">
-                          No disputes: any deleted bill can be reviewed and restored with 1 tap!
-                        </p>
-                        {deletedExpenses.map((delExp) => {
-                          const payer = memberMap.get(delExp.paid_by_member_id);
-                          return (
-                            <div
-                              key={delExp.id}
-                              className="p-3 bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/5 rounded-xl flex items-center justify-between text-xs"
-                            >
-                              <div>
-                                <h5 className="font-semibold text-[var(--text-primary)] line-clamp-1">
-                                  {delExp.details}
-                                </h5>
-                                <span className="text-[10px] text-[var(--text-muted)]">
-                                  {formatINR(delExp.amount_paise)} • Paid by {payer?.display_name || "Unknown"}
-                                </span>
-                              </div>
-                              <button
-                                onClick={() => restoreExpenseMutation.mutate(delExp.id)}
-                                disabled={restoreExpenseMutation.isPending}
-                                className="px-3 py-1 bg-amber-500 hover:bg-amber-600 text-white rounded-lg font-medium text-[11px] flex items-center gap-1 transition"
-                              >
-                                <RotateCcw className="w-3 h-3" />
-                                Restore
-                              </button>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </div>
-                )}
               </div>
 
               {/* Right Column: Recent Expenses Feed (span 7 on md/lg) */}
