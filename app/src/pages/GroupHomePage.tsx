@@ -38,6 +38,7 @@ import {
   Edit2,
   X,
   History,
+  Loader2,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -276,9 +277,10 @@ export const GroupHomePage: React.FC = () => {
 
   // Delete Member Mutation via atomic remove_member RPC
   const deleteMemberMutation = useMutation({
-    mutationFn: async (memberId: string) => {
+    mutationFn: async ({ memberId, force = true }: { memberId: string; force?: boolean }) => {
       const { data, error } = await supabase.rpc("remove_member", {
         p_member_id: memberId,
+        p_force: force,
       });
       if (error) throw error;
       if (data && !data.success) {
@@ -289,6 +291,8 @@ export const GroupHomePage: React.FC = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["group-members", groupId] });
       queryClient.invalidateQueries({ queryKey: ["group-balances", groupId] });
+      queryClient.invalidateQueries({ queryKey: ["group-expenses", groupId] });
+      queryClient.invalidateQueries({ queryKey: ["group-settlements", groupId] });
       setDeletingMember(null);
       setAddRoommateError(null);
     },
@@ -1233,32 +1237,76 @@ export const GroupHomePage: React.FC = () => {
                 </form>
               )}
 
-              {/* Delete Roommate Alert Card */}
+              {/* Customized Delete Roommate Confirmation Modal */}
               {deletingMember && (
-                <div className="card-clean p-5 border-rose-300 dark:border-rose-900/60 bg-rose-50/50 dark:bg-rose-950/20 space-y-3">
-                  <div className="flex items-center gap-2 text-rose-600 dark:text-rose-400 font-bold text-sm">
-                    <Trash2 className="w-4 h-4" />
-                    <span>Remove Roommate: {deletingMember.display_name}?</span>
-                  </div>
-                  <p className="text-xs text-[var(--text-muted)]">
-                    Are you sure you want to remove <strong>{deletingMember.display_name}</strong> from this flat? Roommates with logged expenses or splits cannot be removed until those are settled.
-                  </p>
-                  <div className="flex justify-end gap-2 pt-1">
-                    <button
-                      type="button"
-                      onClick={() => setDeletingMember(null)}
-                      className="px-3.5 py-1.5 text-xs font-medium text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => deleteMemberMutation.mutate(deletingMember.id)}
-                      disabled={deleteMemberMutation.isPending}
-                      className="px-4 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-xs font-medium shadow-xs disabled:opacity-50 cursor-pointer"
-                    >
-                      {deleteMemberMutation.isPending ? "Removing..." : "Yes, Remove"}
-                    </button>
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+                  <div className="card-clean max-w-md w-full p-6 space-y-4 border-rose-300 dark:border-rose-900/60 shadow-2xl">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-rose-100 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0">
+                        <Trash2 className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-base text-[var(--text-primary)]">
+                          Remove {deletingMember.display_name}?
+                        </h3>
+                        <p className="text-xs text-[var(--text-muted)]">
+                          {deletingMember.user_id ? "Active registered roommate" : "Unclaimed ghost spot"}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Balance check */}
+                    {(() => {
+                      const bal = balances.find((b) => b.memberId === deletingMember.id)?.netPaise ?? 0n;
+                      if (bal === 0n) {
+                        return (
+                          <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/40 rounded-xl text-xs text-emerald-700 dark:text-emerald-300">
+                            ✓ Balance is ₹0 (Zero debt). This roommate can be safely removed from future expenses.
+                          </div>
+                        );
+                      } else if (bal > 0n) {
+                        return (
+                          <div className="p-3 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/40 rounded-xl text-xs text-amber-700 dark:text-amber-300 space-y-1">
+                            <strong>Notice:</strong> Flat owes this roommate <strong>{formatINR(bal)}</strong>. Removing them will clear their flat records and membership.
+                          </div>
+                        );
+                      } else {
+                        return (
+                          <div className="p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/40 rounded-xl text-xs text-rose-700 dark:text-rose-300 space-y-1">
+                            <strong>Warning:</strong> This roommate owes the flat <strong>{formatINR(-bal)}</strong>. Removing them will clear their debts from flat records.
+                          </div>
+                        );
+                      }
+                    })()}
+
+                    <p className="text-xs text-[var(--text-muted)] leading-relaxed">
+                      Are you sure you want to remove <strong>{deletingMember.display_name}</strong> from this flat?
+                    </p>
+
+                    <div className="flex items-center justify-end gap-2 pt-2">
+                      <button
+                        type="button"
+                        onClick={() => setDeletingMember(null)}
+                        className="px-4 py-2 rounded-xl text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => deleteMemberMutation.mutate({ memberId: deletingMember.id, force: true })}
+                        disabled={deleteMemberMutation.isPending}
+                        className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold flex items-center gap-1.5 shadow-sm cursor-pointer disabled:opacity-50"
+                      >
+                        {deleteMemberMutation.isPending ? (
+                          <>
+                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                            <span>Removing...</span>
+                          </>
+                        ) : (
+                          <span>Yes, Remove Roommate</span>
+                        )}
+                      </button>
+                    </div>
                   </div>
                 </div>
               )}

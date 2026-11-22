@@ -9,7 +9,13 @@ interface AuthContextType {
   session: Session | null;
   loading: boolean;
   signInWithPhonePin: (phone: string, pin: string) => Promise<void>;
-  signUpWithPhonePin: (phone: string, pin: string, displayName: string) => Promise<void>;
+  signUpWithPhonePin: (
+    phone: string,
+    pin: string,
+    displayName: string,
+    securityQuestion?: string,
+    securityAnswer?: string
+  ) => Promise<void>;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
 }
@@ -106,7 +112,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   async function signUpWithPhonePin(
     rawPhone: string,
     pin: string,
-    displayName: string
+    displayName: string,
+    securityQuestion?: string,
+    securityAnswer?: string
   ) {
     const normalizedPhone = normalizeIndianPhone(rawPhone);
     const syntheticEmail = phoneToSyntheticEmail(rawPhone);
@@ -123,6 +131,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
     if (error) throw error;
 
+    const profileData = {
+      phone: normalizedPhone,
+      display_name: displayName.trim(),
+      security_question: securityQuestion?.trim() || null,
+      security_answer: securityAnswer?.trim().toLowerCase() || null,
+    };
+
     // Immediately sign in to ensure active session
     if (!data.session) {
       const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
@@ -137,8 +152,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (signInData.user) {
         await supabase.from("profiles").upsert({
           id: signInData.user.id,
-          phone: normalizedPhone,
-          display_name: displayName.trim(),
+          ...profileData,
         });
         await fetchProfile(signInData.user.id);
       }
@@ -148,8 +162,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (data.user) {
         await supabase.from("profiles").upsert({
           id: data.user.id,
-          phone: normalizedPhone,
-          display_name: displayName.trim(),
+          ...profileData,
         });
         await fetchProfile(data.user.id);
       }

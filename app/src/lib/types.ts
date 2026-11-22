@@ -2,6 +2,8 @@ export interface Profile {
   id: string;
   phone: string | null;
   display_name: string;
+  security_question?: string | null;
+  security_answer?: string | null;
   created_at: string;
 }
 

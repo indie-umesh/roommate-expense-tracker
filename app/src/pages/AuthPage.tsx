@@ -3,7 +3,25 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
-import { Lock, User, ArrowRight, Loader2, Sun, Moon } from "lucide-react";
+import {
+  Lock,
+  User,
+  ArrowRight,
+  Loader2,
+  Sun,
+  Moon,
+  HelpCircle,
+  KeyRound,
+  CheckCircle2,
+  X,
+} from "lucide-react";
+
+export const SECURITY_QUESTIONS = [
+  "What is your flat / room number or city?",
+  "What was your childhood nickname?",
+  "What is your favorite food or restaurant?",
+  "What was the name of your first school or college?",
+];
 
 export const AuthPage: React.FC = () => {
   const navigate = useNavigate();
@@ -15,8 +33,20 @@ export const AuthPage: React.FC = () => {
   const [phone, setPhone] = useState("");
   const [pin, setPin] = useState("");
   const [confirmPin, setConfirmPin] = useState("");
+  const [securityQuestion, setSecurityQuestion] = useState(SECURITY_QUESTIONS[0]);
+  const [securityAnswer, setSecurityAnswer] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  // Forgot PIN State
+  const [showForgotPin, setShowForgotPin] = useState(false);
+  const [forgotPhone, setForgotPhone] = useState("");
+  const [forgotQuestion, setForgotQuestion] = useState<string | null>(null);
+  const [forgotAnswer, setForgotAnswer] = useState("");
+  const [newPin, setNewPin] = useState("");
+  const [confirmNewPin, setConfirmNewPin] = useState("");
+  const [forgotLoading, setForgotLoading] = useState(false);
+  const [forgotMsg, setForgotMsg] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -43,17 +73,27 @@ export const AuthPage: React.FC = () => {
         setError("PINs do not match");
         return;
       }
+      if (!securityAnswer.trim()) {
+        setError("Please enter a security answer to easily reset your PIN if forgotten");
+        return;
+      }
     }
 
     setLoading(true);
     try {
       if (isSignUp) {
-        await signUpWithPhonePin(cleanPhone, pin, displayName.trim());
+        await signUpWithPhonePin(
+          cleanPhone,
+          pin,
+          displayName.trim(),
+          securityQuestion,
+          securityAnswer.trim()
+        );
       } else {
         await signInWithPhonePin(cleanPhone, pin);
       }
 
-      // Check if user already has a group and route directly into their flat
+      // Route directly into flat or setup
       const { data: userGroups } = await supabase
         .from("groups")
         .select("id")
@@ -72,9 +112,88 @@ export const AuthPage: React.FC = () => {
     }
   }
 
+  // Forgot PIN Step 1: Look up Question
+  async function handleLookupQuestion(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    setForgotMsg(null);
+    const clean = forgotPhone.replace(/\D/g, "");
+    if (clean.length !== 10) {
+      setError("Please enter a valid 10-digit mobile number");
+      return;
+    }
+    setForgotLoading(true);
+    try {
+      const { data, error: rpcErr } = await supabase.rpc("get_security_question", {
+        p_phone: clean,
+      });
+      if (rpcErr) throw rpcErr;
+      if (data && data.found) {
+        setForgotQuestion(data.question);
+      } else {
+        setError(data?.message || "No security question found for this number.");
+      }
+    } catch (err: any) {
+      setError(err?.message || "Failed to find security question");
+    } finally {
+      setForgotLoading(false);
+    }
+  }
+
+  // Forgot PIN Step 2: Answer and Reset PIN
+  async function handleResetPinSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    setForgotMsg(null);
+    const clean = forgotPhone.replace(/\D/g, "");
+    if (!forgotAnswer.trim()) {
+      setError("Please enter your security answer");
+      return;
+    }
+    if (newPin.length !== 6 || !/^\d{6}$/.test(newPin)) {
+      setError("New PIN must be exactly 6 digits");
+      return;
+    }
+    if (newPin !== confirmNewPin) {
+      setError("PINs do not match");
+      return;
+    }
+    setForgotLoading(true);
+    try {
+      const { data, error: rpcErr } = await supabase.rpc("reset_pin_with_security_answer", {
+        p_phone: clean,
+        p_answer: forgotAnswer.trim(),
+        p_new_pin: newPin,
+      });
+      if (rpcErr) throw rpcErr;
+      if (data && data.success) {
+        setForgotMsg(data.message);
+        // Automatically sign in!
+        await signInWithPhonePin(clean, newPin);
+        const { data: userGroups } = await supabase
+          .from("groups")
+          .select("id")
+          .order("created_at", { ascending: false })
+          .limit(1);
+
+        if (userGroups && userGroups.length > 0) {
+          navigate(`/group/${userGroups[0].id}`, { replace: true });
+        } else {
+          navigate("/setup", { replace: true });
+        }
+      } else {
+        setError(data?.message || "Incorrect security answer.");
+      }
+    } catch (err: any) {
+      setError(err?.message || "Failed to reset PIN");
+    } finally {
+      setForgotLoading(false);
+    }
+  }
+
   return (
     <div className="min-h-screen bg-[var(--bg-page)] text-[var(--text-primary)] flex flex-col justify-center px-4 py-8 sm:px-6 lg:px-8 relative transition-colors duration-200">
-      {/* Theme Switcher Button - Available before login */}
+      {/* Theme Switcher Button */}
       <div className="absolute top-5 right-5 z-20">
         <button
           onClick={toggleTheme}
@@ -117,9 +236,10 @@ export const AuthPage: React.FC = () => {
               onClick={() => {
                 setIsSignUp(false);
                 setError(null);
+                setShowForgotPin(false);
               }}
               className={`flex-1 py-2 text-center text-xs font-semibold rounded-lg transition cursor-pointer ${
-                !isSignUp
+                !isSignUp && !showForgotPin
                   ? "bg-white dark:bg-slate-800 text-indigo-600 dark:text-white shadow-xs"
                   : "text-[var(--text-muted)] hover:text-[var(--text-primary)]"
               }`}
@@ -131,9 +251,10 @@ export const AuthPage: React.FC = () => {
               onClick={() => {
                 setIsSignUp(true);
                 setError(null);
+                setShowForgotPin(false);
               }}
               className={`flex-1 py-2 text-center text-xs font-semibold rounded-lg transition cursor-pointer ${
-                isSignUp
+                isSignUp && !showForgotPin
                   ? "bg-white dark:bg-slate-800 text-indigo-600 dark:text-white shadow-xs"
                   : "text-[var(--text-muted)] hover:text-[var(--text-primary)]"
               }`}
@@ -148,76 +269,221 @@ export const AuthPage: React.FC = () => {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {isSignUp && (
+          {forgotMsg && (
+            <div className="mb-5 p-3.5 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-500/30 rounded-xl text-emerald-700 dark:text-emerald-300 text-xs font-medium leading-relaxed">
+              {forgotMsg}
+            </div>
+          )}
+
+          {/* FORGOT PIN VIEW */}
+          {showForgotPin ? (
+            <div className="space-y-4">
+              <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-white/10">
+                <div className="flex items-center gap-2">
+                  <KeyRound className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                  <h3 className="font-bold text-sm text-[var(--text-primary)]">
+                    Reset 6-Digit PIN
+                  </h3>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowForgotPin(false);
+                    setForgotQuestion(null);
+                    setError(null);
+                  }}
+                  className="p-1 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              {!forgotQuestion ? (
+                /* Step 1: Mobile Number */
+                <form onSubmit={handleLookupQuestion} className="space-y-4">
+                  <p className="text-xs text-[var(--text-muted)]">
+                    Enter your registered 10-digit mobile number to verify your security question.
+                  </p>
+                  <div>
+                    <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)] mb-1.5">
+                      Mobile Number
+                    </label>
+                    <div className="relative flex">
+                      <span className="inline-flex items-center px-3.5 rounded-l-xl border border-r-0 border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5 text-[var(--text-primary)] text-sm font-semibold">
+                        +91
+                      </span>
+                      <input
+                        type="tel"
+                        inputMode="numeric"
+                        required
+                        maxLength={10}
+                        value={forgotPhone}
+                        onChange={(e) => setForgotPhone(e.target.value)}
+                        placeholder="9876543210"
+                        className="block w-full px-3.5 py-2.5 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-r-xl text-[var(--text-primary)] placeholder-slate-400 text-sm tracking-wider focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/20 transition"
+                      />
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={forgotLoading}
+                    className="w-full py-2.5 px-4 rounded-xl text-xs font-semibold btn-primary flex items-center justify-center gap-1.5 shadow-sm cursor-pointer disabled:opacity-50"
+                  >
+                    {forgotLoading ? (
+                      <Loader2 className="w-4 h-4 animate-spin text-white" />
+                    ) : (
+                      <>
+                        <span>Continue</span>
+                        <ArrowRight className="w-4 h-4" />
+                      </>
+                    )}
+                  </button>
+                </form>
+              ) : (
+                /* Step 2: Answer & New PIN */
+                <form onSubmit={handleResetPinSubmit} className="space-y-4">
+                  <div className="p-3 bg-indigo-50/80 dark:bg-indigo-950/40 border border-indigo-200/80 dark:border-indigo-800/40 rounded-xl space-y-1">
+                    <span className="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">
+                      Security Question:
+                    </span>
+                    <p className="text-xs font-semibold text-[var(--text-primary)]">
+                      {forgotQuestion}
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)] mb-1.5">
+                      Your Answer
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={forgotAnswer}
+                      onChange={(e) => setForgotAnswer(e.target.value)}
+                      placeholder="Enter your security answer"
+                      className="block w-full px-3.5 py-2.5 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-[var(--text-primary)] text-sm focus:outline-none focus:border-indigo-500 transition"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)] mb-1.5">
+                      New 6-Digit PIN
+                    </label>
+                    <input
+                      type="password"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      maxLength={6}
+                      required
+                      value={newPin}
+                      onChange={(e) => setNewPin(e.target.value)}
+                      placeholder="••••••"
+                      className="block w-full px-3.5 py-2.5 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-[var(--text-primary)] text-sm tracking-[0.3em] text-center focus:outline-none focus:border-indigo-500 transition"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)] mb-1.5">
+                      Confirm New PIN
+                    </label>
+                    <input
+                      type="password"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      maxLength={6}
+                      required
+                      value={confirmNewPin}
+                      onChange={(e) => setConfirmNewPin(e.target.value)}
+                      placeholder="••••••"
+                      className="block w-full px-3.5 py-2.5 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-[var(--text-primary)] text-sm tracking-[0.3em] text-center focus:outline-none focus:border-indigo-500 transition"
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={forgotLoading}
+                    className="w-full py-2.5 px-4 rounded-xl text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center gap-1.5 shadow-sm cursor-pointer disabled:opacity-50"
+                  >
+                    {forgotLoading ? (
+                      <Loader2 className="w-4 h-4 animate-spin text-white" />
+                    ) : (
+                      <>
+                        <CheckCircle2 className="w-4 h-4" />
+                        <span>Reset PIN & Log In</span>
+                      </>
+                    )}
+                  </button>
+                </form>
+              )}
+            </div>
+          ) : (
+            /* NORMAL SIGN IN / SIGN UP FORM */
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {isSignUp && (
+                <div>
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)] mb-1.5">
+                    Your Name
+                  </label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[var(--text-muted)]">
+                      <User className="h-4 w-4" />
+                    </div>
+                    <input
+                      type="text"
+                      required
+                      value={displayName}
+                      onChange={(e) => setDisplayName(e.target.value)}
+                      placeholder="e.g. Umesh"
+                      className="block w-full pl-10 pr-3.5 py-2.5 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-[var(--text-primary)] placeholder-slate-400 text-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/20 transition"
+                    />
+                  </div>
+                </div>
+              )}
+
               <div>
                 <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)] mb-1.5">
-                  Your Name
+                  Mobile Number
                 </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[var(--text-muted)]">
-                    <User className="h-4 w-4" />
-                  </div>
+                <div className="relative flex">
+                  <span className="inline-flex items-center px-3.5 rounded-l-xl border border-r-0 border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5 text-[var(--text-primary)] text-sm font-semibold">
+                    +91
+                  </span>
                   <input
-                    type="text"
+                    type="tel"
+                    inputMode="numeric"
                     required
-                    value={displayName}
-                    onChange={(e) => setDisplayName(e.target.value)}
-                    placeholder="e.g. Umesh"
-                    className="block w-full pl-10 pr-3.5 py-2.5 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-[var(--text-primary)] placeholder-slate-400 text-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/20 transition"
+                    maxLength={10}
+                    value={phone}
+                    onChange={(e) => {
+                      setPhone(e.target.value);
+                      setForgotPhone(e.target.value);
+                    }}
+                    placeholder="9876543210"
+                    className="block w-full px-3.5 py-2.5 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-r-xl text-[var(--text-primary)] placeholder-slate-400 text-sm tracking-wider focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/20 transition"
                   />
                 </div>
               </div>
-            )}
 
-            <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)] mb-1.5">
-                Mobile Number
-              </label>
-              <div className="relative flex">
-                <span className="inline-flex items-center px-3.5 rounded-l-xl border border-r-0 border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5 text-[var(--text-primary)] text-sm font-semibold">
-                  +91
-                </span>
-                <input
-                  type="tel"
-                  inputMode="numeric"
-                  required
-                  maxLength={10}
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="9876543210"
-                  className="block w-full px-3.5 py-2.5 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-r-xl text-[var(--text-primary)] placeholder-slate-400 text-sm tracking-wider focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/20 transition"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)] mb-1.5">
-                6-Digit Security PIN
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[var(--text-muted)]">
-                  <Lock className="h-4 w-4" />
-                </div>
-                <input
-                  type="password"
-                  inputMode="numeric"
-                  pattern="[0-9]*"
-                  maxLength={6}
-                  required
-                  value={pin}
-                  onChange={(e) => setPin(e.target.value)}
-                  placeholder="••••••"
-                  className="block w-full pl-10 pr-3.5 py-2.5 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-[var(--text-primary)] placeholder-slate-400 text-sm tracking-[0.3em] text-center focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/20 transition"
-                />
-              </div>
-            </div>
-
-            {isSignUp && (
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)] mb-1.5">
-                  Confirm 6-Digit PIN
-                </label>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)]">
+                    6-Digit Security PIN
+                  </label>
+                  {!isSignUp && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowForgotPin(true);
+                        setForgotPhone(phone);
+                        setError(null);
+                      }}
+                      className="text-[11px] font-semibold text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer"
+                    >
+                      Forgot PIN?
+                    </button>
+                  )}
+                </div>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[var(--text-muted)]">
                     <Lock className="h-4 w-4" />
@@ -228,31 +494,93 @@ export const AuthPage: React.FC = () => {
                     pattern="[0-9]*"
                     maxLength={6}
                     required
-                    value={confirmPin}
-                    onChange={(e) => setConfirmPin(e.target.value)}
+                    value={pin}
+                    onChange={(e) => setPin(e.target.value)}
                     placeholder="••••••"
                     className="block w-full pl-10 pr-3.5 py-2.5 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-[var(--text-primary)] placeholder-slate-400 text-sm tracking-[0.3em] text-center focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/20 transition"
                   />
                 </div>
               </div>
-            )}
 
-            {/* Flat Minimal CTA Button */}
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full mt-6 flex items-center justify-center gap-2 py-3 px-6 rounded-xl text-sm font-semibold btn-primary disabled:opacity-50 cursor-pointer shadow-sm"
-            >
-              {loading ? (
-                <Loader2 className="h-4 w-4 animate-spin text-white" />
-              ) : (
+              {isSignUp && (
                 <>
-                  <span>{isSignUp ? "Create Flat Account" : "Sign In"}</span>
-                  <ArrowRight className="h-4 w-4" />
+                  <div>
+                    <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)] mb-1.5">
+                      Confirm 6-Digit PIN
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[var(--text-muted)]">
+                        <Lock className="h-4 w-4" />
+                      </div>
+                      <input
+                        type="password"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
+                        maxLength={6}
+                        required
+                        value={confirmPin}
+                        onChange={(e) => setConfirmPin(e.target.value)}
+                        placeholder="••••••"
+                        className="block w-full pl-10 pr-3.5 py-2.5 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-[var(--text-primary)] placeholder-slate-400 text-sm tracking-[0.3em] text-center focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/20 transition"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Security Question for Easy PIN Reset */}
+                  <div className="pt-2 border-t border-slate-100 dark:border-white/10 space-y-3">
+                    <div className="flex items-center gap-1.5 text-xs text-[var(--text-primary)] font-semibold">
+                      <HelpCircle className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
+                      <span>Security Question (For Easy PIN Reset)</span>
+                    </div>
+
+                    <div>
+                      <select
+                        value={securityQuestion}
+                        onChange={(e) => setSecurityQuestion(e.target.value)}
+                        className="w-full px-3 py-2 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-xs text-[var(--text-primary)] focus:outline-none focus:border-indigo-500 cursor-pointer"
+                      >
+                        {SECURITY_QUESTIONS.map((q) => (
+                          <option key={q} value={q} className="dark:bg-slate-900">
+                            {q}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <input
+                        type="text"
+                        required
+                        value={securityAnswer}
+                        onChange={(e) => setSecurityAnswer(e.target.value)}
+                        placeholder="Your Answer (e.g. 302, Indore, Maggi)"
+                        className="w-full px-3.5 py-2 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-xs text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-indigo-500 transition"
+                      />
+                      <span className="text-[10px] text-[var(--text-muted)] mt-1 block">
+                        Used to easily reset your PIN if you ever forget it.
+                      </span>
+                    </div>
+                  </div>
                 </>
               )}
-            </button>
-          </form>
+
+              {/* Flat Minimal CTA Button */}
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full mt-6 flex items-center justify-center gap-2 py-3 px-6 rounded-xl text-sm font-semibold btn-primary disabled:opacity-50 cursor-pointer shadow-sm"
+              >
+                {loading ? (
+                  <Loader2 className="h-4 w-4 animate-spin text-white" />
+                ) : (
+                  <>
+                    <span>{isSignUp ? "Create Flat Account" : "Sign In"}</span>
+                    <ArrowRight className="h-4 w-4" />
+                  </>
+                )}
+              </button>
+            </form>
+          )}
         </div>
       </div>
     </div>
