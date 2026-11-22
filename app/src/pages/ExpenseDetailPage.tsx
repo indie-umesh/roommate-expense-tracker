@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../context/AuthContext";
+import { useLanguage } from "../context/LanguageContext";
 import { formatINR, paiseToRupees, rupeesToPaise } from "../lib/money";
 import type { Member, Expense } from "../lib/types";
 import { RecordSettlementModal } from "../components/RecordSettlementModal";
@@ -21,6 +22,7 @@ export const ExpenseDetailPage: React.FC = () => {
   const { groupId, expenseId } = useParams<{ groupId: string; expenseId: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
 
   const [isEditing, setIsEditing] = useState(false);
@@ -174,7 +176,7 @@ export const ExpenseDetailPage: React.FC = () => {
   if (isLoading || !expense) {
     return (
       <div className="min-h-screen bg-[var(--bg-page)] flex items-center justify-center text-[var(--text-muted)] text-sm font-medium">
-        Loading bill details...
+        {t("loading")}
       </div>
     );
   }
@@ -189,7 +191,7 @@ export const ExpenseDetailPage: React.FC = () => {
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
-          <h1 className="font-bold text-base text-[var(--text-primary)] tracking-tight">Expense Details</h1>
+          <h1 className="font-bold text-base text-[var(--text-primary)] tracking-tight">{t("expense_details")}</h1>
           {canEdit ? (
             !isEditing ? (
               <button
@@ -197,14 +199,14 @@ export const ExpenseDetailPage: React.FC = () => {
                 className="btn-surface h-9 px-3 rounded-xl font-medium text-xs flex items-center gap-1.5 cursor-pointer shadow-xs"
               >
                 <Edit2 className="w-3.5 h-3.5" />
-                <span>Edit</span>
+                <span>{t("edit")}</span>
               </button>
             ) : (
               <button
                 onClick={() => setIsEditing(false)}
                 className="h-9 px-3 rounded-xl text-xs font-medium text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer flex items-center"
               >
-                Cancel
+                {t("cancel")}
               </button>
             )
           ) : (
@@ -224,7 +226,7 @@ export const ExpenseDetailPage: React.FC = () => {
           <div className="card-clean p-6 space-y-4">
             <div>
               <label className="block text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-1.5">
-                Amount (₹)
+                {t("amount_inr")}
               </label>
               <input
                 type="number"
@@ -237,7 +239,7 @@ export const ExpenseDetailPage: React.FC = () => {
 
             <div>
               <label className="block text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-1.5">
-                Details / Category
+                {t("what_for")}
               </label>
               <input
                 type="text"
@@ -249,7 +251,7 @@ export const ExpenseDetailPage: React.FC = () => {
 
             <div>
               <label className="block text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-1.5">
-                Who Paid?
+                {t("who_paid")}
               </label>
               <div className="flex flex-wrap gap-2">
                 {members.map((m) => (
@@ -271,7 +273,7 @@ export const ExpenseDetailPage: React.FC = () => {
 
             <div>
               <label className="block text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-1.5">
-                Split Participants
+                {t("split_participants")}
               </label>
               <div className="flex flex-wrap gap-2">
                 {members.map((m) => {
@@ -292,7 +294,7 @@ export const ExpenseDetailPage: React.FC = () => {
                           isChecked ? "bg-indigo-600 text-white" : "border border-slate-300 dark:border-white/20"
                         }`}
                       >
-                        {isChecked && <Check className="w-3 h-3 stroke-[3]" />}
+                        {isChecked && <Check className="w-3.5 h-3.5 stroke-[3]" />}
                       </div>
                       <span>{m.display_name}</span>
                     </button>
@@ -308,7 +310,7 @@ export const ExpenseDetailPage: React.FC = () => {
                 className="text-xs text-rose-600 hover:text-rose-700 dark:text-rose-400 font-semibold flex items-center gap-1 cursor-pointer"
               >
                 <Ban className="w-3.5 h-3.5" />
-                <span>Cancel this Bill</span>
+                <span>{t("cancel_bill")}</span>
               </button>
 
               <div className="flex items-center gap-2">
@@ -317,7 +319,7 @@ export const ExpenseDetailPage: React.FC = () => {
                   onClick={() => setIsEditing(false)}
                   className="px-4 py-2 rounded-lg text-xs font-medium text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer"
                 >
-                  Cancel
+                  {t("cancel")}
                 </button>
                 <button
                   type="button"
@@ -325,7 +327,7 @@ export const ExpenseDetailPage: React.FC = () => {
                   disabled={updateMutation.isPending}
                   className="px-5 py-2 rounded-lg btn-primary text-xs font-medium shadow-xs disabled:opacity-50"
                 >
-                  {updateMutation.isPending ? "Saving..." : "Save Changes"}
+                  {updateMutation.isPending ? t("saving") : t("save")}
                 </button>
               </div>
             </div>
@@ -340,7 +342,7 @@ export const ExpenseDetailPage: React.FC = () => {
                     {expense.details}
                   </h2>
                   <p className="text-xs text-[var(--text-muted)] mt-1 font-normal">
-                    Logged on {new Date(expense.spent_on).toLocaleDateString("en-IN", {
+                    {t("logged_on")} {new Date(expense.spent_on).toLocaleDateString("en-IN", {
                       day: "numeric",
                       month: "long",
                       year: "numeric",
@@ -352,7 +354,7 @@ export const ExpenseDetailPage: React.FC = () => {
                     {formatINR(expense.amount_paise)}
                   </span>
                   <p className="text-[11px] text-[var(--text-muted)] mt-0.5">
-                    Paid by <strong className="text-[var(--text-primary)]">{payerName}</strong>
+                    {t("paid_by")} <strong className="text-[var(--text-primary)]">{payerName}</strong>
                   </p>
                 </div>
               </div>
@@ -360,7 +362,7 @@ export const ExpenseDetailPage: React.FC = () => {
               {/* Split Breakdown */}
               <div className="border-t border-slate-100 dark:border-white/10 pt-4 space-y-3">
                 <span className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider block">
-                  Split Among {expense.splits?.length || 0} Roommates
+                  {t("split_among_roommates", { count: expense.splits?.length || 0 })}
                 </span>
                 <div className="space-y-2">
                   {expense.splits?.map((split) => {
@@ -378,11 +380,11 @@ export const ExpenseDetailPage: React.FC = () => {
                             {m?.display_name || "Roommate"}
                           </span>
                           {isMe && (
-                            <span className="text-[10px] text-[var(--text-muted)] font-medium">(You)</span>
+                            <span className="text-[10px] text-[var(--text-muted)] font-medium">({t("you")})</span>
                           )}
                           {isPayer && (
                             <span className="text-[10px] bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 px-1.5 py-0.5 rounded font-semibold">
-                              Paid
+                              {t("paid_by")}
                             </span>
                           )}
                         </div>
@@ -405,7 +407,7 @@ export const ExpenseDetailPage: React.FC = () => {
                               }}
                               className="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:hover:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 text-[11px] font-semibold transition cursor-pointer flex items-center gap-1 active:scale-[0.98]"
                             >
-                              <span>Mark as Paid</span>
+                              <span>{t("mark_as_paid")}</span>
                             </button>
                           )}
                         </div>
@@ -417,7 +419,7 @@ export const ExpenseDetailPage: React.FC = () => {
                 {/* Settle / Pay Bill Action Bar */}
                 <div className="pt-3 border-t border-slate-100 dark:border-white/10 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
                   <span className="text-[11px] text-[var(--text-muted)]">
-                    Directly pay or clear balance for this bill:
+                    {t("optimal_settle_desc")}:
                   </span>
                   <div className="flex items-center gap-2">
                     {canEdit && (
@@ -426,7 +428,7 @@ export const ExpenseDetailPage: React.FC = () => {
                         className="px-3 py-1.5 rounded-xl text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 text-xs font-semibold flex items-center gap-1 transition cursor-pointer"
                       >
                         <Ban className="w-3.5 h-3.5" />
-                        <span>Cancel Bill</span>
+                        <span>{t("cancel_bill")}</span>
                       </button>
                     )}
                     <button
@@ -446,7 +448,7 @@ export const ExpenseDetailPage: React.FC = () => {
                       className="px-3.5 py-2 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer active:scale-[0.98]"
                     >
                       <CreditCard className="w-3.5 h-3.5" />
-                      <span>Record Payment for this Bill</span>
+                      <span>{t("record_payment_for_bill")}</span>
                     </button>
                   </div>
                 </div>
@@ -460,13 +462,13 @@ export const ExpenseDetailPage: React.FC = () => {
               </div>
               <div className="space-y-0.5">
                 <h4 className="font-semibold text-xs text-[var(--text-primary)] flex items-center gap-1.5">
-                  <span>Honest Flat Ledger</span>
+                  <span>{t("transparent_ledger")}</span>
                   <span className="text-[10px] bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-2 py-0.2 rounded-full font-bold">
-                    100% Transparent
+                    100%
                   </span>
                 </h4>
                 <p className="text-[11px] text-[var(--text-muted)] leading-relaxed">
-                  Har kharcha aur payment permanently record hoti hai. Agar koi entry galat ho toh use theek ya cancel kiya ja sakta hai, audit record hamesha safe rehta hai.
+                  {t("transparent_ledger_desc")}
                 </p>
               </div>
             </div>
@@ -496,10 +498,10 @@ export const ExpenseDetailPage: React.FC = () => {
             </div>
             <div>
               <h3 className="text-base font-bold text-[var(--text-primary)]">
-                Cancel this Bill?
+                {t("cancel_bill_prompt")}
               </h3>
               <p className="text-xs text-[var(--text-muted)] mt-1.5 leading-relaxed">
-                Agar yeh kharcha galat add ho gaya tha ya personal tha, toh ise cancel karne par sabhi roommates ka hissa ₹0 ho jayega.
+                {t("cancel_bill_desc")}
               </p>
             </div>
             <div className="flex items-center justify-end gap-2 pt-2">
@@ -508,7 +510,7 @@ export const ExpenseDetailPage: React.FC = () => {
                 onClick={() => setShowCancelConfirm(false)}
                 className="px-4 py-2 rounded-xl text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer"
               >
-                Keep Bill
+                {t("keep_bill")}
               </button>
               <button
                 type="button"
@@ -519,10 +521,10 @@ export const ExpenseDetailPage: React.FC = () => {
                 {cancelBillMutation.isPending ? (
                   <>
                     <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                    <span>Cancelling...</span>
+                    <span>{t("cancelling")}</span>
                   </>
                 ) : (
-                  <span>Yes, Cancel Bill</span>
+                  <span>{t("yes_cancel_bill")}</span>
                 )}
               </button>
             </div>

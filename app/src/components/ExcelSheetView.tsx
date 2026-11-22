@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { formatINR } from "../lib/money";
+import { useLanguage } from "../context/LanguageContext";
 import type { Member, Expense } from "../lib/types";
 import { Table, LayoutList, Search, Download } from "lucide-react";
 
@@ -14,6 +15,7 @@ export const ExcelSheetView: React.FC<ExcelSheetViewProps> = ({
   expenses,
   onSelectExpense,
 }) => {
+  const { t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState("");
   const [filterMemberId, setFilterMemberId] = useState<string>("all");
   const [mobileMode, setMobileMode] = useState<"compact" | "table">("compact");
@@ -110,7 +112,7 @@ export const ExcelSheetView: React.FC<ExcelSheetViewProps> = ({
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <div className="card-clean p-4">
           <span className="text-[10px] font-semibold text-[var(--text-muted)] uppercase tracking-wider block">
-            Total Spent
+            {t("total_spent")}
           </span>
           <span className="text-xl md:text-2xl font-bold text-indigo-600 dark:text-indigo-400 tracking-tight block mt-1">
             {formatINR(totalSpent)}
@@ -118,7 +120,7 @@ export const ExcelSheetView: React.FC<ExcelSheetViewProps> = ({
         </div>
         <div className="card-clean p-4">
           <span className="text-[10px] font-semibold text-[var(--text-muted)] uppercase tracking-wider block">
-            Avg per Mate
+            {t("overview")}
           </span>
           <span className="text-xl md:text-2xl font-bold text-amber-500 tracking-tight block mt-1">
             {formatINR(avgPerMember)}
@@ -126,7 +128,7 @@ export const ExcelSheetView: React.FC<ExcelSheetViewProps> = ({
         </div>
         <div className="card-clean p-4">
           <span className="text-[10px] font-semibold text-[var(--text-muted)] uppercase tracking-wider block">
-            Total Bills
+            {t("sheet")}
           </span>
           <span className="text-xl md:text-2xl font-bold text-[var(--text-primary)] tracking-tight block mt-1">
             {filteredExpenses.length}
@@ -134,7 +136,7 @@ export const ExcelSheetView: React.FC<ExcelSheetViewProps> = ({
         </div>
         <div className="card-clean p-4">
           <span className="text-[10px] font-semibold text-[var(--text-muted)] uppercase tracking-wider block">
-            Roommates
+            {t("roommates")}
           </span>
           <span className="text-xl md:text-2xl font-bold text-[var(--text-primary)] tracking-tight block mt-1">
             {members.length}
@@ -151,7 +153,7 @@ export const ExcelSheetView: React.FC<ExcelSheetViewProps> = ({
             <Search className="w-3.5 h-3.5 text-[var(--text-muted)] absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder="Search expenses (e.g. Milk, Dinner)..."
+              placeholder={`${t("what_for")}...`}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-9 pr-3.5 py-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-lg text-xs text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-indigo-500"
@@ -165,7 +167,7 @@ export const ExcelSheetView: React.FC<ExcelSheetViewProps> = ({
               onChange={(e) => setFilterMemberId(e.target.value)}
               className="px-3 py-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-lg text-xs text-[var(--text-primary)] font-medium focus:outline-none focus:border-indigo-500 cursor-pointer"
             >
-              <option value="all">All Roommates</option>
+              <option value="all">{t("roommates")}</option>
               {members.map((m) => (
                 <option key={m.id} value={m.id}>
                   {getMemberDisplayName(m)}
@@ -208,7 +210,7 @@ export const ExcelSheetView: React.FC<ExcelSheetViewProps> = ({
               title="Download Excel / CSV"
             >
               <Download className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
-              <span>Export</span>
+              <span>{t("export_csv")}</span>
             </button>
           </div>
         </div>
@@ -276,10 +278,10 @@ export const ExcelSheetView: React.FC<ExcelSheetViewProps> = ({
           <table className="w-full text-left text-xs border-collapse">
             <thead>
               <tr className="bg-slate-50 dark:bg-white/[0.02] border-b border-slate-200 dark:border-white/10 text-[11px] font-semibold uppercase tracking-wider text-[var(--text-muted)]">
-                <th className="py-3 px-4 w-28 whitespace-nowrap">Date</th>
-                <th className="py-3 px-4 min-w-[160px]">Details</th>
-                <th className="py-3 px-4 text-right whitespace-nowrap">Total</th>
-                <th className="py-3 px-4 whitespace-nowrap">Paid By</th>
+                <th className="py-3 px-4 w-28 whitespace-nowrap">{t("date")}</th>
+                <th className="py-3 px-4 min-w-[160px]">{t("what_for")}</th>
+                <th className="py-3 px-4 text-right whitespace-nowrap">{t("total_inr")}</th>
+                <th className="py-3 px-4 whitespace-nowrap">{t("who_paid")}</th>
                 {members.map((m) => (
                   <th key={m.id} className="py-3 px-4 text-right whitespace-nowrap min-w-[90px]">
                     {getMemberDisplayName(m)}
@@ -344,13 +346,13 @@ export const ExcelSheetView: React.FC<ExcelSheetViewProps> = ({
             <tfoot>
               <tr className="bg-slate-50 dark:bg-white/[0.04] border-t-2 border-slate-200 dark:border-white/10 font-semibold text-xs">
                 <td colSpan={2} className="py-3 px-4 text-[var(--text-primary)] uppercase tracking-wider">
-                  Total
+                  {t("total_inr")}
                 </td>
                 <td className="py-3 px-4 text-right font-bold text-indigo-600 dark:text-indigo-400 whitespace-nowrap">
                   {formatINR(totalSpent)}
                 </td>
                 <td className="py-3 px-4 text-[11px] text-[var(--text-muted)]">
-                  Summary
+                  {t("monthly_summary")}
                 </td>
                 {members.map((m) => {
                   const paid = memberPaidTotals.get(m.id) || 0n;

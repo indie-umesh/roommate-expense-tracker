@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
+import { useLanguage } from "../context/LanguageContext";
+import { SettingsModal } from "../components/SettingsModal";
 import {
   Lock,
   User,
@@ -14,6 +16,7 @@ import {
   KeyRound,
   CheckCircle2,
   X,
+  Globe,
 } from "lucide-react";
 
 export const SECURITY_QUESTIONS = [
@@ -27,6 +30,8 @@ export const AuthPage: React.FC = () => {
   const navigate = useNavigate();
   const { signInWithPhonePin, signUpWithPhonePin } = useAuth();
   const { theme, toggleTheme } = useTheme();
+  const { t, currentLanguage } = useLanguage();
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const [isSignUp, setIsSignUp] = useState(false);
   const [displayName, setDisplayName] = useState("");
@@ -193,11 +198,21 @@ export const AuthPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[var(--bg-page)] text-[var(--text-primary)] flex flex-col justify-center px-4 py-8 sm:px-6 lg:px-8 relative transition-colors duration-200">
-      {/* Theme Switcher Button */}
-      <div className="absolute top-5 right-5 z-20">
+      {/* Top Header Controls: Language & Theme */}
+      <div className="absolute top-5 right-5 z-20 flex items-center gap-2">
+        <button
+          onClick={() => setIsSettingsOpen(true)}
+          className="btn-surface px-3 py-1.5 rounded-full flex items-center gap-1.5 text-xs font-semibold cursor-pointer shadow-xs"
+          title={t("choose_language")}
+        >
+          <Globe className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
+          <span>
+            {currentLanguage?.flag} {currentLanguage?.name || "Language"}
+          </span>
+        </button>
         <button
           onClick={toggleTheme}
-          className="btn-surface px-3 py-1.5 rounded-full flex items-center gap-1.5 text-xs font-semibold cursor-pointer"
+          className="btn-surface px-3 py-1.5 rounded-full flex items-center gap-1.5 text-xs font-semibold cursor-pointer shadow-xs"
           title={`Switch to ${theme === "light" ? "Dark" : "Light"} Mode`}
         >
           {theme === "light" ? (
@@ -223,7 +238,7 @@ export const AuthPage: React.FC = () => {
           Roommate
         </h1>
         <p className="mt-1 text-sm text-[var(--text-muted)] font-normal">
-          Split bills & settle debts in seconds
+          {t("sign_in_desc")}
         </p>
       </div>
 
@@ -244,7 +259,7 @@ export const AuthPage: React.FC = () => {
                   : "text-[var(--text-muted)] hover:text-[var(--text-primary)]"
               }`}
             >
-              Sign In
+              {t("sign_in_btn")}
             </button>
             <button
               type="button"
@@ -259,7 +274,7 @@ export const AuthPage: React.FC = () => {
                   : "text-[var(--text-muted)] hover:text-[var(--text-primary)]"
               }`}
             >
-              Sign Up
+              {t("sign_up_btn")}
             </button>
           </div>
 
@@ -282,7 +297,7 @@ export const AuthPage: React.FC = () => {
                 <div className="flex items-center gap-2">
                   <KeyRound className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
                   <h3 className="font-bold text-sm text-[var(--text-primary)]">
-                    Reset 6-Digit PIN
+                    {t("reset_pin_title")}
                   </h3>
                 </div>
                 <button
@@ -302,11 +317,11 @@ export const AuthPage: React.FC = () => {
                 /* Step 1: Mobile Number */
                 <form onSubmit={handleLookupQuestion} className="space-y-4">
                   <p className="text-xs text-[var(--text-muted)]">
-                    Enter your registered 10-digit mobile number to verify your security question.
+                    {t("phone_label")}
                   </p>
                   <div>
                     <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)] mb-1.5">
-                      Mobile Number
+                      {t("mobile_number")}
                     </label>
                     <div className="relative flex">
                       <span className="inline-flex items-center px-3.5 rounded-l-xl border border-r-0 border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5 text-[var(--text-primary)] text-sm font-semibold">
@@ -345,7 +360,7 @@ export const AuthPage: React.FC = () => {
                 <form onSubmit={handleResetPinSubmit} className="space-y-4">
                   <div className="p-3 bg-indigo-50/80 dark:bg-indigo-950/40 border border-indigo-200/80 dark:border-indigo-800/40 rounded-xl space-y-1">
                     <span className="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">
-                      Security Question:
+                      {t("security_question_label")}:
                     </span>
                     <p className="text-xs font-semibold text-[var(--text-primary)]">
                       {forgotQuestion}
@@ -354,7 +369,7 @@ export const AuthPage: React.FC = () => {
 
                   <div>
                     <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)] mb-1.5">
-                      Your Answer
+                      {t("security_answer_label")}
                     </label>
                     <input
                       type="text"
@@ -368,7 +383,7 @@ export const AuthPage: React.FC = () => {
 
                   <div>
                     <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)] mb-1.5">
-                      New 6-Digit PIN
+                      {t("new_pin_label")}
                     </label>
                     <input
                       type="password"
@@ -385,7 +400,7 @@ export const AuthPage: React.FC = () => {
 
                   <div>
                     <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)] mb-1.5">
-                      Confirm New PIN
+                      {t("confirm_pin_label")}
                     </label>
                     <input
                       type="password"
@@ -410,7 +425,7 @@ export const AuthPage: React.FC = () => {
                     ) : (
                       <>
                         <CheckCircle2 className="w-4 h-4" />
-                        <span>Reset PIN & Log In</span>
+                        <span>{t("reset_pin_btn")}</span>
                       </>
                     )}
                   </button>
@@ -423,7 +438,7 @@ export const AuthPage: React.FC = () => {
               {isSignUp && (
                 <div>
                   <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)] mb-1.5">
-                    Your Name
+                    {t("full_name")}
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[var(--text-muted)]">
@@ -443,7 +458,7 @@ export const AuthPage: React.FC = () => {
 
               <div>
                 <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)] mb-1.5">
-                  Mobile Number
+                  {t("mobile_number")}
                 </label>
                 <div className="relative flex">
                   <span className="inline-flex items-center px-3.5 rounded-l-xl border border-r-0 border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5 text-[var(--text-primary)] text-sm font-semibold">
@@ -468,7 +483,7 @@ export const AuthPage: React.FC = () => {
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)]">
-                    6-Digit Security PIN
+                    {t("pin_label")}
                   </label>
                   {!isSignUp && (
                     <button
@@ -480,7 +495,7 @@ export const AuthPage: React.FC = () => {
                       }}
                       className="text-[11px] font-semibold text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer"
                     >
-                      Forgot PIN?
+                      {t("forgot_pin")}
                     </button>
                   )}
                 </div>
@@ -506,7 +521,7 @@ export const AuthPage: React.FC = () => {
                 <>
                   <div>
                     <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)] mb-1.5">
-                      Confirm 6-Digit PIN
+                      {t("confirm_pin_label")}
                     </label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[var(--text-muted)]">
@@ -530,7 +545,7 @@ export const AuthPage: React.FC = () => {
                   <div className="pt-2 border-t border-slate-100 dark:border-white/10 space-y-3">
                     <div className="flex items-center gap-1.5 text-xs text-[var(--text-primary)] font-semibold">
                       <HelpCircle className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
-                      <span>Security Question (For Easy PIN Reset)</span>
+                      <span>{t("security_question_label")}</span>
                     </div>
 
                     <div>
@@ -574,7 +589,7 @@ export const AuthPage: React.FC = () => {
                   <Loader2 className="h-4 w-4 animate-spin text-white" />
                 ) : (
                   <>
-                    <span>{isSignUp ? "Create Flat Account" : "Sign In"}</span>
+                    <span>{isSignUp ? t("sign_up_btn") : t("sign_in_btn")}</span>
                     <ArrowRight className="h-4 w-4" />
                   </>
                 )}
@@ -583,6 +598,12 @@ export const AuthPage: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* Settings Modal (Language & Theme) */}
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+      />
     </div>
   );
 };

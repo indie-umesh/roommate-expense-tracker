@@ -327,7 +327,7 @@ export const MembersPage: React.FC = () => {
         <div className="card-clean p-6 md:p-7 space-y-4 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
           <div>
             <p className="text-xs text-[var(--text-muted)] font-semibold uppercase tracking-wider">
-              Flat Invite Code
+              {t("invite_code")}
             </p>
             <div className="flex items-center gap-3 mt-1.5">
               <h2 className="text-2xl md:text-3xl font-extrabold text-indigo-600 dark:text-indigo-400 tracking-wider">
@@ -336,13 +336,13 @@ export const MembersPage: React.FC = () => {
               <button
                 onClick={copyInviteCode}
                 className="btn-surface p-2 rounded-lg cursor-pointer"
-                title="Copy code"
+                title={t("copied")}
               >
                 {copiedCode ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4 text-[var(--text-muted)]" />}
               </button>
             </div>
             <p className="text-xs text-[var(--text-muted)] mt-1 font-normal">
-              Share this code so your flatmates can join with zero friction.
+              {t("share_whatsapp_desc")}
             </p>
           </div>
 
@@ -352,7 +352,7 @@ export const MembersPage: React.FC = () => {
               className="w-full md:w-auto flex items-center justify-center gap-2 py-2.5 px-5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-xs transition cursor-pointer shadow-xs active:scale-[0.98]"
             >
               <Share2 className="w-4 h-4" />
-              <span>Share via WhatsApp</span>
+              <span>{t("share_whatsapp")}</span>
             </button>
           </div>
         </div>
@@ -362,10 +362,10 @@ export const MembersPage: React.FC = () => {
           <div className="flex justify-between items-center px-1">
             <div>
               <h3 className="text-sm font-bold text-[var(--text-primary)]">
-                Flat Roommates ({members.length})
+                {t("flat_roommates", { count: members.length })}
               </h3>
               <p className="text-xs text-[var(--text-muted)]">
-                Manage roommate profiles, phone numbers, UPI IDs, and room notes.
+                {t("manage_roommates_desc")}
               </p>
             </div>
             <button
@@ -377,7 +377,7 @@ export const MembersPage: React.FC = () => {
               className="btn-primary flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium shadow-xs"
             >
               <UserPlus className="w-3.5 h-3.5" />
-              <span>Add Roommate</span>
+              <span>{t("add_roommate")}</span>
             </button>
           </div>
 
@@ -388,7 +388,7 @@ export const MembersPage: React.FC = () => {
               className="card-clean p-5 space-y-4 border-indigo-200 dark:border-indigo-800/40"
             >
               <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-white/10">
-                <h4 className="font-bold text-sm text-[var(--text-primary)]">Add Roommate Details</h4>
+                <h4 className="font-bold text-sm text-[var(--text-primary)]">{t("add_roommate_details")}</h4>
                 <button
                   type="button"
                   onClick={() => setIsAddingMember(false)}
@@ -410,7 +410,7 @@ export const MembersPage: React.FC = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 <div>
                   <label className="block text-[11px] font-semibold text-[var(--text-muted)] mb-1">
-                    First Name *
+                    {t("first_name")}
                   </label>
                   <input
                     type="text"
@@ -428,7 +428,7 @@ export const MembersPage: React.FC = () => {
 
                 <div>
                   <label className="block text-[11px] font-semibold text-[var(--text-muted)] mb-1">
-                    Surname {duplicateCandidate ? "(Required)" : "(Optional)"}
+                    {t("surname")}
                   </label>
                   <input
                     type="text"
@@ -445,7 +445,7 @@ export const MembersPage: React.FC = () => {
                 <div>
                   <label className="block text-[11px] font-semibold text-[var(--text-muted)] mb-1 flex items-center gap-1">
                     <Phone className="w-3 h-3 text-[var(--text-muted)]" />
-                    <span>Mobile Number (Optional)</span>
+                    <span>{t("mobile_number")}</span>
                   </label>
                   <input
                     type="tel"
@@ -460,7 +460,7 @@ export const MembersPage: React.FC = () => {
                 <div>
                   <label className="block text-[11px] font-semibold text-[var(--text-muted)] mb-1 flex items-center gap-1">
                     <QrCode className="w-3 h-3 text-[var(--text-muted)]" />
-                    <span>UPI ID / VPA (Optional)</span>
+                    <span>{t("upi_id")}</span>
                   </label>
                   <input
                     type="text"
@@ -474,11 +474,11 @@ export const MembersPage: React.FC = () => {
                 <div className="sm:col-span-2">
                   <label className="block text-[11px] font-semibold text-[var(--text-muted)] mb-1 flex items-center gap-1">
                     <FileText className="w-3 h-3 text-[var(--text-muted)]" />
-                    <span>Room / Notes (Optional)</span>
+                    <span>{t("room_notes")}</span>
                   </label>
                   <input
                     type="text"
-                    placeholder="e.g. Master Bedroom, Room 201"
+                    placeholder={t("room_notes_placeholder")}
                     value={newNotes}
                     onChange={(e) => setNewNotes(e.target.value)}
                     className="w-full px-3 py-2 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg text-xs text-[var(--text-primary)] focus:outline-none focus:border-indigo-500"
@@ -492,14 +492,14 @@ export const MembersPage: React.FC = () => {
                   onClick={() => setIsAddingMember(false)}
                   className="px-3.5 py-1.5 text-xs font-medium text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer"
                 >
-                  Cancel
+                  {t("cancel")}
                 </button>
                 <button
                   type="submit"
                   disabled={addMemberMutation.isPending}
                   className="px-4 py-1.5 btn-primary text-xs font-medium rounded-lg shadow-xs"
                 >
-                  {addMemberMutation.isPending ? "Adding..." : "Save Roommate"}
+                  {addMemberMutation.isPending ? t("loading") : t("save_roommate")}
                 </button>
               </div>
             </form>
@@ -513,8 +513,8 @@ export const MembersPage: React.FC = () => {
             >
               <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-white/10">
                 <div>
-                  <h4 className="font-bold text-sm text-[var(--text-primary)]">Edit Roommate Details</h4>
-                  <p className="text-[11px] text-[var(--text-muted)]">Update name, phone number, UPI ID, or room notes.</p>
+                  <h4 className="font-bold text-sm text-[var(--text-primary)]">{t("edit_roommate_details")}</h4>
+                  <p className="text-[11px] text-[var(--text-muted)]">{t("manage_roommates_desc")}</p>
                 </div>
                 <button
                   type="button"
@@ -528,7 +528,7 @@ export const MembersPage: React.FC = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 <div>
                   <label className="block text-[11px] font-semibold text-[var(--text-muted)] mb-1">
-                    Full Name *
+                    {t("full_name")}
                   </label>
                   <input
                     type="text"
@@ -542,7 +542,7 @@ export const MembersPage: React.FC = () => {
                 <div>
                   <label className="block text-[11px] font-semibold text-[var(--text-muted)] mb-1 flex items-center gap-1">
                     <Phone className="w-3 h-3 text-[var(--text-muted)]" />
-                    <span>Mobile Number</span>
+                    <span>{t("mobile_number")}</span>
                   </label>
                   <input
                     type="tel"
@@ -557,7 +557,7 @@ export const MembersPage: React.FC = () => {
                 <div>
                   <label className="block text-[11px] font-semibold text-[var(--text-muted)] mb-1 flex items-center gap-1">
                     <QrCode className="w-3 h-3 text-[var(--text-muted)]" />
-                    <span>UPI ID / VPA</span>
+                    <span>{t("upi_id")}</span>
                   </label>
                   <input
                     type="text"
@@ -571,11 +571,11 @@ export const MembersPage: React.FC = () => {
                 <div>
                   <label className="block text-[11px] font-semibold text-[var(--text-muted)] mb-1 flex items-center gap-1">
                     <FileText className="w-3 h-3 text-[var(--text-muted)]" />
-                    <span>Room / Notes</span>
+                    <span>{t("room_notes")}</span>
                   </label>
                   <input
                     type="text"
-                    placeholder="e.g. Master Bedroom"
+                    placeholder={t("room_notes_placeholder")}
                     value={editNotes}
                     onChange={(e) => setEditNotes(e.target.value)}
                     className="w-full px-3 py-2 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg text-xs text-[var(--text-primary)] focus:outline-none focus:border-indigo-500"
@@ -589,14 +589,14 @@ export const MembersPage: React.FC = () => {
                   onClick={() => setEditingMember(null)}
                   className="px-3.5 py-1.5 text-xs font-medium text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer"
                 >
-                  Cancel
+                  {t("cancel")}
                 </button>
                 <button
                   type="submit"
                   disabled={editMemberMutation.isPending}
                   className="px-4 py-1.5 btn-primary text-xs font-medium rounded-lg shadow-xs"
                 >
-                  {editMemberMutation.isPending ? "Saving..." : "Update Details"}
+                  {editMemberMutation.isPending ? t("loading") : t("update_details")}
                 </button>
               </div>
             </form>
@@ -690,7 +690,7 @@ export const MembersPage: React.FC = () => {
                         <button
                           onClick={() => handleStartEdit(member)}
                           className="p-1.5 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-100 dark:hover:bg-white/10 rounded-md transition cursor-pointer"
-                          title="Edit details"
+                          title={t("edit")}
                         >
                           <Edit2 className="w-3.5 h-3.5" />
                         </button>
@@ -701,7 +701,7 @@ export const MembersPage: React.FC = () => {
                               ? "text-amber-500 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950/40"
                               : "text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40"
                           }`}
-                          title={isLocked ? "Cannot remove: Account not settled (Click to view warning)" : "Remove roommate"}
+                          title={isLocked ? t("removal_blocked") : t("delete")}
                         >
                           {isLocked ? <Lock className="w-3.5 h-3.5" /> : <Trash2 className="w-3.5 h-3.5" />}
                         </button>
@@ -722,14 +722,14 @@ export const MembersPage: React.FC = () => {
                         </div>
                       ) : (
                         <div className="text-[11px] text-slate-400 dark:text-slate-600 italic">
-                          No phone number added
+                          {t("no_phone")}
                         </div>
                       )}
 
                       {member.upi_id && (
                         <div className="flex items-center justify-between text-xs text-[var(--text-muted)] bg-slate-50 dark:bg-white/5 p-1.5 px-2 rounded-lg">
                           <div className="flex items-center gap-1.5 truncate">
-                            <CreditCard className="w-3 h-3 text-emerald-500 shrink-0" />
+                            <CreditCard className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
                             <span className="font-mono text-[11px] text-[var(--text-primary)] truncate">
                               {member.upi_id}
                             </span>
@@ -737,7 +737,7 @@ export const MembersPage: React.FC = () => {
                           <button
                             onClick={() => copyUpi(member.upi_id!)}
                             className="p-1 hover:text-indigo-600 dark:hover:text-indigo-400 cursor-pointer shrink-0"
-                            title="Copy UPI ID"
+                            title={t("copy_upi")}
                           >
                             {copiedUpiId === member.upi_id ? (
                               <Check className="w-3.5 h-3.5 text-emerald-600" />

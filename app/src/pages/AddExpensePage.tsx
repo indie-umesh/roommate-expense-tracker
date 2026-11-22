@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../context/AuthContext";
+import { useLanguage } from "../context/LanguageContext";
 import { rupeesToPaise } from "../lib/money";
 import type { Member } from "../lib/types";
 import { X, Check, Loader2 } from "lucide-react";
@@ -11,6 +12,7 @@ export const AddExpensePage: React.FC = () => {
   const { groupId } = useParams<{ groupId: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
 
   const amountInputRef = useRef<HTMLInputElement>(null);
@@ -117,7 +119,7 @@ export const AddExpensePage: React.FC = () => {
         >
           <X className="w-6 h-6" />
         </button>
-        <h1 className="font-bold text-base text-white tracking-tight">Add Expense</h1>
+        <h1 className="font-bold text-base text-white tracking-tight">{t("add_expense")}</h1>
         <div className="w-6" />
       </header>
 
@@ -131,7 +133,7 @@ export const AddExpensePage: React.FC = () => {
         {/* Large Hero Amount Input */}
         <div className="bg-[#121826] p-6 rounded-[28px] border border-white/10 text-center shadow-xl">
           <label className="block text-xs uppercase tracking-wider text-slate-400 font-bold mb-2">
-            Amount Spent
+            {t("amount_inr")}
           </label>
           <div className="flex items-center justify-center">
             <span className="text-3xl font-black text-emerald-400 mr-1.5">₹</span>
@@ -151,7 +153,7 @@ export const AddExpensePage: React.FC = () => {
         {/* Details */}
         <div>
           <label className="block text-xs font-bold text-slate-400 mb-1.5">
-            What was it for?
+            {t("what_for")}
           </label>
           <input
             type="text"
@@ -165,7 +167,7 @@ export const AddExpensePage: React.FC = () => {
         {/* Paid By */}
         <div>
           <label className="block text-xs font-bold text-slate-400 mb-1.5">
-            Who Paid?
+            {t("who_paid")}
           </label>
           <div className="flex flex-wrap gap-2">
             {members.map((member) => {
@@ -182,7 +184,7 @@ export const AddExpensePage: React.FC = () => {
                       : "bg-[#121826] text-slate-300 border border-white/10 hover:bg-white/10"
                   }`}
                 >
-                  {isMe ? `You (${member.display_name})` : member.display_name}
+                  {isMe ? `${t("you")} (${member.display_name})` : member.display_name}
                 </button>
               );
             })}
@@ -193,7 +195,7 @@ export const AddExpensePage: React.FC = () => {
         <div>
           <div className="flex justify-between items-center mb-1.5">
             <label className="text-xs font-bold text-slate-400">
-              Split equally among ({selectedMemberIds.length})
+              {t("split_equally")} ({selectedMemberIds.length})
             </label>
             <button
               type="button"
@@ -238,7 +240,7 @@ export const AddExpensePage: React.FC = () => {
           {createExpenseMutation.isPending ? (
             <Loader2 className="w-5 h-5 animate-spin" />
           ) : (
-            "Split & Save"
+            t("save_expense")
           )}
         </button>
       </main>

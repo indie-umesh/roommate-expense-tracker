@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../context/AuthContext";
+import { useLanguage } from "../context/LanguageContext";
 import { rupeesToPaise } from "../lib/money";
 import type { Member } from "../lib/types";
 import {
@@ -76,6 +77,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
   onClose,
 }) => {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
   const inputRef = useRef<HTMLInputElement>(null);
   const detailsInputRef = useRef<HTMLInputElement>(null);
@@ -350,16 +352,16 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
   const createExpenseMutation = useMutation({
     mutationFn: async () => {
       if (!amountRupees || parseFloat(amountRupees) <= 0) {
-        throw new Error("Enter an amount (e.g. ₹150)");
+        throw new Error(t("enter_amount_err"));
       }
       if (!details.trim()) {
-        throw new Error("What was this for? (e.g. Swiggy, Groceries)");
+        throw new Error(t("what_for"));
       }
       if (!paidByMemberId) {
-        throw new Error("Select who paid this bill");
+        throw new Error(t("select_payer_err"));
       }
       if (selectedMemberIds.length === 0) {
-        throw new Error("Select at least 1 person to split");
+        throw new Error(t("select_participants_err"));
       }
 
       const paise = rupeesToPaise(amountRupees);
@@ -415,10 +417,10 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                 </span>
                 <div>
                   <h3 className="font-bold text-base text-[var(--text-primary)] tracking-tight">
-                    Add Expense
+                    {t("add_expense")}
                   </h3>
                   <p className="text-[11px] text-[var(--text-muted)] font-normal">
-                    Split bills in seconds
+                    {t("add_flat_expense")}
                   </p>
                 </div>
               </div>
@@ -443,14 +445,14 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                   <div className="flex items-center gap-1.5">
                     <Settings2 className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
                     <h4 className="font-bold text-sm text-[var(--text-primary)]">
-                      Manage Categories
+                      {t("category")}
                     </h4>
                   </div>
                   <button
                     onClick={() => setShowManageTags(false)}
                     className="text-xs text-indigo-600 dark:text-indigo-400 font-semibold hover:underline cursor-pointer"
                   >
-                    Done ✓
+                    {t("done")} ✓
                   </button>
                 </div>
 
@@ -463,7 +465,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                 {/* Clean Add Category Form - No Manual Emoji Picker */}
                 <div className="p-3 bg-slate-50 dark:bg-white/5 rounded-xl border border-slate-200/80 dark:border-white/10 space-y-2">
                   <span className="text-[11px] font-semibold text-[var(--text-muted)] uppercase tracking-wider block">
-                    Add New Category
+                    {t("custom_category")}
                   </span>
                   <div className="flex items-center gap-2">
                     <input
@@ -486,19 +488,16 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                       className="px-4 py-2 btn-primary text-xs font-semibold rounded-lg shadow-xs disabled:opacity-50 flex items-center gap-1 cursor-pointer shrink-0"
                     >
                       <Plus className="w-3.5 h-3.5" />
-                      <span>Add</span>
+                      <span>{t("save")}</span>
                     </button>
                   </div>
-                  <p className="text-[11px] text-[var(--text-muted)] italic">
-                    Type a category name and a smart matching emoji will be assigned automatically!
-                  </p>
                 </div>
 
                 {/* Structured Categories List */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-xs text-[var(--text-muted)] px-1">
                     <span className="font-semibold uppercase tracking-wider text-[10px]">
-                      Active Categories ({activeCategories.length})
+                      {t("category")} ({activeCategories.length})
                     </span>
                     <button
                       type="button"
@@ -507,7 +506,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                       className="text-[11px] text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 hover:underline flex items-center gap-1 cursor-pointer"
                     >
                       <RotateCcw className="w-3 h-3" />
-                      <span>Reset Defaults</span>
+                      <span>{t("reset_defaults") || "Reset"}</span>
                     </button>
                   </div>
 
@@ -557,7 +556,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                     onClick={() => setShowManageTags(false)}
                     className="px-4 py-2 btn-primary text-xs font-semibold rounded-xl shadow-xs cursor-pointer"
                   >
-                    Done Managing Categories
+                    {t("done")}
                   </button>
                 </div>
               </div>
@@ -567,7 +566,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                 {/* Amount Display */}
                 <div className="bg-slate-50 dark:bg-white/5 border border-slate-200/80 dark:border-white/10 p-4 rounded-2xl text-center">
                   <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-muted)] block mb-1">
-                    Amount Spent
+                    {t("amount_inr")}
                   </span>
                   <div className="flex items-center justify-center">
                     <span className="text-3xl font-black text-indigo-600 dark:text-indigo-400 mr-1.5">
@@ -603,7 +602,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                 {/* What was it for + Auto Suggestions + Wrapped Category Chips */}
                 <div className="relative">
                   <label className="block text-[11px] font-semibold uppercase tracking-wider text-[var(--text-muted)] mb-1">
-                    What was this for?
+                    {t("what_for")}
                   </label>
                   <input
                     ref={detailsInputRef}
@@ -637,7 +636,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                               <span className="font-semibold">{cat.label}</span>
                             </span>
                             <span className="text-[10px] text-indigo-600 dark:text-indigo-400 font-medium">
-                              Select
+                              {t("done")}
                             </span>
                           </button>
                         ))
@@ -652,7 +651,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                         >
                           <Plus className="w-3.5 h-3.5" />
                           <span>
-                            Use & save "{getCategoryEmoji(details.trim())} {details.trim()}" as a new category
+                            Use & save "{getCategoryEmoji(details.trim())} {details.trim()}"
                           </span>
                         </button>
                       )}
@@ -684,7 +683,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                       className="px-2.5 py-1 rounded-lg border border-dashed border-indigo-300 dark:border-indigo-500/40 text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 transition cursor-pointer flex items-center gap-1"
                     >
                       <Settings2 className="w-3 h-3" />
-                      <span>Manage Tags</span>
+                      <span>{t("category")}</span>
                     </button>
                   </div>
                 </div>
@@ -692,7 +691,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                 {/* Paid By - Wrapped, No Horizontal Scroll */}
                 <div>
                   <label className="block text-[11px] font-semibold uppercase tracking-wider text-[var(--text-muted)] mb-1.5">
-                    Who Paid?
+                    {t("who_paid")}
                   </label>
                   <div className="flex flex-wrap items-center gap-1.5">
                     {uniqueMembers.map((member) => {
@@ -719,14 +718,14 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                 <div>
                   <div className="flex justify-between items-center mb-1.5">
                     <label className="text-[11px] font-semibold uppercase tracking-wider text-[var(--text-muted)]">
-                      Split Among ({selectedMemberIds.length})
+                      {t("split_count", { count: selectedMemberIds.length })}
                     </label>
                     <button
                       type="button"
                       onClick={() => setSelectedMemberIds(uniqueMembers.map((m) => m.id))}
                       className="text-[11px] text-indigo-600 dark:text-indigo-400 font-semibold hover:underline cursor-pointer"
                     >
-                      Equal Split (All)
+                      {t("split_equally")}
                     </button>
                   </div>
 
@@ -770,7 +769,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                   {createExpenseMutation.isPending ? (
                     <Loader2 className="w-4 h-4 animate-spin text-white" />
                   ) : (
-                    "Split & Save →"
+                    `${t("save_expense")} →`
                   )}
                 </button>
               </div>

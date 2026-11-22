@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../context/AuthContext";
+import { useLanguage } from "../context/LanguageContext";
 import { rupeesToPaise, paiseToRupees } from "../lib/money";
 import type { Member } from "../lib/types";
 import { X, Check, Loader2, ArrowRight, ArrowLeftRight, Receipt } from "lucide-react";
@@ -42,6 +43,7 @@ export const RecordSettlementModal: React.FC<RecordSettlementModalProps> = ({
   onSuccess,
 }) => {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
 
   const myMember = members.find((m) => m.user_id === user?.id);
@@ -182,10 +184,10 @@ export const RecordSettlementModal: React.FC<RecordSettlementModalProps> = ({
                 </span>
                 <div>
                   <h3 className="font-bold text-base text-[var(--text-primary)] tracking-tight">
-                    Record Payment
+                    {t("record_payment")}
                   </h3>
                   <p className="text-[11px] text-[var(--text-muted)] font-normal">
-                    Cash, UPI ya GPay se hisaab clear karein
+                    {t("optimal_settle_desc")}
                   </p>
                 </div>
               </div>
@@ -221,7 +223,7 @@ export const RecordSettlementModal: React.FC<RecordSettlementModalProps> = ({
               <div className="space-y-3 p-3.5 bg-slate-50 dark:bg-white/[0.03] border border-slate-200/80 dark:border-white/10 rounded-xl">
                 <div>
                   <label className="block text-[11px] font-bold text-rose-600 dark:text-rose-400 uppercase tracking-wider mb-1.5">
-                    1. Kisne paise diye? (Payer)
+                    1. {t("who_paid_settle")}
                   </label>
                   <div className="flex flex-wrap gap-1.5">
                     {members.map((m) => {
@@ -240,7 +242,7 @@ export const RecordSettlementModal: React.FC<RecordSettlementModalProps> = ({
                           {isSelected && <Check className="w-3.5 h-3.5 stroke-[3]" />}
                           <span>{m.display_name}</span>
                           {m.id === myMember?.id && (
-                            <span className="text-[10px] opacity-80">(You)</span>
+                            <span className="text-[10px] opacity-80">({t("you")})</span>
                           )}
                         </button>
                       );
@@ -254,7 +256,7 @@ export const RecordSettlementModal: React.FC<RecordSettlementModalProps> = ({
 
                 <div>
                   <label className="block text-[11px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider mb-1.5">
-                    2. Kisko paise mile? (Receiver)
+                    2. {t("who_received_settle")}
                   </label>
                   <div className="flex flex-wrap gap-1.5">
                     {members.map((m) => {
@@ -277,7 +279,7 @@ export const RecordSettlementModal: React.FC<RecordSettlementModalProps> = ({
                           {isSelected && <Check className="w-3.5 h-3.5 stroke-[3]" />}
                           <span>{m.display_name}</span>
                           {m.id === myMember?.id && (
-                            <span className="text-[10px] opacity-80">(You)</span>
+                            <span className="text-[10px] opacity-80">({t("you")})</span>
                           )}
                         </button>
                       );
@@ -289,7 +291,7 @@ export const RecordSettlementModal: React.FC<RecordSettlementModalProps> = ({
               {/* Amount Input */}
               <div>
                 <label className="block text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-1.5">
-                  Amount (₹)
+                  {t("amount_paid")}
                 </label>
                 <div className="relative">
                   <span className="absolute left-4 top-1/2 -translate-y-1/2 text-2xl font-bold text-[var(--text-muted)]">
@@ -328,13 +330,13 @@ export const RecordSettlementModal: React.FC<RecordSettlementModalProps> = ({
               {/* Reason / Note Input */}
               <div>
                 <label className="block text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-1.5">
-                  Note (Optional)
+                  {t("payment_note")}
                 </label>
                 <input
                   type="text"
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
-                  placeholder="e.g. GPay, Cash, Galat bill adjustment"
+                  placeholder={t("payment_note_placeholder")}
                   className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-emerald-500 transition"
                 />
 
@@ -356,7 +358,7 @@ export const RecordSettlementModal: React.FC<RecordSettlementModalProps> = ({
               {/* Date Input */}
               <div>
                 <label className="block text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-1.5">
-                  Date
+                  {t("date")}
                 </label>
                 <input
                   type="date"
@@ -376,13 +378,13 @@ export const RecordSettlementModal: React.FC<RecordSettlementModalProps> = ({
                   {recordSettlementMutation.isPending ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      <span>Saving Payment...</span>
+                      <span>{t("saving_payment")}</span>
                     </>
                   ) : (
                     <>
                       <Check className="w-4 h-4" />
                       <span>
-                        Confirm {parsedAmount > 0 ? `₹${parsedAmount}` : ""} Payment
+                        {t("save_payment_btn")} {parsedAmount > 0 ? `(₹${parsedAmount})` : ""}
                       </span>
                     </>
                   )}

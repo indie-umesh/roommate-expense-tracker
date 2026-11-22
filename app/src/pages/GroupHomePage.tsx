@@ -528,7 +528,7 @@ export const GroupHomePage: React.FC = () => {
                 <div className="card-clean p-6 relative overflow-hidden">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)]">
-                      Your Net Balance
+                      {t("net_balance")}
                     </span>
                     <span className={`text-xs px-2.5 py-0.5 rounded-full font-medium ${
                       myBalance > 0n
@@ -538,10 +538,10 @@ export const GroupHomePage: React.FC = () => {
                         : "bg-slate-100 dark:bg-white/5 text-[var(--text-muted)]"
                     }`}>
                       {myBalance > 0n
-                        ? "In Profit 🎉"
+                        ? t("you_get_back")
                         : myBalance < 0n
-                        ? "In Debt 💀"
-                        : "Even Stevens 😎"}
+                        ? t("you_owe")
+                        : t("all_settled_up")}
                     </span>
                   </div>
 
@@ -563,10 +563,10 @@ export const GroupHomePage: React.FC = () => {
                     </h2>
                     <p className="text-xs text-[var(--text-muted)] mt-1.5 font-medium">
                       {myBalance > 0n
-                        ? "Roommates owe you this. Pure profit!"
+                        ? t("flat_owes_them", { amount: formatINR(myBalance) })
                         : myBalance < 0n
-                        ? "You owe roommates. Settle up when ready!"
-                        : "All settled up. Zero debt!"}
+                        ? t("owes_flat", { amount: formatINR(-myBalance) })
+                        : t("zero_debt")}
                     </p>
                   </div>
 
@@ -574,24 +574,24 @@ export const GroupHomePage: React.FC = () => {
                   <div className="mt-5 pt-4 border-t border-slate-100 dark:border-white/10 space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-muted)]">
-                        Who Pays Whom
+                        {t("what_flatmates_owe")}
                       </span>
                       <button
                         onClick={() => setActiveTab("settle")}
                         className="text-xs text-indigo-600 dark:text-indigo-400 font-semibold hover:underline cursor-pointer"
                       >
-                        Settle up →
+                        {t("settle")} →
                       </button>
                     </div>
 
                     {simplifiedTransfers.length === 0 ? (
                       <p className="text-xs text-indigo-600 dark:text-indigo-400 font-medium">
-                        ✓ All accounts balanced to zero!
+                        ✓ {t("all_debts_cleared")}
                       </p>
                     ) : (
-                      simplifiedTransfers.slice(0, 3).map((t, idx) => {
-                        const fromName = memberMap.get(t.fromMemberId)?.display_name || "Someone";
-                        const toName = memberMap.get(t.toMemberId)?.display_name || "Someone";
+                      simplifiedTransfers.slice(0, 3).map((tItem, idx) => {
+                        const fromName = memberMap.get(tItem.fromMemberId)?.display_name || "Someone";
+                        const toName = memberMap.get(tItem.toMemberId)?.display_name || "Someone";
                         return (
                           <div
                             key={idx}
@@ -603,7 +603,7 @@ export const GroupHomePage: React.FC = () => {
                               <span className="font-semibold text-indigo-600 dark:text-indigo-400">{toName}</span>
                             </div>
                             <span className="font-bold text-[var(--text-primary)]">
-                              {formatINR(t.amountPaise)}
+                              {formatINR(tItem.amountPaise)}
                             </span>
                           </div>
                         );
@@ -617,25 +617,25 @@ export const GroupHomePage: React.FC = () => {
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-semibold text-[var(--text-muted)] flex items-center gap-1.5">
                       <Sparkles className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
-                      Flat Snapshot
+                      {t("overview")}
                     </span>
                     <button
                       onClick={() => setActiveTab("members")}
                       className="text-xs text-indigo-600 dark:text-indigo-400 font-semibold hover:underline cursor-pointer"
                     >
-                      Roommates ({members.length}) →
+                      {t("roommates")} ({members.length}) →
                     </button>
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
                     <div className="p-3 bg-slate-50 dark:bg-white/5 rounded-xl border border-slate-100 dark:border-white/5">
-                      <span className="text-[10px] font-medium text-[var(--text-muted)] uppercase block">Total Spent</span>
+                      <span className="text-[10px] font-medium text-[var(--text-muted)] uppercase block">{t("total_spent")}</span>
                       <span className="text-base font-bold text-indigo-600 dark:text-indigo-400 block mt-0.5">
                         {formatINR(totalGroupSpent)}
                       </span>
                     </div>
                     <div className="p-3 bg-slate-50 dark:bg-white/5 rounded-xl border border-slate-100 dark:border-white/5">
-                      <span className="text-[10px] font-medium text-[var(--text-muted)] uppercase block">Total Bills</span>
+                      <span className="text-[10px] font-medium text-[var(--text-muted)] uppercase block">{t("sheet")}</span>
                       <span className="text-base font-bold text-[var(--text-primary)] block mt-0.5">
                         {expenses.length}
                       </span>
@@ -647,7 +647,7 @@ export const GroupHomePage: React.FC = () => {
                     className="w-full py-2.5 px-4 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] text-white font-semibold text-xs shadow-sm flex items-center justify-center gap-1.5 transition active:scale-[0.98] cursor-pointer"
                   >
                     <Share2 className="w-3.5 h-3.5" />
-                    Invite via WhatsApp
+                    {t("share_whatsapp")}
                   </button>
                 </div>
               </div>
@@ -656,24 +656,21 @@ export const GroupHomePage: React.FC = () => {
               <div className="md:col-span-7 space-y-3">
                 <div className="flex items-center justify-between px-1">
                   <h3 className="font-bold text-sm md:text-base text-[var(--text-primary)]">
-                    Recent Expenses ({expenses.length})
+                    {t("recent_activity")} ({expenses.length})
                   </h3>
                   <button
                     onClick={() => setActiveTab("sheet")}
                     className="flex items-center gap-1 text-xs text-indigo-600 dark:text-indigo-400 font-semibold hover:underline cursor-pointer"
                   >
                     <Table className="w-3.5 h-3.5" />
-                    Open Spreadsheet Matrix →
+                    {t("spreadsheet")} →
                   </button>
                 </div>
 
                 {expenses.length === 0 ? (
                   <div className="card-clean text-center py-12 p-6">
                     <Receipt className="w-10 h-10 text-[var(--text-muted)] mx-auto mb-2 opacity-40" />
-                    <p className="text-sm font-semibold text-[var(--text-primary)]">No expenses logged yet</p>
-                    <p className="text-xs text-[var(--text-muted)] mt-1">
-                      Tap the + button to add your first bill in under 5 seconds!
-                    </p>
+                    <p className="text-sm font-semibold text-[var(--text-primary)]">{t("no_expenses_yet")}</p>
                   </div>
                 ) : (
                   <div className="space-y-2.5">
@@ -697,7 +694,7 @@ export const GroupHomePage: React.FC = () => {
                                 {expense.details}
                               </h4>
                               <p className="text-[11px] text-[var(--text-muted)] mt-0.5 font-medium">
-                                {isPayerMe ? "You" : payer?.display_name || "Roommate"} paid •{" "}
+                                {isPayerMe ? t("you") : payer?.display_name || "Roommate"} {t("paid_by")} •{" "}
                                 {new Date(expense.spent_on).toLocaleDateString("en-IN", {
                                   month: "short",
                                   day: "numeric",
@@ -720,12 +717,12 @@ export const GroupHomePage: React.FC = () => {
                               }`}
                             >
                               {isPayerMe
-                                ? `lent ${formatINR(
+                                ? `+${formatINR(
                                     expense.amount_paise - (mySplit?.share_paise || 0n)
                                   )}`
                                 : mySplit
-                                ? `share ${formatINR(mySplit.share_paise)}`
-                                : "not in split"}
+                                ? formatINR(mySplit.share_paise)
+                                : "–"}
                             </span>
                           </div>
                         </div>
@@ -780,10 +777,10 @@ export const GroupHomePage: React.FC = () => {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
                   <h2 className="text-base md:text-lg font-bold text-[var(--text-primary)]">
-                    Minimal Transfers
+                    {t("optimal_settle_plan")}
                   </h2>
                   <p className="text-xs text-[var(--text-muted)] mt-0.5">
-                    Calculated to settle every roommate's balance in the fewest payments possible.
+                    {t("optimal_settle_desc")}
                   </p>
                 </div>
                 <button
@@ -794,23 +791,23 @@ export const GroupHomePage: React.FC = () => {
                   className="btn-primary py-2 px-3.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 shadow-xs cursor-pointer shrink-0"
                 >
                   <Plus className="w-4 h-4" />
-                  <span>Record Payment (Cash / UPI)</span>
+                  <span>{t("record_payment")}</span>
                 </button>
               </div>
 
               {simplifiedTransfers.length === 0 ? (
                 <div className="text-center py-10">
                   <div className="text-4xl mb-3">🎉</div>
-                  <h4 className="font-bold text-indigo-600 dark:text-indigo-400 text-lg">All Settled Up!</h4>
+                  <h4 className="font-bold text-indigo-600 dark:text-indigo-400 text-lg">{t("all_settled_up")}</h4>
                   <p className="text-xs text-[var(--text-muted)] mt-1 font-medium">
-                    Nobody owes anything in this flat right now. Zero debt!
+                    {t("all_debts_cleared")}
                   </p>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {simplifiedTransfers.map((t, idx) => {
-                    const fromName = memberMap.get(t.fromMemberId)?.display_name || "Someone";
-                    const toName = memberMap.get(t.toMemberId)?.display_name || "Someone";
+                  {simplifiedTransfers.map((tItem, idx) => {
+                    const fromName = memberMap.get(tItem.fromMemberId)?.display_name || "Someone";
+                    const toName = memberMap.get(tItem.toMemberId)?.display_name || "Someone";
 
                     return (
                       <div
@@ -824,7 +821,7 @@ export const GroupHomePage: React.FC = () => {
                             <span className="font-semibold text-indigo-600 dark:text-indigo-400 text-sm">{toName}</span>
                           </div>
                           <span className="text-3xl font-extrabold text-[var(--text-primary)] mt-2 block tracking-tight">
-                            {formatINR(t.amountPaise)}
+                            {formatINR(tItem.amountPaise)}
                           </span>
                         </div>
 
@@ -832,30 +829,30 @@ export const GroupHomePage: React.FC = () => {
                           <button
                             onClick={() =>
                               recordSettlementMutation.mutate({
-                                fromMemberId: t.fromMemberId,
-                                toMemberId: t.toMemberId,
-                                amountPaise: t.amountPaise,
+                                fromMemberId: tItem.fromMemberId,
+                                toMemberId: tItem.toMemberId,
+                                amountPaise: tItem.amountPaise,
                               })
                             }
                             disabled={recordSettlementMutation.isPending}
                             className="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition active:scale-[0.98] cursor-pointer"
                           >
                             <CheckCircle2 className="w-4 h-4" />
-                            Mark Paid & Settle
+                            {t("mark_as_paid")}
                           </button>
 
                           <button
                             onClick={() => {
                               setSettlementModalInitial({
-                                fromMemberId: t.fromMemberId,
-                                toMemberId: t.toMemberId,
-                                amountPaise: t.amountPaise,
+                                fromMemberId: tItem.fromMemberId,
+                                toMemberId: tItem.toMemberId,
+                                amountPaise: tItem.amountPaise,
                               });
                               setShowRecordSettlementModal(true);
                             }}
                             className="w-full py-1.5 text-[11px] font-medium text-[var(--text-muted)] hover:text-indigo-600 dark:hover:text-indigo-400 transition cursor-pointer"
                           >
-                            Custom amount or add note →
+                            {t("custom_amount_note")}
                           </button>
                         </div>
                       </div>
@@ -871,7 +868,7 @@ export const GroupHomePage: React.FC = () => {
                 <div className="flex items-center gap-2">
                   <History className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
                   <h3 className="font-bold text-sm md:text-base text-[var(--text-primary)]">
-                    Payment History ({settlements.length})
+                    {t("payment_history", { count: settlements.length })}
                   </h3>
                 </div>
                 <button
@@ -882,13 +879,13 @@ export const GroupHomePage: React.FC = () => {
                   className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 cursor-pointer"
                 >
                   <Plus className="w-3.5 h-3.5" />
-                  <span>Record Payment</span>
+                  <span>{t("record_payment")}</span>
                 </button>
               </div>
 
               {settlements.length === 0 ? (
                 <div className="text-center py-8 text-xs text-[var(--text-muted)]">
-                  No payments recorded yet.
+                  {t("no_payments_yet")}
                 </div>
               ) : (
                 <div className="divide-y divide-slate-100 dark:divide-white/10">
@@ -905,7 +902,7 @@ export const GroupHomePage: React.FC = () => {
                             <span className="font-semibold text-rose-500 dark:text-rose-400">
                               {from?.display_name || "Roommate"}
                             </span>
-                            <span className="text-[var(--text-muted)]">paid</span>
+                            <span className="text-[var(--text-muted)]">{t("pays")}</span>
                             <span className="font-semibold text-emerald-600 dark:text-emerald-400">
                               {to?.display_name || "Roommate"}
                             </span>
@@ -948,7 +945,7 @@ export const GroupHomePage: React.FC = () => {
             <div className="card-clean p-6 md:p-8 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
               <div className="space-y-1">
                 <span className="text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)]">
-                  Flat Invite Code
+                  {t("invite_code")}
                 </span>
                 <div className="flex items-center gap-3">
                   <span className="text-3xl md:text-4xl font-extrabold text-indigo-600 dark:text-indigo-400 tracking-widest">
@@ -957,7 +954,7 @@ export const GroupHomePage: React.FC = () => {
                   <button
                     onClick={copyCode}
                     className="p-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 transition cursor-pointer"
-                    title="Copy code"
+                    title={t("copied")}
                   >
                     {copiedCode ? (
                       <Check className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
@@ -967,7 +964,7 @@ export const GroupHomePage: React.FC = () => {
                   </button>
                 </div>
                 <p className="text-xs text-[var(--text-muted)] font-medium">
-                  Share this code with roommates so they can join and claim their spot instantly.
+                  {t("share_whatsapp_desc")}
                 </p>
               </div>
 
@@ -977,7 +974,7 @@ export const GroupHomePage: React.FC = () => {
                   className="flex-1 md:flex-none flex items-center justify-center gap-2 py-3 px-6 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] text-white font-semibold text-sm shadow-sm transition active:scale-[0.98] cursor-pointer"
                 >
                   <Share2 className="w-4 h-4" />
-                  Share via WhatsApp
+                  {t("share_whatsapp")}
                 </button>
               </div>
             </div>
@@ -986,14 +983,14 @@ export const GroupHomePage: React.FC = () => {
             <div className="space-y-3">
               <div className="flex items-center justify-between px-1">
                 <h3 className="font-bold text-sm md:text-base text-[var(--text-primary)]">
-                  Roommates ({members.length})
+                  {t("flat_roommates", { count: members.length })}
                 </h3>
                 <button
                   onClick={() => setShowAddRoommate(true)}
                   className="flex items-center gap-1.5 px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-semibold shadow-sm transition active:scale-[0.98] cursor-pointer"
                 >
                   <UserPlus className="w-3.5 h-3.5" />
-                  + Add Roommate
+                  + {t("add_roommate")}
                 </button>
               </div>
 
@@ -1004,7 +1001,7 @@ export const GroupHomePage: React.FC = () => {
                   className="card-clean p-5 space-y-4 border-indigo-200 dark:border-indigo-800/40"
                 >
                   <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-white/10">
-                    <h4 className="font-bold text-sm text-[var(--text-primary)]">Add Roommate Details</h4>
+                    <h4 className="font-bold text-sm text-[var(--text-primary)]">{t("add_roommate_details")}</h4>
                     <button
                       type="button"
                       onClick={() => {
@@ -1038,7 +1035,7 @@ export const GroupHomePage: React.FC = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                     <div>
                       <label className="block text-[11px] font-semibold text-[var(--text-muted)] mb-1">
-                        First Name *
+                        {t("first_name")}
                       </label>
                       <input
                         type="text"
@@ -1056,7 +1053,7 @@ export const GroupHomePage: React.FC = () => {
 
                     <div>
                       <label className="block text-[11px] font-semibold text-[var(--text-muted)] mb-1">
-                        Surname / Initial {duplicateCandidate ? "(Required)" : "(Optional)"}
+                        {t("surname")}
                       </label>
                       <input
                         type="text"
@@ -1077,7 +1074,7 @@ export const GroupHomePage: React.FC = () => {
                     <div>
                       <label className="block text-[11px] font-semibold text-[var(--text-muted)] mb-1 flex items-center gap-1">
                         <Phone className="w-3 h-3 text-[var(--text-muted)]" />
-                        <span>Mobile Number (Optional)</span>
+                        <span>{t("mobile_number")}</span>
                       </label>
                       <input
                         type="tel"
@@ -1092,7 +1089,7 @@ export const GroupHomePage: React.FC = () => {
                     <div>
                       <label className="block text-[11px] font-semibold text-[var(--text-muted)] mb-1 flex items-center gap-1">
                         <QrCode className="w-3 h-3 text-[var(--text-muted)]" />
-                        <span>UPI ID / VPA (Optional)</span>
+                        <span>{t("upi_id")}</span>
                       </label>
                       <input
                         type="text"
@@ -1106,11 +1103,11 @@ export const GroupHomePage: React.FC = () => {
                     <div className="sm:col-span-2">
                       <label className="block text-[11px] font-semibold text-[var(--text-muted)] mb-1 flex items-center gap-1">
                         <FileText className="w-3 h-3 text-[var(--text-muted)]" />
-                        <span>Room / Notes (Optional)</span>
+                        <span>{t("room_notes")}</span>
                       </label>
                       <input
                         type="text"
-                        placeholder="e.g. Master Bedroom, Room 201"
+                        placeholder={t("room_notes_placeholder")}
                         value={newRoommateNotes}
                         onChange={(e) => setNewRoommateNotes(e.target.value)}
                         className="w-full px-3 py-2 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg text-xs text-[var(--text-primary)] focus:outline-none focus:border-indigo-500"
@@ -1127,14 +1124,14 @@ export const GroupHomePage: React.FC = () => {
                       }}
                       className="px-4 py-2 text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer"
                     >
-                      Cancel
+                      {t("cancel")}
                     </button>
                     <button
                       type="submit"
                       disabled={addMemberMutation.isPending}
                       className="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg shadow-sm transition active:scale-[0.98] cursor-pointer"
                     >
-                      {addMemberMutation.isPending ? "Adding..." : "Save Roommate"}
+                      {addMemberMutation.isPending ? t("loading") : t("save_roommate")}
                     </button>
                   </div>
                 </form>
@@ -1148,8 +1145,8 @@ export const GroupHomePage: React.FC = () => {
                 >
                   <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-white/10">
                     <div>
-                      <h4 className="font-bold text-sm text-[var(--text-primary)]">Edit Roommate Details</h4>
-                      <p className="text-[11px] text-[var(--text-muted)]">Update name, phone number, UPI ID, or room notes.</p>
+                      <h4 className="font-bold text-sm text-[var(--text-primary)]">{t("edit_roommate_details")}</h4>
+                      <p className="text-[11px] text-[var(--text-muted)]">{t("manage_roommates_desc")}</p>
                     </div>
                     <button
                       type="button"
@@ -1163,7 +1160,7 @@ export const GroupHomePage: React.FC = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                     <div>
                       <label className="block text-[11px] font-semibold text-[var(--text-muted)] mb-1">
-                        Full Name *
+                        {t("full_name")}
                       </label>
                       <input
                         type="text"
@@ -1177,7 +1174,7 @@ export const GroupHomePage: React.FC = () => {
                     <div>
                       <label className="block text-[11px] font-semibold text-[var(--text-muted)] mb-1 flex items-center gap-1">
                         <Phone className="w-3 h-3 text-[var(--text-muted)]" />
-                        <span>Mobile Number</span>
+                        <span>{t("mobile_number")}</span>
                       </label>
                       <input
                         type="tel"
@@ -1192,7 +1189,7 @@ export const GroupHomePage: React.FC = () => {
                     <div>
                       <label className="block text-[11px] font-semibold text-[var(--text-muted)] mb-1 flex items-center gap-1">
                         <QrCode className="w-3 h-3 text-[var(--text-muted)]" />
-                        <span>UPI ID / VPA</span>
+                        <span>{t("upi_id")}</span>
                       </label>
                       <input
                         type="text"
@@ -1206,11 +1203,11 @@ export const GroupHomePage: React.FC = () => {
                     <div>
                       <label className="block text-[11px] font-semibold text-[var(--text-muted)] mb-1 flex items-center gap-1">
                         <FileText className="w-3 h-3 text-[var(--text-muted)]" />
-                        <span>Room / Notes</span>
+                        <span>{t("room_notes")}</span>
                       </label>
                       <input
                         type="text"
-                        placeholder="e.g. Master Bedroom"
+                        placeholder={t("room_notes_placeholder")}
                         value={editNotes}
                         onChange={(e) => setEditNotes(e.target.value)}
                         className="w-full px-3 py-2 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg text-xs text-[var(--text-primary)] focus:outline-none focus:border-indigo-500"
@@ -1224,14 +1221,14 @@ export const GroupHomePage: React.FC = () => {
                       onClick={() => setEditingMember(null)}
                       className="px-3.5 py-1.5 text-xs font-medium text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer"
                     >
-                      Cancel
+                      {t("cancel")}
                     </button>
                     <button
                       type="submit"
                       disabled={editMemberMutation.isPending}
                       className="px-4 py-1.5 btn-primary text-xs font-medium rounded-lg shadow-xs"
                     >
-                      {editMemberMutation.isPending ? "Saving..." : "Update Details"}
+                      {editMemberMutation.isPending ? t("loading") : t("update_details")}
                     </button>
                   </div>
                 </form>
@@ -1276,12 +1273,12 @@ export const GroupHomePage: React.FC = () => {
                                 <span>{member.display_name}</span>
                                 {member.user_id === user?.id && (
                                   <span className="text-[10px] font-semibold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-200 dark:border-indigo-500/30 px-1.5 py-0.2 rounded-md">
-                                    You
+                                    {t("you")}
                                   </span>
                                 )}
                               </h4>
                               <p className="text-[11px] text-[var(--text-muted)] mt-0.5">
-                                {member.role === "admin" ? "Admin" : "Roommate"} • {member.user_id ? "Active member" : "Unclaimed ghost spot"}
+                                {member.role === "admin" ? t("admin") : t("roommates")} • {member.user_id ? t("active_member") : t("unclaimed_spot")}
                               </p>
 
                               {/* Financial Dues & Settlement Status Badge */}
@@ -1293,16 +1290,16 @@ export const GroupHomePage: React.FC = () => {
                                       : "bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800/40"
                                   }`}>
                                     <Lock className="w-2.5 h-2.5" />
-                                    <span>{bal > 0n ? `Flat owes ${formatINR(bal)}` : `Owes ${formatINR(-bal)}`}</span>
+                                    <span>{bal > 0n ? t("flat_owes_them", { amount: formatINR(bal) }) : t("owes_flat", { amount: formatINR(-bal) })}</span>
                                   </span>
                                 ) : hasBills ? (
                                   <span className="text-[10px] font-medium bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-800/40 px-2 py-0.5 rounded-md flex items-center gap-1">
                                     <Lock className="w-2.5 h-2.5" />
-                                    <span>Active in ledger</span>
+                                    <span>{t("active_member")}</span>
                                   </span>
                                 ) : (
                                   <span className="text-[10px] font-medium bg-emerald-50/60 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded-md">
-                                    ✓ Settled (₹0)
+                                    ✓ {t("zero_debt")}
                                   </span>
                                 )}
                               </div>
@@ -1314,7 +1311,7 @@ export const GroupHomePage: React.FC = () => {
                             <button
                               onClick={() => handleStartEdit(member)}
                               className="p-1.5 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-100 dark:hover:bg-white/10 rounded-md transition cursor-pointer"
-                              title="Edit details"
+                              title={t("edit")}
                             >
                               <Edit2 className="w-3.5 h-3.5" />
                             </button>
@@ -1325,7 +1322,7 @@ export const GroupHomePage: React.FC = () => {
                                   ? "text-amber-500 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950/40"
                                   : "text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40"
                               }`}
-                              title={isLocked ? "Cannot remove: Account not settled (Click to view warning)" : "Remove roommate"}
+                              title={isLocked ? t("removal_blocked") : t("delete")}
                             >
                               {isLocked ? <Lock className="w-3.5 h-3.5" /> : <Trash2 className="w-3.5 h-3.5" />}
                             </button>
@@ -1346,7 +1343,7 @@ export const GroupHomePage: React.FC = () => {
                           </div>
                         ) : (
                           <div className="text-[11px] text-slate-400 dark:text-slate-600 italic">
-                            No phone number added
+                            {t("no_phone")}
                           </div>
                         )}
 
@@ -1361,7 +1358,7 @@ export const GroupHomePage: React.FC = () => {
                             <button
                               onClick={() => copyUpi(member.upi_id!)}
                               className="p-1 hover:text-indigo-600 dark:hover:text-indigo-400 cursor-pointer shrink-0"
-                              title="Copy UPI ID"
+                              title={t("copy_upi")}
                             >
                               {copiedUpiId === member.upi_id ? (
                                 <Check className="w-3.5 h-3.5 text-emerald-600" />

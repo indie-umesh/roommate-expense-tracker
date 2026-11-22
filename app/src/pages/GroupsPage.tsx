@@ -4,13 +4,17 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
+import { useLanguage } from "../context/LanguageContext";
+import { SettingsModal } from "../components/SettingsModal";
 import type { Group } from "../lib/types";
-import { Users, Plus, ArrowRight, LogOut, KeyRound, Sun, Moon } from "lucide-react";
+import { Users, Plus, ArrowRight, LogOut, KeyRound, Sun, Moon, Globe } from "lucide-react";
 
 export const GroupsPage: React.FC = () => {
   const navigate = useNavigate();
   const { user, profile, signOut } = useAuth();
   const { theme, toggleTheme } = useTheme();
+  const { t, currentLanguage } = useLanguage();
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const queryClient = useQueryClient();
 
   const [isCreating, setIsCreating] = useState(false);
@@ -95,12 +99,27 @@ export const GroupsPage: React.FC = () => {
                 Roommate
               </h1>
               <p className="text-xs text-[var(--text-muted)] font-normal mt-0.5">
-                Signed in as <span className="font-medium text-indigo-600 dark:text-indigo-400">{profile?.display_name || "User"}</span>
+                {t("signed_in_as")}{" "}
+                <span className="font-medium text-indigo-600 dark:text-indigo-400">
+                  {profile?.display_name || "User"}
+                </span>
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
+            {/* Language Selector Button */}
+            <button
+              onClick={() => setIsSettingsOpen(true)}
+              className="h-9 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-xs font-semibold text-slate-700 dark:text-slate-200 transition flex items-center gap-1.5 cursor-pointer border border-slate-200/80 dark:border-white/10"
+              title={t("choose_language")}
+            >
+              <Globe className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
+              <span>
+                {currentLanguage?.flag} {currentLanguage?.name || "Language"}
+              </span>
+            </button>
+
             {/* Theme Toggle Button */}
             <button
               onClick={toggleTheme}
@@ -118,7 +137,7 @@ export const GroupsPage: React.FC = () => {
             <button
               onClick={() => signOut()}
               className="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-400 hover:text-rose-500 transition flex items-center justify-center cursor-pointer border border-slate-200/80 dark:border-white/10"
-              title="Sign out"
+              title={t("sign_out")}
             >
               <LogOut className="w-4 h-4" />
             </button>
@@ -280,6 +299,11 @@ export const GroupsPage: React.FC = () => {
           )}
         </div>
       </main>
+
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+      />
     </div>
   );
 };
