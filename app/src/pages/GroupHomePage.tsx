@@ -11,6 +11,7 @@ import { BottomNav } from "../components/BottomNav";
 import type { NavTab } from "../components/BottomNav";
 import { ExcelSheetView } from "../components/ExcelSheetView";
 import { AddExpenseModal } from "../components/AddExpenseModal";
+import { RecordSettlementModal } from "../components/RecordSettlementModal";
 import confetti from "canvas-confetti";
 import {
   Receipt,
@@ -36,6 +37,7 @@ import {
   FileText,
   Edit2,
   X,
+  History,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -48,6 +50,12 @@ export const GroupHomePage: React.FC = () => {
 
   const [activeTab, setActiveTab] = useState<NavTab>("activity");
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [showRecordSettlementModal, setShowRecordSettlementModal] = useState(false);
+  const [settlementModalInitial, setSettlementModalInitial] = useState<{
+    fromMemberId?: string;
+    toMemberId?: string;
+    amountPaise?: bigint;
+  }>({});
   const [copiedCode, setCopiedCode] = useState(false);
   const [newRoommateFirstName, setNewRoommateFirstName] = useState("");
   const [newRoommateSurname, setNewRoommateSurname] = useState("");
@@ -757,23 +765,37 @@ export const GroupHomePage: React.FC = () => {
           </motion.div>
         )}
 
-        {/* TAB 3: SETTLE UP (MINIMAL TRANSFERS) */}
+        {/* TAB 3: SETTLE UP (MINIMAL TRANSFERS & REIMBURSEMENTS) */}
         {activeTab === "settle" && (
           <motion.div
             initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
-            className="space-y-4"
+            className="space-y-6"
           >
-            <div className="card-clean p-6 md:p-8">
-              <h2 className="text-base md:text-lg font-bold text-[var(--text-primary)] mb-1">
-                Minimal Transfers
-              </h2>
-              <p className="text-xs text-[var(--text-muted)] mb-6">
-                Calculated to settle every roommate's balance in the fewest payments possible.
-              </p>
+            <div className="card-clean p-6 md:p-8 space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <h2 className="text-base md:text-lg font-bold text-[var(--text-primary)]">
+                    Minimal Transfers
+                  </h2>
+                  <p className="text-xs text-[var(--text-muted)] mt-0.5">
+                    Calculated to settle every roommate's balance in the fewest payments possible.
+                  </p>
+                </div>
+                <button
+                  onClick={() => {
+                    setSettlementModalInitial({});
+                    setShowRecordSettlementModal(true);
+                  }}
+                  className="btn-primary py-2 px-3.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 shadow-xs cursor-pointer shrink-0"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>Custom Reimbursement / Settle</span>
+                </button>
+              </div>
 
               {simplifiedTransfers.length === 0 ? (
-                <div className="text-center py-12">
+                <div className="text-center py-10">
                   <div className="text-4xl mb-3">🎉</div>
                   <h4 className="font-bold text-indigo-600 dark:text-indigo-400 text-lg">All Settled Up!</h4>
                   <p className="text-xs text-[var(--text-muted)] mt-1 font-medium">
@@ -789,7 +811,7 @@ export const GroupHomePage: React.FC = () => {
                     return (
                       <div
                         key={idx}
-                        className="card-clean p-5 flex flex-col justify-between gap-4 transition"
+                        className="card-clean p-5 flex flex-col justify-between gap-4 transition border border-slate-200/80 dark:border-white/10"
                       >
                         <div>
                           <div className="flex items-center gap-2 text-xs text-[var(--text-muted)]">
@@ -802,20 +824,106 @@ export const GroupHomePage: React.FC = () => {
                           </span>
                         </div>
 
-                        <button
-                          onClick={() =>
-                            recordSettlementMutation.mutate({
-                              fromMemberId: t.fromMemberId,
-                              toMemberId: t.toMemberId,
-                              amountPaise: t.amountPaise,
-                            })
-                          }
-                          disabled={recordSettlementMutation.isPending}
-                          className="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition active:scale-[0.98] cursor-pointer"
-                        >
-                          <CheckCircle2 className="w-4 h-4" />
-                          Mark Paid & Settle
-                        </button>
+                        <div className="space-y-2">
+                          <button
+                            onClick={() =>
+                              recordSettlementMutation.mutate({
+                                fromMemberId: t.fromMemberId,
+                                toMemberId: t.toMemberId,
+                                amountPaise: t.amountPaise,
+                              })
+                            }
+                            disabled={recordSettlementMutation.isPending}
+                            className="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition active:scale-[0.98] cursor-pointer"
+                          >
+                            <CheckCircle2 className="w-4 h-4" />
+                            Mark Paid & Settle
+                          </button>
+
+                          <button
+                            onClick={() => {
+                              setSettlementModalInitial({
+                                fromMemberId: t.fromMemberId,
+                                toMemberId: t.toMemberId,
+                                amountPaise: t.amountPaise,
+                              });
+                              setShowRecordSettlementModal(true);
+                            }}
+                            className="w-full py-1.5 text-[11px] font-medium text-[var(--text-muted)] hover:text-indigo-600 dark:hover:text-indigo-400 transition cursor-pointer"
+                          >
+                            Adjust amount or add note →
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            {/* Settlement & Reimbursement History */}
+            <div className="card-clean p-6 md:p-8 space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <History className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                  <h3 className="font-bold text-sm md:text-base text-[var(--text-primary)]">
+                    Settlement & Reimbursement History ({settlements.length})
+                  </h3>
+                </div>
+                <button
+                  onClick={() => {
+                    setSettlementModalInitial({});
+                    setShowRecordSettlementModal(true);
+                  }}
+                  className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 cursor-pointer"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>Record Adjustment</span>
+                </button>
+              </div>
+
+              {settlements.length === 0 ? (
+                <div className="text-center py-8 text-xs text-[var(--text-muted)]">
+                  No settlements or reimbursements recorded yet.
+                </div>
+              ) : (
+                <div className="divide-y divide-slate-100 dark:divide-white/10">
+                  {settlements.map((s) => {
+                    const from = memberMap.get(s.from_member_id);
+                    const to = memberMap.get(s.to_member_id);
+                    return (
+                      <div
+                        key={s.id}
+                        className="py-3 flex items-center justify-between gap-3 text-xs"
+                      >
+                        <div className="space-y-0.5">
+                          <div className="flex items-center gap-1.5 font-medium text-[var(--text-primary)]">
+                            <span className="font-semibold text-rose-500 dark:text-rose-400">
+                              {from?.display_name || "Roommate"}
+                            </span>
+                            <span className="text-[var(--text-muted)]">paid</span>
+                            <span className="font-semibold text-emerald-600 dark:text-emerald-400">
+                              {to?.display_name || "Roommate"}
+                            </span>
+                          </div>
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="text-[11px] text-[var(--text-muted)]">
+                              {new Date(s.settled_on).toLocaleDateString("en-IN", {
+                                day: "numeric",
+                                month: "short",
+                                year: "numeric",
+                              })}
+                            </span>
+                            {s.note && (
+                              <span className="text-[11px] bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 px-2 py-0.5 rounded-md font-medium border border-indigo-200/50 dark:border-indigo-800/40">
+                                💬 {s.note}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        <span className="text-sm font-extrabold text-[var(--text-primary)]">
+                          {formatINR(s.amount_paise)}
+                        </span>
                       </div>
                     );
                   })}
@@ -1272,6 +1380,17 @@ export const GroupHomePage: React.FC = () => {
         members={members}
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
+      />
+
+      {/* Record Settlement & Reimbursement Modal */}
+      <RecordSettlementModal
+        groupId={groupId!}
+        members={members}
+        isOpen={showRecordSettlementModal}
+        onClose={() => setShowRecordSettlementModal(false)}
+        initialFromMemberId={settlementModalInitial.fromMemberId}
+        initialToMemberId={settlementModalInitial.toMemberId}
+        initialAmountPaise={settlementModalInitial.amountPaise}
       />
     </div>
   );
