@@ -115,15 +115,15 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
     }
   }
 
-  // Fetch custom categories from DB for this flat
+  // Fetch custom categories from DB for this flat (newest first)
   const { data: dbCategories = [] } = useQuery<CategoryItem[]>({
     queryKey: ["group-categories", groupId],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("group_categories")
-        .select("id, name, emoji")
+        .select("id, name, emoji, created_at")
         .eq("group_id", groupId)
-        .order("created_at", { ascending: true });
+        .order("created_at", { ascending: false });
 
       if (error) {
         console.error("Error fetching categories:", error);
@@ -140,26 +140,32 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
     enabled: !!groupId && isOpen,
   });
 
-  // Effective categories: NEVER wipe defaults! Merge defaults + custom tags
+  // Effective categories: newly added categories appear FIRST, followed by defaults
   const activeCategories: CategoryItem[] = React.useMemo(() => {
     // 1. Filter defaults that have not been explicitly hidden/removed
     const visibleDefaults = DEFAULT_CATEGORIES.filter(
       (d) => !hiddenLabels.includes(d.label.toLowerCase())
     );
 
-    // 2. Track existing labels to prevent duplicates
-    const labelSet = new Set(visibleDefaults.map((d) => d.label.toLowerCase()));
+    // 2. Track custom categories (newest first)
+    const customLabels = new Set<string>();
     const customList: CategoryItem[] = [];
 
-    // 3. Append DB custom categories
     for (const cat of dbCategories) {
-      if (!hiddenLabels.includes(cat.label.toLowerCase()) && !labelSet.has(cat.label.toLowerCase())) {
-        labelSet.add(cat.label.toLowerCase());
+      const lower = cat.label.toLowerCase();
+      if (!hiddenLabels.includes(lower) && !customLabels.has(lower)) {
+        customLabels.add(lower);
         customList.push(cat);
       }
     }
 
-    return [...visibleDefaults, ...customList];
+    // 3. Filter remaining defaults that are not shadowed by custom
+    const remainingDefaults = visibleDefaults.filter(
+      (d) => !customLabels.has(d.label.toLowerCase())
+    );
+
+    // Newly added custom categories appear FIRST!
+    return [...customList, ...remainingDefaults];
   }, [dbCategories, hiddenLabels]);
 
   // Add Category Mutation - Automatically computes emoji from name
