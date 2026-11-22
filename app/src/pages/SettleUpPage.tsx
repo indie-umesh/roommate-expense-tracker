@@ -110,15 +110,17 @@ export const SettleUpPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[var(--bg-page)] text-[var(--text-primary)] flex flex-col transition-colors duration-200">
-      <header className="px-4 py-3.5 bg-white/85 dark:bg-[#111827]/85 backdrop-blur-md border-b border-slate-200/80 dark:border-white/10 flex items-center justify-between sticky top-0 z-10">
-        <button
-          onClick={() => navigate(`/group/${groupId}`)}
-          className="p-1.5 -ml-1 text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-slate-100 dark:hover:bg-white/10 rounded-lg transition cursor-pointer"
-        >
-          <ChevronLeft className="w-5 h-5" />
-        </button>
-        <h1 className="font-bold text-base text-[var(--text-primary)] tracking-tight">Settle Up</h1>
-        <div className="w-6" />
+      <header className="h-16 bg-white/90 dark:bg-[#111827]/90 backdrop-blur-md border-b border-slate-200/80 dark:border-white/10 flex items-center sticky top-0 z-10 transition-all">
+        <div className="max-w-lg w-full h-full mx-auto px-4 flex items-center justify-between">
+          <button
+            onClick={() => navigate(`/group/${groupId}`)}
+            className="w-9 h-9 flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-slate-100 dark:hover:bg-white/10 rounded-xl transition cursor-pointer"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          <h1 className="font-bold text-base text-[var(--text-primary)] tracking-tight">Settle Up</h1>
+          <div className="w-9" />
+        </div>
       </header>
 
       <main className="flex-1 p-4 md:p-6 max-w-lg w-full mx-auto space-y-4">

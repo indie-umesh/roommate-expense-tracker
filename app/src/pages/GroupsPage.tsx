@@ -84,18 +84,18 @@ export const GroupsPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-[var(--bg-page)] text-[var(--text-primary)] flex flex-col transition-colors duration-200">
       {/* Top Header */}
-      <header className="px-5 md:px-8 py-3.5 bg-white/80 dark:bg-[#111827]/85 backdrop-blur-md border-b border-slate-200/80 dark:border-white/10 flex items-center justify-between sticky top-0 z-20">
-        <div className="max-w-5xl mx-auto w-full flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold text-sm shadow-xs">
+      <header className="h-16 bg-white/90 dark:bg-[#111827]/90 backdrop-blur-md border-b border-slate-200/80 dark:border-white/10 flex items-center sticky top-0 z-20 transition-all">
+        <div className="max-w-5xl mx-auto w-full h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-bold text-sm shadow-xs">
               ₹
             </div>
             <div>
-              <h1 className="font-bold text-base text-[var(--text-primary)] tracking-tight">
+              <h1 className="font-bold text-base text-[var(--text-primary)] tracking-tight leading-tight">
                 Roommate
               </h1>
-              <p className="text-[11px] text-[var(--text-muted)] font-normal">
-                Signed in as <span className="font-medium text-[var(--text-primary)]">{profile?.display_name || "User"}</span>
+              <p className="text-xs text-[var(--text-muted)] font-normal mt-0.5">
+                Signed in as <span className="font-medium text-indigo-600 dark:text-indigo-400">{profile?.display_name || "User"}</span>
               </p>
             </div>
           </div>
@@ -104,7 +104,7 @@ export const GroupsPage: React.FC = () => {
             {/* Theme Toggle Button */}
             <button
               onClick={toggleTheme}
-              className="btn-surface p-1.5 rounded-lg transition flex items-center justify-center cursor-pointer"
+              className="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-600 dark:text-slate-300 transition flex items-center justify-center cursor-pointer border border-slate-200/80 dark:border-white/10"
               title={`Switch to ${theme === "light" ? "Dark" : "Light"} Mode`}
             >
               {theme === "light" ? (
@@ -117,7 +117,7 @@ export const GroupsPage: React.FC = () => {
             {/* Logout Button */}
             <button
               onClick={() => signOut()}
-              className="p-1.5 text-[var(--text-muted)] hover:text-rose-500 rounded-lg hover:bg-slate-100 dark:hover:bg-white/10 transition cursor-pointer"
+              className="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-400 hover:text-rose-500 transition flex items-center justify-center cursor-pointer border border-slate-200/80 dark:border-white/10"
               title="Sign out"
             >
               <LogOut className="w-4 h-4" />
