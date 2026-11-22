@@ -84,18 +84,18 @@ export const GroupsPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-[var(--bg-page)] text-[var(--text-primary)] flex flex-col transition-colors duration-200">
       {/* Top Header */}
-      <header className="px-5 md:px-8 py-4 bg-white/80 dark:bg-[#121826]/85 backdrop-blur-md border-b border-slate-200/80 dark:border-white/10 flex items-center justify-between sticky top-0 z-20">
+      <header className="px-5 md:px-8 py-3.5 bg-white/80 dark:bg-[#111827]/85 backdrop-blur-md border-b border-slate-200/80 dark:border-white/10 flex items-center justify-between sticky top-0 z-20">
         <div className="max-w-5xl mx-auto w-full flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl btn-3d-indigo flex items-center justify-center text-white font-black text-sm">
+            <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold text-sm shadow-xs">
               ₹
             </div>
             <div>
-              <h1 className="font-black text-lg text-[var(--text-primary)] tracking-tight">
+              <h1 className="font-bold text-base text-[var(--text-primary)] tracking-tight">
                 Roommate
               </h1>
-              <p className="text-xs text-[var(--text-muted)] font-medium">
-                Signed in as <span className="font-bold text-indigo-600 dark:text-indigo-400">{profile?.display_name || "User"}</span>
+              <p className="text-[11px] text-[var(--text-muted)] font-normal">
+                Signed in as <span className="font-medium text-[var(--text-primary)]">{profile?.display_name || "User"}</span>
               </p>
             </div>
           </div>
@@ -104,7 +104,7 @@ export const GroupsPage: React.FC = () => {
             {/* Theme Toggle Button */}
             <button
               onClick={toggleTheme}
-              className="btn-3d-surface p-2 rounded-full transition flex items-center justify-center cursor-pointer"
+              className="btn-surface p-1.5 rounded-lg transition flex items-center justify-center cursor-pointer"
               title={`Switch to ${theme === "light" ? "Dark" : "Light"} Mode`}
             >
               {theme === "light" ? (
@@ -117,7 +117,7 @@ export const GroupsPage: React.FC = () => {
             {/* Logout Button */}
             <button
               onClick={() => signOut()}
-              className="p-2 text-[var(--text-muted)] hover:text-rose-500 rounded-full hover:bg-slate-100 dark:hover:bg-white/10 transition cursor-pointer"
+              className="p-1.5 text-[var(--text-muted)] hover:text-rose-500 rounded-lg hover:bg-slate-100 dark:hover:bg-white/10 transition cursor-pointer"
               title="Sign out"
             >
               <LogOut className="w-4 h-4" />
@@ -128,23 +128,23 @@ export const GroupsPage: React.FC = () => {
 
       <main className="flex-1 p-5 md:p-8 max-w-md md:max-w-3xl lg:max-w-5xl w-full mx-auto space-y-6">
         {error && (
-          <div className="p-3.5 bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-500/40 rounded-2xl text-rose-700 dark:text-rose-300 text-xs font-semibold">
+          <div className="p-3.5 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-500/30 rounded-xl text-rose-700 dark:text-rose-300 text-xs font-medium">
             {error}
           </div>
         )}
 
-        {/* 3D Action Buttons */}
-        <div className="grid grid-cols-2 gap-3.5 max-w-md mx-auto">
+        {/* Action Buttons */}
+        <div className="grid grid-cols-2 gap-3 max-w-md mx-auto">
           <button
             onClick={() => {
               setIsCreating(true);
               setIsJoining(false);
               setError(null);
             }}
-            className="flex items-center justify-center gap-2 py-3 px-5 rounded-2xl btn-3d-indigo font-black text-sm"
+            className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl btn-primary font-medium text-xs shadow-xs"
           >
-            <Plus className="w-4 h-4 stroke-[3]" />
-            New Group
+            <Plus className="w-4 h-4" />
+            <span>New Group</span>
           </button>
           <button
             onClick={() => {
@@ -152,128 +152,129 @@ export const GroupsPage: React.FC = () => {
               setIsCreating(false);
               setError(null);
             }}
-            className="flex items-center justify-center gap-2 py-3 px-5 rounded-2xl btn-3d-surface font-extrabold text-sm"
+            className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl btn-surface font-medium text-xs"
           >
-            <KeyRound className="w-4 h-4 text-indigo-500" />
-            Join Code
+            <KeyRound className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+            <span>Join Code</span>
           </button>
         </div>
 
-        {/* Modal: Create Group */}
+        {/* Create Group Form */}
         {isCreating && (
           <form
             onSubmit={(e) => {
               e.preventDefault();
               if (groupName.trim()) createGroupMutation.mutate(groupName);
             }}
-            className="card-3d p-6 space-y-4 max-w-md mx-auto"
+            className="card-clean p-5 space-y-3.5 max-w-md mx-auto"
           >
-            <h3 className="font-extrabold text-sm text-[var(--text-primary)]">Create New Flat</h3>
+            <h3 className="font-semibold text-sm text-[var(--text-primary)]">
+              Create a New Flat Group
+            </h3>
             <input
               type="text"
               required
               autoFocus
-              placeholder="e.g. Flat 302 Roommates"
+              placeholder="e.g. 402 Palm Heights"
               value={groupName}
               onChange={(e) => setGroupName(e.target.value)}
-              className="w-full px-4 py-3 bg-slate-50 dark:bg-[#182238] border border-slate-200 dark:border-white/10 rounded-xl text-sm text-[var(--text-primary)] placeholder-slate-400 focus:outline-none focus:border-indigo-500"
+              className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-xs text-[var(--text-primary)] focus:outline-none focus:border-indigo-500"
             />
-            <div className="flex gap-2.5 justify-end pt-1">
+            <div className="flex justify-end gap-2">
               <button
                 type="button"
                 onClick={() => setIsCreating(false)}
-                className="px-4 py-2 text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer"
+                className="px-3.5 py-1.5 text-xs text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={createGroupMutation.isPending}
-                className="px-6 py-2 text-xs btn-3d-indigo font-black rounded-xl disabled:opacity-50"
+                className="px-4 py-1.5 text-xs btn-primary font-medium rounded-lg shadow-xs disabled:opacity-50"
               >
-                {createGroupMutation.isPending ? "Creating..." : "Create Flat"}
+                {createGroupMutation.isPending ? "Creating..." : "Create Group"}
               </button>
             </div>
           </form>
         )}
 
-        {/* Modal: Join Group */}
+        {/* Join Group Form */}
         {isJoining && (
           <form
             onSubmit={(e) => {
               e.preventDefault();
               if (inviteCode.trim()) joinGroupMutation.mutate(inviteCode);
             }}
-            className="card-3d p-6 space-y-4 max-w-md mx-auto"
+            className="card-clean p-5 space-y-3.5 max-w-md mx-auto"
           >
-            <h3 className="font-extrabold text-sm text-[var(--text-primary)]">Enter Invite Code</h3>
+            <h3 className="font-semibold text-sm text-[var(--text-primary)]">
+              Enter 6-Letter Flat Invite Code
+            </h3>
             <input
               type="text"
               required
               autoFocus
-              placeholder="e.g. ROOM-1234"
+              maxLength={8}
+              placeholder="e.g. INDORE"
               value={inviteCode}
               onChange={(e) => setInviteCode(e.target.value.toUpperCase())}
-              className="w-full px-4 py-3 bg-slate-50 dark:bg-[#182238] border border-slate-200 dark:border-white/10 rounded-xl text-base text-[var(--text-primary)] placeholder-slate-400 uppercase tracking-widest text-center font-mono font-bold focus:outline-none focus:border-indigo-500"
+              className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-center text-sm font-bold tracking-widest text-[var(--text-primary)] focus:outline-none focus:border-indigo-500 uppercase"
             />
-            <div className="flex gap-2.5 justify-end pt-1">
+            <div className="flex justify-end gap-2">
               <button
                 type="button"
                 onClick={() => setIsJoining(false)}
-                className="px-4 py-2 text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer"
+                className="px-3.5 py-1.5 text-xs text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={joinGroupMutation.isPending}
-                className="px-6 py-2 text-xs btn-3d-indigo font-black rounded-xl disabled:opacity-50"
+                className="px-4 py-1.5 text-xs btn-primary font-medium rounded-lg shadow-xs disabled:opacity-50"
               >
-                {joinGroupMutation.isPending ? "Joining..." : "Join Flat"}
+                {joinGroupMutation.isPending ? "Joining..." : "Join Group"}
               </button>
             </div>
           </form>
         )}
 
-        {/* Group List - 3D Cards in Responsive Grid */}
-        <div className="pt-2">
+        {/* Group List */}
+        <div className="space-y-3 max-w-md mx-auto">
           {isLoading ? (
-            <div className="text-center py-12 text-[var(--text-muted)] text-sm font-semibold">
-              Loading your flats...
+            <div className="text-center py-10 text-xs text-[var(--text-muted)]">
+              Loading flat groups...
             </div>
           ) : groups && groups.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {groups.map((group) => (
-                <div
-                  key={group.id}
-                  onClick={() => navigate(`/group/${group.id}`)}
-                  className="card-3d p-5 flex items-center justify-between cursor-pointer active:scale-[0.99] transition hover:-translate-y-1"
-                >
-                  <div className="flex items-center gap-3.5">
-                    <div className="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-white/5 border border-indigo-100 dark:border-white/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold shrink-0 shadow-sm">
-                      <Users className="w-6 h-6" />
-                    </div>
-                    <div>
-                      <h3 className="font-black text-[var(--text-primary)] text-base tracking-tight">
-                        {group.name}
-                      </h3>
-                      <p className="text-xs text-[var(--text-muted)] tracking-wider mt-0.5">
-                        Code: <span className="font-extrabold text-indigo-600 dark:text-indigo-400">{group.invite_code}</span>
-                      </p>
-                    </div>
+            groups.map((group) => (
+              <div
+                key={group.id}
+                onClick={() => navigate(`/group/${group.id}`)}
+                className="card-clean p-4 flex items-center justify-between cursor-pointer hover:border-slate-300 dark:hover:border-white/20 transition"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
+                    <Users className="w-5 h-5" />
                   </div>
-                  <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-white/5 flex items-center justify-center text-[var(--text-muted)]">
-                    <ArrowRight className="w-4 h-4" />
+                  <div>
+                    <h3 className="font-semibold text-sm text-[var(--text-primary)]">
+                      {group.name}
+                    </h3>
+                    <p className="text-xs text-[var(--text-muted)]">
+                      Code: <span className="font-semibold text-indigo-600 dark:text-indigo-400">{group.invite_code}</span>
+                    </p>
                   </div>
                 </div>
-              ))}
-            </div>
+                <ArrowRight className="w-4 h-4 text-[var(--text-muted)]" />
+              </div>
+            ))
           ) : (
-            <div className="card-3d text-center py-12 p-6 max-w-md mx-auto">
-              <Users className="w-12 h-12 mx-auto text-[var(--text-muted)] mb-3 opacity-60" />
-              <p className="text-base font-extrabold text-[var(--text-primary)]">No groups yet</p>
-              <p className="text-xs text-[var(--text-muted)] mt-1 max-w-xs mx-auto">
-                Create a group for your roommates or enter an invite code to join.
+            <div className="card-clean text-center py-10 p-6 max-w-md mx-auto">
+              <Users className="w-10 h-10 text-[var(--text-muted)] mx-auto mb-2 opacity-50" />
+              <h3 className="font-semibold text-sm text-[var(--text-primary)]">No Flats Joined Yet</h3>
+              <p className="text-xs text-[var(--text-muted)] mt-1">
+                Create a new flat or ask your roommate for their 6-letter invite code.
               </p>
             </div>
           )}

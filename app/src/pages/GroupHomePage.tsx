@@ -219,7 +219,7 @@ export const GroupHomePage: React.FC = () => {
     },
   });
 
-  // Add Member Mutation with Duplicate Name Safeguard (Zero payday baggage)
+  // Add Member Mutation with Duplicate Name Safeguard
   const addMemberMutation = useMutation({
     mutationFn: async ({ name }: { name: string }) => {
       const { error } = await supabase.from("members").insert({
@@ -287,34 +287,34 @@ export const GroupHomePage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[var(--bg-page)] text-[var(--text-primary)] flex flex-col pb-24 md:pb-8 w-full transition-colors duration-200">
-      {/* Top Main App Header (Clean Single-Flat Navigation) */}
-      <header className="px-4 md:px-8 py-3.5 bg-white/85 dark:bg-[#121826]/85 backdrop-blur-md border-b border-slate-200/80 dark:border-white/10 sticky top-0 z-30 transition-all">
+      {/* Top Modern App Header */}
+      <header className="px-4 md:px-8 py-3.5 bg-white/80 dark:bg-[#121826]/85 backdrop-blur-md border-b border-slate-200/80 dark:border-white/10 sticky top-0 z-30 transition-all">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
           {/* Left: App Logo & Flat Name */}
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl btn-3d-indigo flex items-center justify-center text-white font-black text-sm shrink-0">
+            <div className="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-bold text-sm shrink-0 shadow-sm">
               ₹
             </div>
             <div>
-              <h1 className="font-black text-base md:text-lg text-[var(--text-primary)] tracking-tight">
+              <h1 className="font-bold text-base md:text-lg text-[var(--text-primary)] tracking-tight">
                 {group?.name || "Indore Flat"}
               </h1>
               <p className="text-[11px] md:text-xs text-[var(--text-muted)] font-medium flex items-center gap-1.5">
                 <span>{members.length} roommates</span>
                 <span>•</span>
-                <span>Signed in as <strong className="text-indigo-600 dark:text-indigo-400">{profile?.display_name || "User"}</strong></span>
+                <span>Signed in as <strong className="text-indigo-600 dark:text-indigo-400 font-semibold">{profile?.display_name || "User"}</strong></span>
               </p>
             </div>
           </div>
 
-          {/* Center: Tablet / Desktop Navigation Pills (Hidden on mobile, visible on md+) */}
-          <div className="hidden md:flex items-center bg-slate-100 dark:bg-[#182238] p-1 rounded-2xl border border-slate-200/80 dark:border-white/10">
+          {/* Center: Tablet / Desktop Navigation Pills */}
+          <div className="hidden md:flex items-center bg-slate-100 dark:bg-white/5 p-1 rounded-xl border border-slate-200/80 dark:border-white/5">
             <button
               onClick={() => setActiveTab("activity")}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer ${
                 activeTab === "activity"
-                  ? "btn-3d-indigo text-white"
-                  : "text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+                  ? "bg-white dark:bg-indigo-600 text-indigo-600 dark:text-white shadow-sm"
+                  : "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
               }`}
             >
               <Home className="w-3.5 h-3.5" />
@@ -322,10 +322,10 @@ export const GroupHomePage: React.FC = () => {
             </button>
             <button
               onClick={() => setActiveTab("sheet")}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer ${
                 activeTab === "sheet"
-                  ? "btn-3d-indigo text-white"
-                  : "text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+                  ? "bg-white dark:bg-indigo-600 text-indigo-600 dark:text-white shadow-sm"
+                  : "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
               }`}
             >
               <Table className="w-3.5 h-3.5" />
@@ -333,10 +333,10 @@ export const GroupHomePage: React.FC = () => {
             </button>
             <button
               onClick={() => setActiveTab("settle")}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer ${
                 activeTab === "settle"
-                  ? "btn-3d-indigo text-white"
-                  : "text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+                  ? "bg-white dark:bg-indigo-600 text-indigo-600 dark:text-white shadow-sm"
+                  : "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
               }`}
             >
               <CreditCard className="w-3.5 h-3.5" />
@@ -344,10 +344,10 @@ export const GroupHomePage: React.FC = () => {
             </button>
             <button
               onClick={() => setActiveTab("members")}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer ${
                 activeTab === "members"
-                  ? "btn-3d-indigo text-white"
-                  : "text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+                  ? "bg-white dark:bg-indigo-600 text-indigo-600 dark:text-white shadow-sm"
+                  : "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
               }`}
             >
               <Users className="w-3.5 h-3.5" />
@@ -360,18 +360,18 @@ export const GroupHomePage: React.FC = () => {
             {/* Invite Code Pill */}
             <button
               onClick={copyCode}
-              className="btn-3d-surface flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold tracking-wider cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-indigo-600 dark:text-indigo-400 border border-slate-200/80 dark:border-white/10 transition cursor-pointer"
               title="Click to copy invite code"
             >
               {copiedCode ? (
                 <>
                   <Check className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
-                  <span className="text-indigo-600 dark:text-indigo-400">Copied!</span>
+                  <span>Copied!</span>
                 </>
               ) : (
                 <>
-                  <Copy className="w-3.5 h-3.5 opacity-70 text-indigo-600 dark:text-indigo-400" />
-                  <span className="text-indigo-600 dark:text-indigo-400 font-extrabold">{group?.invite_code || "INDORE"}</span>
+                  <Copy className="w-3.5 h-3.5 opacity-70" />
+                  <span className="font-bold tracking-wide">{group?.invite_code || "INDORE"}</span>
                 </>
               )}
             </button>
@@ -379,16 +379,16 @@ export const GroupHomePage: React.FC = () => {
             {/* Desktop / iPad Add Expense CTA */}
             <button
               onClick={() => setIsAddModalOpen(true)}
-              className="hidden md:flex items-center gap-1.5 px-4 py-2 btn-3d-indigo rounded-xl text-xs font-black"
+              className="hidden md:flex items-center gap-1.5 px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-semibold shadow-sm transition active:scale-[0.98] cursor-pointer"
             >
-              <Plus className="w-4 h-4 stroke-[3]" />
+              <Plus className="w-4 h-4 stroke-[2.5]" />
               <span>Add Expense</span>
             </button>
 
             {/* Theme Toggle Button */}
             <button
               onClick={toggleTheme}
-              className="btn-3d-surface p-2 rounded-full cursor-pointer flex items-center justify-center"
+              className="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-600 dark:text-slate-300 transition cursor-pointer flex items-center justify-center border border-slate-200/80 dark:border-white/10"
               title={`Switch to ${theme === "light" ? "Dark" : "Light"} Mode`}
             >
               {theme === "light" ? (
@@ -401,7 +401,7 @@ export const GroupHomePage: React.FC = () => {
             {/* Logout Button */}
             <button
               onClick={() => signOut()}
-              className="btn-3d-surface p-2 rounded-full cursor-pointer flex items-center justify-center text-[var(--text-muted)] hover:text-rose-500"
+              className="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-400 hover:text-rose-500 transition cursor-pointer border border-slate-200/80 dark:border-white/10"
               title="Sign out"
             >
               <LogOut className="w-4 h-4" />
@@ -415,7 +415,7 @@ export const GroupHomePage: React.FC = () => {
         {/* TAB 1: ACTIVITY / OVERVIEW DASHBOARD */}
         {activeTab === "activity" && (
           <motion.div
-            initial={{ opacity: 0, y: 8 }}
+            initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
             className="space-y-6"
           >
@@ -423,18 +423,18 @@ export const GroupHomePage: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-start">
               {/* Left Column: Net Status & Financial Summary (span 5 on md/lg) */}
               <div className="md:col-span-5 space-y-4">
-                {/* 3D Elevated Net Balance Card */}
-                <div className="card-3d p-6 sm:p-7 relative overflow-hidden">
+                {/* Clean Modern Net Balance Card */}
+                <div className="card-clean p-6 relative overflow-hidden">
                   <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-extrabold uppercase tracking-wider text-[var(--text-muted)]">
+                    <span className="text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)]">
                       Your Net Balance
                     </span>
-                    <span className={`text-xs px-2.5 py-1 rounded-full font-extrabold border ${
+                    <span className={`text-xs px-2.5 py-0.5 rounded-full font-medium ${
                       myBalance > 0n
-                        ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30"
+                        ? "bg-amber-500/10 text-amber-600 dark:text-amber-400"
                         : myBalance < 0n
-                        ? "bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/30"
-                        : "bg-slate-100 dark:bg-white/5 text-[var(--text-muted)] border-slate-200 dark:border-white/10"
+                        ? "bg-rose-500/10 text-rose-600 dark:text-rose-400"
+                        : "bg-slate-100 dark:bg-white/5 text-[var(--text-muted)]"
                     }`}>
                       {myBalance > 0n
                         ? "In Profit 🎉"
@@ -460,7 +460,7 @@ export const GroupHomePage: React.FC = () => {
                         ? formatINR(myBalance)
                         : "₹0"}
                     </h2>
-                    <p className="text-xs text-[var(--text-muted)] mt-1 font-medium">
+                    <p className="text-xs text-[var(--text-muted)] mt-1.5 font-medium">
                       {myBalance > 0n
                         ? "Roommates owe you this. Pure profit!"
                         : myBalance < 0n
@@ -472,19 +472,19 @@ export const GroupHomePage: React.FC = () => {
                   {/* Settlement Summary in Plain Words */}
                   <div className="mt-5 pt-4 border-t border-slate-100 dark:border-white/10 space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-extrabold uppercase tracking-wider text-[var(--text-muted)]">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-muted)]">
                         Who Pays Whom
                       </span>
                       <button
                         onClick={() => setActiveTab("settle")}
-                        className="text-[11px] text-indigo-600 dark:text-indigo-400 font-extrabold hover:underline cursor-pointer"
+                        className="text-xs text-indigo-600 dark:text-indigo-400 font-semibold hover:underline cursor-pointer"
                       >
                         Settle up →
                       </button>
                     </div>
 
                     {simplifiedTransfers.length === 0 ? (
-                      <p className="text-xs text-indigo-600 dark:text-indigo-400 font-bold">
+                      <p className="text-xs text-indigo-600 dark:text-indigo-400 font-medium">
                         ✓ All accounts balanced to zero!
                       </p>
                     ) : (
@@ -497,11 +497,11 @@ export const GroupHomePage: React.FC = () => {
                             className="flex items-center justify-between text-xs py-1"
                           >
                             <div className="flex items-center gap-1.5 text-[var(--text-primary)]">
-                              <span className="font-bold text-rose-500 dark:text-rose-400">{fromName}</span>
+                              <span className="font-semibold text-rose-500 dark:text-rose-400">{fromName}</span>
                               <ArrowRight className="w-3 h-3 text-[var(--text-muted)]" />
-                              <span className="font-bold text-indigo-600 dark:text-indigo-400">{toName}</span>
+                              <span className="font-semibold text-indigo-600 dark:text-indigo-400">{toName}</span>
                             </div>
-                            <span className="font-black text-[var(--text-primary)]">
+                            <span className="font-bold text-[var(--text-primary)]">
                               {formatINR(t.amountPaise)}
                             </span>
                           </div>
@@ -511,31 +511,31 @@ export const GroupHomePage: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Flat Snapshot Overview Card (Zero Payday Baggage) */}
-                <div className="card-3d p-5 space-y-4">
+                {/* Flat Snapshot Overview Card */}
+                <div className="card-clean p-5 space-y-4">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-[var(--text-muted)] flex items-center gap-1.5">
+                    <span className="text-xs font-semibold text-[var(--text-muted)] flex items-center gap-1.5">
                       <Sparkles className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
                       Flat Snapshot
                     </span>
                     <button
                       onClick={() => setActiveTab("members")}
-                      className="text-[11px] text-indigo-600 dark:text-indigo-400 font-extrabold hover:underline cursor-pointer"
+                      className="text-xs text-indigo-600 dark:text-indigo-400 font-semibold hover:underline cursor-pointer"
                     >
                       Roommates ({members.length}) →
                     </button>
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
-                    <div className="p-3 bg-slate-50 dark:bg-[#182238] rounded-xl border border-slate-100 dark:border-white/5">
-                      <span className="text-[10px] font-bold text-[var(--text-muted)] uppercase block">Total Spent</span>
-                      <span className="text-lg font-black text-indigo-600 dark:text-indigo-400 block mt-0.5">
+                    <div className="p-3 bg-slate-50 dark:bg-white/5 rounded-xl border border-slate-100 dark:border-white/5">
+                      <span className="text-[10px] font-medium text-[var(--text-muted)] uppercase block">Total Spent</span>
+                      <span className="text-base font-bold text-indigo-600 dark:text-indigo-400 block mt-0.5">
                         {formatINR(totalGroupSpent)}
                       </span>
                     </div>
-                    <div className="p-3 bg-slate-50 dark:bg-[#182238] rounded-xl border border-slate-100 dark:border-white/5">
-                      <span className="text-[10px] font-bold text-[var(--text-muted)] uppercase block">Total Bills</span>
-                      <span className="text-lg font-black text-[var(--text-primary)] block mt-0.5">
+                    <div className="p-3 bg-slate-50 dark:bg-white/5 rounded-xl border border-slate-100 dark:border-white/5">
+                      <span className="text-[10px] font-medium text-[var(--text-muted)] uppercase block">Total Bills</span>
+                      <span className="text-base font-bold text-[var(--text-primary)] block mt-0.5">
                         {expenses.length}
                       </span>
                     </div>
@@ -543,7 +543,7 @@ export const GroupHomePage: React.FC = () => {
 
                   <button
                     onClick={shareWhatsApp}
-                    className="w-full py-2.5 px-4 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] text-white font-extrabold text-xs shadow-[0_4px_0_0_#15803d] active:translate-y-[2px] active:shadow-[0_2px_0_0_#15803d] flex items-center justify-center gap-1.5 transition cursor-pointer"
+                    className="w-full py-2.5 px-4 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] text-white font-semibold text-xs shadow-sm flex items-center justify-center gap-1.5 transition active:scale-[0.98] cursor-pointer"
                   >
                     <Share2 className="w-3.5 h-3.5" />
                     Invite via WhatsApp
@@ -552,17 +552,17 @@ export const GroupHomePage: React.FC = () => {
 
                 {/* Dispute Prevention: Deleted Bills Archive */}
                 {deletedExpenses.length > 0 && (
-                  <div className="card-3d p-5 border-amber-500/40 space-y-3">
+                  <div className="card-clean p-5 border-amber-500/30 space-y-3">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <Trash2 className="w-4 h-4 text-amber-500" />
-                        <span className="text-xs font-bold text-[var(--text-primary)]">
+                        <span className="text-xs font-semibold text-[var(--text-primary)]">
                           Deleted Bills Archive ({deletedExpenses.length})
                         </span>
                       </div>
                       <button
                         onClick={() => setShowDeletedBills(!showDeletedBills)}
-                        className="text-xs text-amber-600 dark:text-amber-400 font-bold hover:underline flex items-center gap-1 cursor-pointer"
+                        className="text-xs text-amber-600 dark:text-amber-400 font-semibold hover:underline flex items-center gap-1 cursor-pointer"
                       >
                         <span>{showDeletedBills ? "Hide" : "Review"}</span>
                         {showDeletedBills ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
@@ -570,8 +570,8 @@ export const GroupHomePage: React.FC = () => {
                     </div>
 
                     {showDeletedBills && (
-                      <div className="space-y-2.5 pt-2 border-t border-slate-100 dark:border-white/10">
-                        <p className="text-[11px] text-[var(--text-muted)] leading-relaxed">
+                      <div className="space-y-2 pt-2 border-t border-slate-100 dark:border-white/10">
+                        <p className="text-[11px] text-[var(--text-muted)]">
                           No disputes: any deleted bill can be reviewed and restored with 1 tap!
                         </p>
                         {deletedExpenses.map((delExp) => {
@@ -579,10 +579,10 @@ export const GroupHomePage: React.FC = () => {
                           return (
                             <div
                               key={delExp.id}
-                              className="p-3 bg-slate-50 dark:bg-[#182238] border border-slate-200 dark:border-white/5 rounded-xl flex items-center justify-between text-xs"
+                              className="p-3 bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/5 rounded-xl flex items-center justify-between text-xs"
                             >
                               <div>
-                                <h5 className="font-bold text-[var(--text-primary)] line-clamp-1">
+                                <h5 className="font-semibold text-[var(--text-primary)] line-clamp-1">
                                   {delExp.details}
                                 </h5>
                                 <span className="text-[10px] text-[var(--text-muted)]">
@@ -592,7 +592,7 @@ export const GroupHomePage: React.FC = () => {
                               <button
                                 onClick={() => restoreExpenseMutation.mutate(delExp.id)}
                                 disabled={restoreExpenseMutation.isPending}
-                                className="px-3 py-1 btn-3d-amber rounded-lg font-bold text-[11px] flex items-center gap-1"
+                                className="px-3 py-1 bg-amber-500 hover:bg-amber-600 text-white rounded-lg font-medium text-[11px] flex items-center gap-1 transition"
                               >
                                 <RotateCcw className="w-3 h-3" />
                                 Restore
@@ -609,12 +609,12 @@ export const GroupHomePage: React.FC = () => {
               {/* Right Column: Recent Expenses Feed (span 7 on md/lg) */}
               <div className="md:col-span-7 space-y-3">
                 <div className="flex items-center justify-between px-1">
-                  <h3 className="font-black text-sm md:text-base text-[var(--text-primary)]">
+                  <h3 className="font-bold text-sm md:text-base text-[var(--text-primary)]">
                     Recent Expenses ({expenses.length})
                   </h3>
                   <button
                     onClick={() => setActiveTab("sheet")}
-                    className="flex items-center gap-1 text-xs text-indigo-600 dark:text-indigo-400 font-extrabold hover:underline cursor-pointer"
+                    className="flex items-center gap-1 text-xs text-indigo-600 dark:text-indigo-400 font-semibold hover:underline cursor-pointer"
                   >
                     <Table className="w-3.5 h-3.5" />
                     Open Spreadsheet Matrix →
@@ -622,15 +622,15 @@ export const GroupHomePage: React.FC = () => {
                 </div>
 
                 {expenses.length === 0 ? (
-                  <div className="card-3d text-center py-12 p-6">
-                    <Receipt className="w-12 h-12 text-[var(--text-muted)] mx-auto mb-2 opacity-50" />
-                    <p className="text-base font-extrabold text-[var(--text-primary)]">No expenses logged yet</p>
+                  <div className="card-clean text-center py-12 p-6">
+                    <Receipt className="w-10 h-10 text-[var(--text-muted)] mx-auto mb-2 opacity-40" />
+                    <p className="text-sm font-semibold text-[var(--text-primary)]">No expenses logged yet</p>
                     <p className="text-xs text-[var(--text-muted)] mt-1">
                       Tap the + button to add your first bill in under 5 seconds!
                     </p>
                   </div>
                 ) : (
-                  <div className="space-y-3">
+                  <div className="space-y-2.5">
                     {expenses.slice(0, 15).map((expense) => {
                       const payer = memberMap.get(expense.paid_by_member_id);
                       const isPayerMe = expense.paid_by_member_id === myMember?.id;
@@ -640,14 +640,14 @@ export const GroupHomePage: React.FC = () => {
                         <div
                           key={expense.id}
                           onClick={() => navigate(`/group/${groupId}/expense/${expense.id}`)}
-                          className="card-3d p-4 flex items-center justify-between cursor-pointer active:scale-[0.99] transition hover:-translate-y-0.5"
+                          className="card-clean p-4 flex items-center justify-between cursor-pointer hover:border-slate-300 dark:hover:border-white/20 transition"
                         >
-                          <div className="flex items-center gap-3.5">
-                            <div className="w-11 h-11 rounded-2xl bg-indigo-50 dark:bg-white/5 border border-indigo-100 dark:border-white/10 flex items-center justify-center font-bold text-lg shrink-0 shadow-sm">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-white/5 border border-indigo-100 dark:border-white/10 flex items-center justify-center font-bold text-lg shrink-0">
                               {expense.details.match(/^(\p{Emoji})/u)?.[0] || "🧾"}
                             </div>
                             <div>
-                              <h4 className="text-sm font-black text-[var(--text-primary)] line-clamp-1 tracking-tight">
+                              <h4 className="text-sm font-semibold text-[var(--text-primary)] line-clamp-1 tracking-tight">
                                 {expense.details}
                               </h4>
                               <p className="text-[11px] text-[var(--text-muted)] mt-0.5 font-medium">
@@ -661,11 +661,11 @@ export const GroupHomePage: React.FC = () => {
                           </div>
 
                           <div className="text-right shrink-0">
-                            <span className="text-sm md:text-base font-black text-[var(--text-primary)] block tracking-tight">
+                            <span className="text-sm md:text-base font-bold text-[var(--text-primary)] block tracking-tight">
                               {formatINR(expense.amount_paise)}
                             </span>
                             <span
-                              className={`text-[11px] font-extrabold ${
+                              className={`text-[11px] font-semibold ${
                                 isPayerMe
                                   ? "text-indigo-600 dark:text-indigo-400"
                                   : mySplit
@@ -695,20 +695,20 @@ export const GroupHomePage: React.FC = () => {
         {/* TAB 2: EXCEL-STYLE FULL SHEET VIEW */}
         {activeTab === "sheet" && (
           <motion.div
-            initial={{ opacity: 0, y: 8 }}
+            initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
             className="space-y-4"
           >
             <div className="flex items-center justify-between px-1">
               <div>
-                <h2 className="font-black text-base md:text-lg text-[var(--text-primary)]">Spreadsheet View</h2>
+                <h2 className="font-bold text-base md:text-lg text-[var(--text-primary)]">Spreadsheet View</h2>
                 <p className="text-xs text-[var(--text-muted)]">
                   Instant matrix view with individual shares and totals.
                 </p>
               </div>
               <button
                 onClick={() => setActiveTab("activity")}
-                className="text-xs text-indigo-600 dark:text-indigo-400 font-extrabold hover:underline cursor-pointer"
+                className="text-xs text-indigo-600 dark:text-indigo-400 font-semibold hover:underline cursor-pointer"
               >
                 Back to Feed
               </button>
@@ -726,12 +726,12 @@ export const GroupHomePage: React.FC = () => {
         {/* TAB 3: SETTLE UP (MINIMAL TRANSFERS) */}
         {activeTab === "settle" && (
           <motion.div
-            initial={{ opacity: 0, y: 8 }}
+            initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
             className="space-y-4"
           >
-            <div className="card-3d p-6 md:p-8">
-              <h2 className="text-base md:text-lg font-black text-[var(--text-primary)] mb-1">
+            <div className="card-clean p-6 md:p-8">
+              <h2 className="text-base md:text-lg font-bold text-[var(--text-primary)] mb-1">
                 Minimal Transfers
               </h2>
               <p className="text-xs text-[var(--text-muted)] mb-6">
@@ -740,8 +740,8 @@ export const GroupHomePage: React.FC = () => {
 
               {simplifiedTransfers.length === 0 ? (
                 <div className="text-center py-12">
-                  <div className="text-5xl mb-3">🎉</div>
-                  <h4 className="font-black text-indigo-600 dark:text-indigo-400 text-lg">All Settled Up!</h4>
+                  <div className="text-4xl mb-3">🎉</div>
+                  <h4 className="font-bold text-indigo-600 dark:text-indigo-400 text-lg">All Settled Up!</h4>
                   <p className="text-xs text-[var(--text-muted)] mt-1 font-medium">
                     Nobody owes anything in this flat right now. Zero debt!
                   </p>
@@ -755,15 +755,15 @@ export const GroupHomePage: React.FC = () => {
                     return (
                       <div
                         key={idx}
-                        className="card-3d p-5 flex flex-col justify-between gap-4 transition"
+                        className="card-clean p-5 flex flex-col justify-between gap-4 transition"
                       >
                         <div>
                           <div className="flex items-center gap-2 text-xs text-[var(--text-muted)]">
-                            <span className="font-bold text-rose-500 dark:text-rose-400 text-sm">{fromName}</span>
+                            <span className="font-semibold text-rose-500 dark:text-rose-400 text-sm">{fromName}</span>
                             <ArrowRight className="w-4 h-4 text-[var(--text-muted)]" />
-                            <span className="font-bold text-indigo-600 dark:text-indigo-400 text-sm">{toName}</span>
+                            <span className="font-semibold text-indigo-600 dark:text-indigo-400 text-sm">{toName}</span>
                           </div>
-                          <span className="text-3xl font-black text-[var(--text-primary)] mt-2 block tracking-tight">
+                          <span className="text-3xl font-extrabold text-[var(--text-primary)] mt-2 block tracking-tight">
                             {formatINR(t.amountPaise)}
                           </span>
                         </div>
@@ -777,7 +777,7 @@ export const GroupHomePage: React.FC = () => {
                             })
                           }
                           disabled={recordSettlementMutation.isPending}
-                          className="w-full py-2.5 rounded-xl btn-3d-amber text-xs font-black flex items-center justify-center gap-1.5"
+                          className="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition active:scale-[0.98] cursor-pointer"
                         >
                           <CheckCircle2 className="w-4 h-4" />
                           Mark Paid & Settle
@@ -794,23 +794,23 @@ export const GroupHomePage: React.FC = () => {
         {/* TAB 4: ROOMMATES / MEMBERS */}
         {activeTab === "members" && (
           <motion.div
-            initial={{ opacity: 0, y: 8 }}
+            initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
             className="space-y-6"
           >
             {/* Flat Invite Banner */}
-            <div className="card-3d p-6 md:p-8 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+            <div className="card-clean p-6 md:p-8 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
               <div className="space-y-1">
-                <span className="text-[10px] font-extrabold uppercase tracking-wider text-[var(--text-muted)]">
+                <span className="text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)]">
                   Flat Invite Code
                 </span>
                 <div className="flex items-center gap-3">
-                  <span className="text-3xl md:text-4xl font-black text-indigo-600 dark:text-indigo-400 tracking-widest">
+                  <span className="text-3xl md:text-4xl font-extrabold text-indigo-600 dark:text-indigo-400 tracking-widest">
                     {group?.invite_code || "INDORE"}
                   </span>
                   <button
                     onClick={copyCode}
-                    className="btn-3d-surface p-2.5 rounded-full cursor-pointer"
+                    className="p-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 transition cursor-pointer"
                     title="Copy code"
                   >
                     {copiedCode ? (
@@ -828,7 +828,7 @@ export const GroupHomePage: React.FC = () => {
               <div className="flex items-center gap-2">
                 <button
                   onClick={shareWhatsApp}
-                  className="flex-1 md:flex-none flex items-center justify-center gap-2 py-3 px-6 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] text-white font-extrabold text-sm shadow-[0_4px_0_0_#15803d] active:translate-y-[3px] active:shadow-[0_1px_0_0_#15803d] transition cursor-pointer"
+                  className="flex-1 md:flex-none flex items-center justify-center gap-2 py-3 px-6 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] text-white font-semibold text-sm shadow-sm transition active:scale-[0.98] cursor-pointer"
                 >
                   <Share2 className="w-4 h-4" />
                   Share via WhatsApp
@@ -839,26 +839,26 @@ export const GroupHomePage: React.FC = () => {
             {/* Roommates List Header & Add Button */}
             <div className="space-y-3">
               <div className="flex items-center justify-between px-1">
-                <h3 className="font-black text-sm md:text-base text-[var(--text-primary)]">
+                <h3 className="font-bold text-sm md:text-base text-[var(--text-primary)]">
                   Roommates ({members.length})
                 </h3>
                 <button
                   onClick={() => setShowAddRoommate(true)}
-                  className="btn-3d-indigo flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-black"
+                  className="flex items-center gap-1.5 px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-semibold shadow-sm transition active:scale-[0.98] cursor-pointer"
                 >
                   <UserPlus className="w-3.5 h-3.5" />
                   + Add Roommate
                 </button>
               </div>
 
-              {/* Add Roommate Modal / Inline Card (Pure & Simple, NO Payday) */}
+              {/* Add Roommate Modal / Inline Card */}
               {showAddRoommate && (
                 <form
                   onSubmit={handleAddRoommateSubmit}
-                  className="card-3d p-5 space-y-3.5"
+                  className="card-clean p-5 space-y-3.5"
                 >
                   <div className="flex items-center justify-between">
-                    <h4 className="font-extrabold text-sm text-[var(--text-primary)]">Add New Roommate</h4>
+                    <h4 className="font-semibold text-sm text-[var(--text-primary)]">Add New Roommate</h4>
                     <span className="text-[11px] text-[var(--text-muted)]">
                       They can claim this spot when they sign up!
                     </span>
@@ -884,7 +884,7 @@ export const GroupHomePage: React.FC = () => {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-[11px] font-bold text-[var(--text-muted)] mb-1">
+                      <label className="block text-[11px] font-semibold text-[var(--text-muted)] mb-1">
                         First Name *
                       </label>
                       <input
@@ -897,12 +897,12 @@ export const GroupHomePage: React.FC = () => {
                           setNewRoommateFirstName(e.target.value);
                           setAddRoommateError(null);
                         }}
-                        className="w-full px-3 py-2 bg-slate-50 dark:bg-[#182238] border border-slate-200 dark:border-white/10 focus:border-indigo-500 rounded-xl text-xs text-[var(--text-primary)] focus:outline-none"
+                        className="w-full px-3 py-2 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 focus:border-indigo-500 rounded-lg text-xs text-[var(--text-primary)] focus:outline-none"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-[11px] font-bold text-[var(--text-muted)] mb-1">
+                      <label className="block text-[11px] font-semibold text-[var(--text-muted)] mb-1">
                         Surname / Initial {duplicateCandidate ? "(Required)" : "(Optional)"}
                       </label>
                       <input
@@ -913,7 +913,7 @@ export const GroupHomePage: React.FC = () => {
                           setNewRoommateSurname(e.target.value);
                           setAddRoommateError(null);
                         }}
-                        className={`w-full px-3 py-2 bg-slate-50 dark:bg-[#182238] border rounded-xl text-xs text-[var(--text-primary)] focus:outline-none ${
+                        className={`w-full px-3 py-2 bg-slate-50 dark:bg-white/5 border rounded-lg text-xs text-[var(--text-primary)] focus:outline-none ${
                           duplicateCandidate
                             ? "border-amber-400 bg-amber-50 dark:bg-amber-950/30 focus:border-amber-500"
                             : "border-slate-200 dark:border-white/10 focus:border-indigo-500"
@@ -936,7 +936,7 @@ export const GroupHomePage: React.FC = () => {
                     <button
                       type="submit"
                       disabled={addMemberMutation.isPending}
-                      className="px-5 py-2 btn-3d-indigo text-xs font-black rounded-xl"
+                      className="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg shadow-sm transition active:scale-[0.98] cursor-pointer"
                     >
                       {addMemberMutation.isPending ? "Adding..." : "Save Roommate"}
                     </button>
@@ -949,17 +949,17 @@ export const GroupHomePage: React.FC = () => {
                 {members.map((member) => (
                   <div
                     key={member.id}
-                    className="card-3d p-4 flex items-center justify-between"
+                    className="card-clean p-4 flex items-center justify-between"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-2xl bg-indigo-50 dark:bg-white/5 border border-indigo-100 dark:border-white/10 text-indigo-600 dark:text-indigo-400 font-black text-xs flex items-center justify-center shrink-0">
+                      <div className="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-white/5 border border-indigo-100 dark:border-white/10 text-indigo-600 dark:text-indigo-400 font-bold text-xs flex items-center justify-center shrink-0">
                         {member.display_name.slice(0, 2).toUpperCase()}
                       </div>
                       <div>
-                        <h4 className="font-bold text-sm text-[var(--text-primary)] flex items-center gap-1.5">
+                        <h4 className="font-semibold text-sm text-[var(--text-primary)] flex items-center gap-1.5">
                           <span>{member.display_name}</span>
                           {member.user_id === user?.id && (
-                            <span className="text-[10px] font-extrabold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-200 dark:border-indigo-500/30 px-1.5 py-0.2 rounded-md">
+                            <span className="text-[10px] font-semibold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-200 dark:border-indigo-500/30 px-1.5 py-0.2 rounded-md">
                               You
                             </span>
                           )}
@@ -971,7 +971,7 @@ export const GroupHomePage: React.FC = () => {
                     </div>
 
                     {member.role === "admin" && (
-                      <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-[var(--text-muted)] font-extrabold">
+                      <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-[var(--text-muted)] font-semibold">
                         Admin
                       </span>
                     )}
@@ -983,14 +983,14 @@ export const GroupHomePage: React.FC = () => {
         )}
       </main>
 
-      {/* Floating Bottom Navigation Bar (Visible on mobile, hidden on tablet/desktop md+) */}
+      {/* Floating Bottom Navigation Bar */}
       <BottomNav
         activeTab={activeTab}
         onChangeTab={setActiveTab}
         onOpenAddModal={() => setIsAddModalOpen(true)}
       />
 
-      {/* 3-Tap Quick Add Expense Modal */}
+      {/* Quick Add Expense Modal */}
       <AddExpenseModal
         groupId={groupId!}
         members={members}

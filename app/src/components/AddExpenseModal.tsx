@@ -175,19 +175,19 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
             {/* Header */}
             <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-white/10">
               <div className="flex items-center gap-2">
-                <span className="w-8 h-8 rounded-xl btn-3d-indigo text-white flex items-center justify-center font-black text-xs">
+                <span className="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-bold text-xs shadow-xs">
                   ₹
                 </span>
                 <div>
-                  <h3 className="font-black text-base text-[var(--text-primary)] tracking-tight">
+                  <h3 className="font-bold text-base text-[var(--text-primary)] tracking-tight">
                     Add Expense
                   </h3>
-                  <p className="text-[11px] text-[var(--text-muted)] font-medium">Split bills in under 5 seconds</p>
+                  <p className="text-[11px] text-[var(--text-muted)] font-normal">Split bills in seconds</p>
                 </div>
               </div>
               <button
                 onClick={onClose}
-                className="p-1.5 rounded-full text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-slate-100 dark:hover:bg-white/10 transition cursor-pointer"
+                className="p-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-slate-100 dark:hover:bg-white/10 transition cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -226,7 +226,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                       key={amt}
                       type="button"
                       onClick={() => handleQuickAmount(amt)}
-                      className="btn-3d-surface px-2.5 py-1 rounded-xl text-xs font-bold whitespace-nowrap cursor-pointer"
+                      className="px-2.5 py-1 rounded-lg bg-white dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 border border-slate-200 dark:border-white/10 text-xs font-medium text-slate-700 dark:text-slate-200 transition active:scale-95 cursor-pointer"
                     >
                       +{amt}
                     </button>
@@ -250,7 +250,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                       key={tag.label}
                       type="button"
                       onClick={() => handleQuickTag(tag.emoji, tag.label)}
-                      className="btn-3d-surface px-2.5 py-1 rounded-full text-xs font-semibold flex items-center gap-1 whitespace-nowrap cursor-pointer"
+                      className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 border border-slate-200/80 dark:border-white/10 text-xs font-medium text-slate-600 dark:text-slate-300 flex items-center gap-1 whitespace-nowrap transition cursor-pointer"
                     >
                       <span>{tag.emoji}</span>
                       <span>{tag.label}</span>
@@ -261,7 +261,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
 
               {/* Paid by */}
               <div>
-                <label className="block text-[11px] font-extrabold uppercase tracking-wider text-[var(--text-muted)] mb-1.5">
+                <label className="block text-[11px] font-semibold uppercase tracking-wider text-[var(--text-muted)] mb-1.5">
                   Who Paid?
                 </label>
                 <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1">
@@ -272,10 +272,10 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                         key={member.id}
                         type="button"
                         onClick={() => setPaidByMemberId(member.id)}
-                        className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap cursor-pointer ${
+                        className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition whitespace-nowrap cursor-pointer ${
                           isSelected
-                            ? "btn-3d-indigo text-white"
-                            : "btn-3d-surface text-[var(--text-muted)]"
+                            ? "bg-indigo-600 text-white shadow-sm"
+                            : "bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-white/10"
                         }`}
                       >
                         {getMemberLabel(member)}
@@ -288,13 +288,13 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
               {/* Split equally among */}
               <div>
                 <div className="flex justify-between items-center mb-1.5">
-                  <label className="text-[11px] font-extrabold uppercase tracking-wider text-[var(--text-muted)]">
+                  <label className="text-[11px] font-semibold uppercase tracking-wider text-[var(--text-muted)]">
                     Split Among ({selectedMemberIds.length})
                   </label>
                   <button
                     type="button"
                     onClick={() => setSelectedMemberIds(uniqueMembers.map((m) => m.id))}
-                    className="text-[11px] text-indigo-600 dark:text-indigo-400 font-extrabold hover:underline cursor-pointer"
+                    className="text-[11px] text-indigo-600 dark:text-indigo-400 font-semibold hover:underline cursor-pointer"
                   >
                     Equal Split (All)
                   </button>
@@ -308,9 +308,9 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                         key={member.id}
                         type="button"
                         onClick={() => toggleMemberSplit(member.id)}
-                        className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-2 border transition cursor-pointer ${
+                        className={`px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-2 border transition cursor-pointer ${
                           isChecked
-                            ? "bg-indigo-50 dark:bg-indigo-950/70 border-indigo-200 dark:border-indigo-500/60 text-indigo-700 dark:text-indigo-200 shadow-sm"
+                            ? "bg-indigo-50 dark:bg-indigo-950/70 border-indigo-200 dark:border-indigo-500/60 text-indigo-700 dark:text-indigo-200"
                             : "bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/10 text-[var(--text-muted)]"
                         }`}
                       >
@@ -330,12 +330,12 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                 </div>
               </div>
 
-              {/* 3D Indigo Action Button */}
+              {/* Clean Minimal Save Button */}
               <button
                 type="button"
                 disabled={createExpenseMutation.isPending}
                 onClick={() => createExpenseMutation.mutate()}
-                className="w-full mt-3 py-3.5 px-4 rounded-xl btn-3d-indigo font-black text-sm flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                className="w-full mt-3 py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm shadow-sm transition active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
               >
                 {createExpenseMutation.isPending ? (
                   <Loader2 className="w-5 h-5 animate-spin text-white" />

@@ -110,55 +110,61 @@ export const SettleUpPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[var(--bg-page)] text-[var(--text-primary)] flex flex-col transition-colors duration-200">
-      <header className="px-4 py-3.5 bg-white/85 dark:bg-[#121826]/85 backdrop-blur-md border-b border-slate-200/80 dark:border-white/10 flex items-center justify-between sticky top-0 z-10">
+      <header className="px-4 py-3.5 bg-white/85 dark:bg-[#111827]/85 backdrop-blur-md border-b border-slate-200/80 dark:border-white/10 flex items-center justify-between sticky top-0 z-10">
         <button
           onClick={() => navigate(`/group/${groupId}`)}
-          className="p-1 -ml-1 text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-slate-100 dark:hover:bg-white/10 rounded-full transition cursor-pointer"
+          className="p-1.5 -ml-1 text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-slate-100 dark:hover:bg-white/10 rounded-lg transition cursor-pointer"
         >
-          <ChevronLeft className="w-6 h-6" />
+          <ChevronLeft className="w-5 h-5" />
         </button>
-        <h1 className="font-black text-base text-[var(--text-primary)] tracking-tight">Settle Up</h1>
+        <h1 className="font-bold text-base text-[var(--text-primary)] tracking-tight">Settle Up</h1>
         <div className="w-6" />
       </header>
 
-      <main className="flex-1 p-4 max-w-lg w-full mx-auto space-y-4">
+      <main className="flex-1 p-4 md:p-6 max-w-lg w-full mx-auto space-y-4">
         {error && (
-          <div className="p-3.5 bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-500/40 rounded-2xl text-rose-700 dark:text-rose-300 text-xs font-semibold">
+          <div className="p-3.5 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-500/30 rounded-xl text-rose-700 dark:text-rose-300 text-xs font-medium">
             {error}
           </div>
         )}
 
-        <div className="card-3d p-6">
-          <h2 className="text-base font-black text-[var(--text-primary)] mb-1">
-            Minimal Payments
+        <div className="card-clean p-6">
+          <h2 className="text-base font-bold text-[var(--text-primary)] mb-1">
+            Optimized Transfers
           </h2>
           <p className="text-xs text-[var(--text-muted)] mb-5">
-            Optimized minimal payments required to balance all roommates to zero.
+            Minimal payments needed so every roommate ends at ₹0 balance.
           </p>
 
           {simplifiedTransfers.length === 0 ? (
-            <div className="text-center py-10 text-indigo-600 dark:text-indigo-400 text-sm font-black">
-              ✓ All accounts are balanced! Zero debt.
+            <div className="text-center py-10 text-emerald-600 dark:text-emerald-400 text-sm font-semibold">
+              <CheckCircle2 className="w-10 h-10 mx-auto mb-2 text-emerald-500" />
+              All balances are completely settled!
             </div>
           ) : (
             <div className="space-y-3">
               {simplifiedTransfers.map((t, idx) => {
-                const fromName = memberMap.get(t.fromMemberId)?.display_name || "Someone";
-                const toName = memberMap.get(t.toMemberId)?.display_name || "Someone";
+                const fromMember = memberMap.get(t.fromMemberId);
+                const toMember = memberMap.get(t.toMemberId);
+
                 return (
                   <div
                     key={idx}
-                    className="card-3d p-4 flex items-center justify-between"
+                    className="p-3.5 bg-slate-50 dark:bg-white/[0.03] border border-slate-200/80 dark:border-white/10 rounded-xl flex items-center justify-between"
                   >
                     <div>
-                      <div className="flex items-center gap-1.5 text-xs text-[var(--text-muted)]">
-                        <span className="font-bold text-rose-500 dark:text-rose-400">{fromName}</span>
+                      <div className="flex items-center gap-1.5 text-xs text-[var(--text-primary)]">
+                        <span className="font-bold text-rose-600 dark:text-rose-400">
+                          {fromMember?.display_name || "Someone"}
+                        </span>
                         <ArrowRight className="w-3.5 h-3.5 text-[var(--text-muted)]" />
-                        <span className="font-bold text-indigo-600 dark:text-indigo-400">{toName}</span>
+                        <span className="font-bold text-emerald-600 dark:text-emerald-400">
+                          {toMember?.display_name || "Someone"}
+                        </span>
                       </div>
-                      <span className="text-2xl font-black text-[var(--text-primary)] mt-1 block tracking-tight">
+                      <div className="text-base font-extrabold text-[var(--text-primary)] mt-1">
                         {formatINR(t.amountPaise)}
-                      </span>
+                      </div>
                     </div>
 
                     <button
@@ -170,10 +176,10 @@ export const SettleUpPage: React.FC = () => {
                         })
                       }
                       disabled={recordSettlementMutation.isPending}
-                      className="px-4 py-2 btn-3d-amber font-black text-xs rounded-xl flex items-center gap-1.5 cursor-pointer"
+                      className="px-3.5 py-1.5 btn-amber text-xs font-semibold rounded-lg flex items-center gap-1.5 cursor-pointer shadow-xs disabled:opacity-50"
                     >
-                      <CheckCircle2 className="w-4 h-4" />
-                      Mark Paid
+                      <CheckCircle2 className="w-3.5 h-3.5" />
+                      <span>Mark Settled</span>
                     </button>
                   </div>
                 );
