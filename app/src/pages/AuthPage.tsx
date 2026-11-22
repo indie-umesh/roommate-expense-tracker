@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "../lib/supabase";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
 import { Lock, User, ArrowRight, Loader2, Sun, Moon } from "lucide-react";
@@ -51,7 +52,19 @@ export const AuthPage: React.FC = () => {
       } else {
         await signInWithPhonePin(cleanPhone, pin);
       }
-      navigate("/groups");
+
+      // Check if user already has a group and route directly into their flat
+      const { data: userGroups } = await supabase
+        .from("groups")
+        .select("id")
+        .order("created_at", { ascending: false })
+        .limit(1);
+
+      if (userGroups && userGroups.length > 0) {
+        navigate(`/group/${userGroups[0].id}`, { replace: true });
+      } else {
+        navigate("/setup", { replace: true });
+      }
     } catch (err: any) {
       setError(err?.message || "Authentication failed. Please check credentials.");
     } finally {

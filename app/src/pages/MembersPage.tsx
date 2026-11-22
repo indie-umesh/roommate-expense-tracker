@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../lib/supabase";
 import type { Group, Member } from "../lib/types";
-import { ChevronLeft, Share2, UserPlus, Copy, Check, Calendar, AlertCircle } from "lucide-react";
+import { ChevronLeft, Share2, UserPlus, Copy, Check, AlertCircle } from "lucide-react";
 
 export const MembersPage: React.FC = () => {
   const { groupId } = useParams<{ groupId: string }>();
@@ -12,7 +12,6 @@ export const MembersPage: React.FC = () => {
 
   const [newGhostFirstName, setNewGhostFirstName] = useState("");
   const [newGhostSurname, setNewGhostSurname] = useState("");
-  const [newGhostPayday, setNewGhostPayday] = useState<string>("");
   const [copied, setCopied] = useState(false);
   const [isAddingGhost, setIsAddingGhost] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -55,15 +54,14 @@ export const MembersPage: React.FC = () => {
     return existingFirst === enteredFirst;
   });
 
-  // Add Ghost Member Mutation
+  // Add Ghost Member Mutation (No payday)
   const addGhostMutation = useMutation({
-    mutationFn: async ({ name, payday }: { name: string; payday?: number | null }) => {
+    mutationFn: async ({ name }: { name: string }) => {
       const { error } = await supabase.from("members").insert({
         group_id: groupId,
         user_id: null,
         display_name: name.trim(),
         role: "member",
-        payday_day: payday || null,
       });
       if (error) throw error;
     },
@@ -71,26 +69,11 @@ export const MembersPage: React.FC = () => {
       queryClient.invalidateQueries({ queryKey: ["group-members", groupId] });
       setNewGhostFirstName("");
       setNewGhostSurname("");
-      setNewGhostPayday("");
       setIsAddingGhost(false);
       setError(null);
     },
     onError: (err: any) => {
       setError(err?.message || "Failed to add roommate");
-    },
-  });
-
-  // Update Payday Mutation
-  const updatePaydayMutation = useMutation({
-    mutationFn: async ({ memberId, payday }: { memberId: string; payday: number }) => {
-      const { error } = await supabase
-        .from("members")
-        .update({ payday_day: payday })
-        .eq("id", memberId);
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["group-members", groupId] });
     },
   });
 
@@ -121,10 +104,7 @@ export const MembersPage: React.FC = () => {
     }
 
     setError(null);
-    addGhostMutation.mutate({
-      name: fullName,
-      payday: newGhostPayday ? parseInt(newGhostPayday, 10) : null,
-    });
+    addGhostMutation.mutate({ name: fullName });
   }
 
   function copyInviteCode() {
@@ -138,7 +118,7 @@ export const MembersPage: React.FC = () => {
   function shareWhatsApp() {
     if (!group) return;
     const text = encodeURIComponent(
-      `Hey! Join our roommate expense tracker group "${group.name}". Use invite code: ${group.invite_code} or visit https://app.roommatesexpensemanager.com`
+      `Hey! Join our flat on Roommate. Use invite code: ${group.invite_code} or visit https://app.roommatesexpensemanager.com`
     );
     window.open(`https://api.whatsapp.com/send?text=${text}`, "_blank");
   }
@@ -237,7 +217,7 @@ export const MembersPage: React.FC = () => {
                 </div>
               )}
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-[11px] font-bold text-[var(--text-muted)] mb-1">
                     First Name *
@@ -275,21 +255,6 @@ export const MembersPage: React.FC = () => {
                     }`}
                   />
                 </div>
-
-                <div>
-                  <label className="block text-[11px] font-bold text-[var(--text-muted)] mb-1">
-                    Payday Day (1-31)
-                  </label>
-                  <input
-                    type="number"
-                    min="1"
-                    max="31"
-                    placeholder="e.g. 1st, 5th, 15th"
-                    value={newGhostPayday}
-                    onChange={(e) => setNewGhostPayday(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-50 dark:bg-[#182238] border border-slate-200 dark:border-white/10 rounded-xl text-xs text-[var(--text-primary)] focus:outline-none focus:border-indigo-500"
-                  />
-                </div>
               </div>
 
               <div className="flex gap-2.5 justify-end pt-2">
@@ -319,7 +284,7 @@ export const MembersPage: React.FC = () => {
             {members.map((member) => (
               <div
                 key={member.id}
-                className="card-3d p-4 flex flex-col justify-between gap-3"
+                className="card-3d p-4 flex items-center justify-between"
               >
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-2xl bg-indigo-50 dark:bg-white/5 border border-indigo-100 dark:border-white/10 text-indigo-600 dark:text-indigo-400 font-black text-xs flex items-center justify-center shrink-0">
@@ -335,30 +300,11 @@ export const MembersPage: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Payday Setting Section */}
-                <div className="pt-2 border-t border-slate-100 dark:border-white/5 flex items-center justify-between text-xs">
-                  <span className="flex items-center gap-1.5 text-[var(--text-muted)] font-medium">
-                    <Calendar className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
-                    Payday:
+                {member.role === "admin" && (
+                  <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-[var(--text-muted)] font-extrabold">
+                    Admin
                   </span>
-                  <div className="flex items-center gap-1">
-                    <input
-                      type="number"
-                      min="1"
-                      max="31"
-                      defaultValue={member.payday_day || ""}
-                      placeholder="Day (1-31)"
-                      onBlur={(e) => {
-                        const val = parseInt(e.target.value, 10);
-                        if (!isNaN(val) && val >= 1 && val <= 31 && val !== member.payday_day) {
-                          updatePaydayMutation.mutate({ memberId: member.id, payday: val });
-                        }
-                      }}
-                      className="w-16 px-2 py-1 bg-slate-50 dark:bg-[#182238] border border-slate-200 dark:border-white/10 rounded-lg text-xs text-[var(--text-primary)] text-center focus:outline-none focus:border-indigo-500 font-bold"
-                    />
-                    <span className="text-[10px] text-[var(--text-muted)] font-semibold">th</span>
-                  </div>
-                </div>
+                )}
               </div>
             ))}
           </div>

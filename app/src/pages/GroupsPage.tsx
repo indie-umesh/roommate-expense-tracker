@@ -34,6 +34,13 @@ export const GroupsPage: React.FC = () => {
     enabled: !!user,
   });
 
+  // If user already has a flat, redirect directly into it!
+  React.useEffect(() => {
+    if (groups && groups.length > 0) {
+      navigate(`/group/${groups[0].id}`, { replace: true });
+    }
+  }, [groups, navigate]);
+
   // Create Group Mutation via atomic RPC
   const createGroupMutation = useMutation({
     mutationFn: async (name: string) => {

@@ -13,13 +13,11 @@ import { ExcelSheetView } from "../components/ExcelSheetView";
 import { AddExpenseModal } from "../components/AddExpenseModal";
 import confetti from "canvas-confetti";
 import {
-  ChevronLeft,
   Receipt,
   Share2,
   Copy,
   Check,
   CheckCircle2,
-  Calendar,
   ArrowRight,
   UserPlus,
   Table,
@@ -28,20 +26,21 @@ import {
   Users,
   Plus,
   AlertCircle,
-  Clock,
   Trash2,
   RotateCcw,
   Sun,
   Moon,
   ChevronDown,
   ChevronUp,
+  LogOut,
+  Sparkles,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
 export const GroupHomePage: React.FC = () => {
   const { groupId } = useParams<{ groupId: string }>();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, profile, signOut } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const queryClient = useQueryClient();
 
@@ -50,7 +49,6 @@ export const GroupHomePage: React.FC = () => {
   const [copiedCode, setCopiedCode] = useState(false);
   const [newRoommateFirstName, setNewRoommateFirstName] = useState("");
   const [newRoommateSurname, setNewRoommateSurname] = useState("");
-  const [newRoommatePayday, setNewRoommatePayday] = useState("");
   const [showAddRoommate, setShowAddRoommate] = useState(false);
   const [showDeletedBills, setShowDeletedBills] = useState(false);
   const [addRoommateError, setAddRoommateError] = useState<string | null>(null);
@@ -158,6 +156,7 @@ export const GroupHomePage: React.FC = () => {
   const balances = calculateBalances(memberIds, expenses, settlements);
   const simplifiedTransfers = simplifyDebts(balances);
   const myBalance = balances.find((b) => b.memberId === myMember?.id)?.netPaise ?? 0n;
+  const totalGroupSpent = expenses.reduce((sum, e) => sum + e.amount_paise, 0n);
 
   // Realtime duplicate detection for new roommate
   const enteredFirstName = newRoommateFirstName.trim().toLowerCase();
@@ -220,15 +219,14 @@ export const GroupHomePage: React.FC = () => {
     },
   });
 
-  // Add Member Mutation with Duplicate Name Safeguard
+  // Add Member Mutation with Duplicate Name Safeguard (Zero payday baggage)
   const addMemberMutation = useMutation({
-    mutationFn: async ({ name, payday }: { name: string; payday?: number | null }) => {
+    mutationFn: async ({ name }: { name: string }) => {
       const { error } = await supabase.from("members").insert({
         group_id: groupId,
         user_id: null,
         display_name: name.trim(),
         role: "member",
-        payday_day: payday || null,
       });
       if (error) throw error;
     },
@@ -236,7 +234,6 @@ export const GroupHomePage: React.FC = () => {
       queryClient.invalidateQueries({ queryKey: ["group-members", groupId] });
       setNewRoommateFirstName("");
       setNewRoommateSurname("");
-      setNewRoommatePayday("");
       setShowAddRoommate(false);
       setAddRoommateError(null);
     },
@@ -269,10 +266,7 @@ export const GroupHomePage: React.FC = () => {
     }
 
     setAddRoommateError(null);
-    addMemberMutation.mutate({
-      name: fullName,
-      payday: newRoommatePayday ? parseInt(newRoommatePayday, 10) : null,
-    });
+    addMemberMutation.mutate({ name: fullName });
   }
 
   function copyCode() {
@@ -293,28 +287,22 @@ export const GroupHomePage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[var(--bg-page)] text-[var(--text-primary)] flex flex-col pb-24 md:pb-8 w-full transition-colors duration-200">
-      {/* Responsive Top Navigation Header */}
+      {/* Top Main App Header (Clean Single-Flat Navigation) */}
       <header className="px-4 md:px-8 py-3.5 bg-white/85 dark:bg-[#121826]/85 backdrop-blur-md border-b border-slate-200/80 dark:border-white/10 sticky top-0 z-30 transition-all">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
-          {/* Left: Back & Group Name */}
-          <div className="flex items-center gap-2.5">
-            <button
-              onClick={() => navigate("/groups")}
-              className="p-1.5 -ml-1 text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-slate-100 dark:hover:bg-white/10 rounded-full transition cursor-pointer"
-              title="Back to all flats"
-            >
-              <ChevronLeft className="w-5 h-5 md:w-6 md:h-6" />
-            </button>
+          {/* Left: App Logo & Flat Name */}
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl btn-3d-indigo flex items-center justify-center text-white font-black text-sm shrink-0">
+              ₹
+            </div>
             <div>
               <h1 className="font-black text-base md:text-lg text-[var(--text-primary)] tracking-tight">
-                {group?.name || "Flat"}
+                {group?.name || "Indore Flat"}
               </h1>
               <p className="text-[11px] md:text-xs text-[var(--text-muted)] font-medium flex items-center gap-1.5">
-                <span>{members.length} mates</span>
+                <span>{members.length} roommates</span>
                 <span>•</span>
-                <span className="text-indigo-600 dark:text-indigo-400 font-semibold">
-                  Paydays: {members.filter((m) => m.payday_day).map((m) => `${(m.display_name || "Mate").split(" ")[0]} (${m.payday_day}th)`).join(", ") || "Active"}
-                </span>
+                <span>Signed in as <strong className="text-indigo-600 dark:text-indigo-400">{profile?.display_name || "User"}</strong></span>
               </p>
             </div>
           </div>
@@ -383,7 +371,7 @@ export const GroupHomePage: React.FC = () => {
               ) : (
                 <>
                   <Copy className="w-3.5 h-3.5 opacity-70 text-indigo-600 dark:text-indigo-400" />
-                  <span className="text-indigo-600 dark:text-indigo-400 font-extrabold">{group?.invite_code || "ROOM-0000"}</span>
+                  <span className="text-indigo-600 dark:text-indigo-400 font-extrabold">{group?.invite_code || "INDORE"}</span>
                 </>
               )}
             </button>
@@ -408,6 +396,15 @@ export const GroupHomePage: React.FC = () => {
               ) : (
                 <Sun className="w-4 h-4 text-amber-400" />
               )}
+            </button>
+
+            {/* Logout Button */}
+            <button
+              onClick={() => signOut()}
+              className="btn-3d-surface p-2 rounded-full cursor-pointer flex items-center justify-center text-[var(--text-muted)] hover:text-rose-500"
+              title="Sign out"
+            >
+              <LogOut className="w-4 h-4" />
             </button>
           </div>
         </div>
@@ -514,34 +511,43 @@ export const GroupHomePage: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Payday Cycles Card */}
-                <div className="card-3d p-5 space-y-3">
+                {/* Flat Snapshot Overview Card (Zero Payday Baggage) */}
+                <div className="card-3d p-5 space-y-4">
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-extrabold uppercase tracking-wider text-[var(--text-muted)] flex items-center gap-1.5">
-                      <Clock className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
-                      Payday Calendar
+                      <Sparkles className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
+                      Flat Snapshot
                     </span>
                     <button
                       onClick={() => setActiveTab("members")}
                       className="text-[11px] text-indigo-600 dark:text-indigo-400 font-extrabold hover:underline cursor-pointer"
                     >
-                      Manage →
+                      Roommates ({members.length}) →
                     </button>
                   </div>
 
-                  <div className="space-y-2">
-                    {members.map((m) => (
-                      <div
-                        key={m.id}
-                        className="flex items-center justify-between text-xs py-1.5 border-b border-slate-100 dark:border-white/5 last:border-0"
-                      >
-                        <span className="font-bold text-[var(--text-primary)]">{m.display_name}</span>
-                        <span className="text-[11px] font-extrabold px-2.5 py-0.5 rounded-lg bg-indigo-50 dark:bg-white/5 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-white/10">
-                          {m.payday_day ? `${m.payday_day}th of month` : "Not set"}
-                        </span>
-                      </div>
-                    ))}
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="p-3 bg-slate-50 dark:bg-[#182238] rounded-xl border border-slate-100 dark:border-white/5">
+                      <span className="text-[10px] font-bold text-[var(--text-muted)] uppercase block">Total Spent</span>
+                      <span className="text-lg font-black text-indigo-600 dark:text-indigo-400 block mt-0.5">
+                        {formatINR(totalGroupSpent)}
+                      </span>
+                    </div>
+                    <div className="p-3 bg-slate-50 dark:bg-[#182238] rounded-xl border border-slate-100 dark:border-white/5">
+                      <span className="text-[10px] font-bold text-[var(--text-muted)] uppercase block">Total Bills</span>
+                      <span className="text-lg font-black text-[var(--text-primary)] block mt-0.5">
+                        {expenses.length}
+                      </span>
+                    </div>
                   </div>
+
+                  <button
+                    onClick={shareWhatsApp}
+                    className="w-full py-2.5 px-4 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] text-white font-extrabold text-xs shadow-[0_4px_0_0_#15803d] active:translate-y-[2px] active:shadow-[0_2px_0_0_#15803d] flex items-center justify-center gap-1.5 transition cursor-pointer"
+                  >
+                    <Share2 className="w-3.5 h-3.5" />
+                    Invite via WhatsApp
+                  </button>
                 </div>
 
                 {/* Dispute Prevention: Deleted Bills Archive */}
@@ -800,7 +806,7 @@ export const GroupHomePage: React.FC = () => {
                 </span>
                 <div className="flex items-center gap-3">
                   <span className="text-3xl md:text-4xl font-black text-indigo-600 dark:text-indigo-400 tracking-widest">
-                    {group?.invite_code || "ROOM-0000"}
+                    {group?.invite_code || "INDORE"}
                   </span>
                   <button
                     onClick={copyCode}
@@ -845,7 +851,7 @@ export const GroupHomePage: React.FC = () => {
                 </button>
               </div>
 
-              {/* Add Roommate Modal / Inline Card */}
+              {/* Add Roommate Modal / Inline Card (Pure & Simple, NO Payday) */}
               {showAddRoommate && (
                 <form
                   onSubmit={handleAddRoommateSubmit}
@@ -876,7 +882,7 @@ export const GroupHomePage: React.FC = () => {
                     </div>
                   )}
 
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                       <label className="block text-[11px] font-bold text-[var(--text-muted)] mb-1">
                         First Name *
@@ -912,21 +918,6 @@ export const GroupHomePage: React.FC = () => {
                             ? "border-amber-400 bg-amber-50 dark:bg-amber-950/30 focus:border-amber-500"
                             : "border-slate-200 dark:border-white/10 focus:border-indigo-500"
                         }`}
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-[11px] font-bold text-[var(--text-muted)] mb-1">
-                        Salary / Payday (1-31)
-                      </label>
-                      <input
-                        type="number"
-                        min="1"
-                        max="31"
-                        placeholder="e.g. 1st, 5th, 15th"
-                        value={newRoommatePayday}
-                        onChange={(e) => setNewRoommatePayday(e.target.value)}
-                        className="w-full px-3 py-2 bg-slate-50 dark:bg-[#182238] border border-slate-200 dark:border-white/10 focus:border-indigo-500 rounded-xl text-xs text-[var(--text-primary)] focus:outline-none"
                       />
                     </div>
                   </div>
@@ -973,14 +964,9 @@ export const GroupHomePage: React.FC = () => {
                             </span>
                           )}
                         </h4>
-                        <div className="flex items-center gap-1.5 text-[11px] text-[var(--text-muted)] mt-0.5">
-                          <span>{member.user_id ? "Active user" : "Unclaimed ghost"}</span>
-                          <span>•</span>
-                          <span className="flex items-center gap-1 font-semibold text-[var(--text-muted)]">
-                            <Calendar className="w-3 h-3 text-indigo-600 dark:text-indigo-400" />
-                            {member.payday_day ? `Payday: ${member.payday_day}th` : "No payday set"}
-                          </span>
-                        </div>
+                        <p className="text-[11px] text-[var(--text-muted)] mt-0.5">
+                          {member.user_id ? "Active member" : "Unclaimed ghost spot"}
+                        </p>
                       </div>
                     </div>
 
