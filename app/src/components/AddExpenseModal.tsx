@@ -26,8 +26,10 @@ export interface CategoryItem {
   id?: string;
   emoji: string;
   label: string;
+  isCustom?: boolean;
 }
 
+// Built-in Default Categories
 export const DEFAULT_CATEGORIES: CategoryItem[] = [
   { emoji: "🍔", label: "Swiggy" },
   { emoji: "🍕", label: "Zomato" },
@@ -42,7 +44,28 @@ export const DEFAULT_CATEGORIES: CategoryItem[] = [
   { emoji: "💧", label: "Water" },
 ];
 
-const EMOJI_OPTIONS = ["🍔", "🍕", "🛒", "🥛", "⚡", "🧹", "🏠", "☕", "🍿", "🚕", "💧", "🧺", "🏋️", "💊", "🧴", "🎉", "🧾"];
+// Smart automatic emoji matcher based on category name
+export function getCategoryEmoji(name: string): string {
+  const n = name.toLowerCase().trim();
+  if (/swiggy|burger|fast\s?food|mcd|kfc/i.test(n)) return "🍔";
+  if (/zomato|pizza|dinner|lunch|food|meal|biryani|restaurant/i.test(n)) return "🍕";
+  if (/grocer|blinkit|zepto|instamart|market|sabzi|veg|vegetable|ration/i.test(n)) return "🛒";
+  if (/milk|dairy|dahi|curd|paneer|amul/i.test(n)) return "🥛";
+  if (/wifi|internet|broadband|bill|electric|bijli|recharge|power/i.test(n)) return "⚡";
+  if (/maid|cook|clean|safai|bai|sweep/i.test(n)) return "🧹";
+  if (/rent|flat|room|broker|deposit|maintenance/i.test(n)) return "🏠";
+  if (/chai|tea|coffee|cafe|starbucks|sutta/i.test(n)) return "☕";
+  if (/snack|chips|munch|biscuit|namkeen|ice\s?cream|dessert/i.test(n)) return "🍿";
+  if (/cab|uber|ola|auto|petrol|fuel|diesel|travel|bus|train|flight/i.test(n)) return "🚕";
+  if (/water|pani|bisleri|aquafina|camper|can/i.test(n)) return "💧";
+  if (/laundry|dhobi|wash|iron|dry\s?clean/i.test(n)) return "🧺";
+  if (/gym|fitness|workout|protein/i.test(n)) return "🏋️";
+  if (/med|pharma|doctor|tablet|chemist/i.test(n)) return "💊";
+  if (/party|beer|alcohol|drink|wine|pub|club/i.test(n)) return "🎉";
+  if (/movie|cinema|netflix|prime|hotstar/i.test(n)) return "🎬";
+  if (/shop|cloth|clothes|amazon|flipkart|myntra/i.test(n)) return "🛍️";
+  return "🏷️";
+}
 
 const QUICK_AMOUNTS = [100, 200, 500, 1000, 2000];
 
@@ -71,10 +94,28 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
   // Category management panel state
   const [showManageTags, setShowManageTags] = useState(false);
   const [newCatName, setNewCatName] = useState("");
-  const [newCatEmoji, setNewCatEmoji] = useState("🧾");
   const [manageError, setManageError] = useState<string | null>(null);
 
-  // Fetch categories from DB for this flat
+  // Hidden categories tracker in localStorage
+  const [hiddenLabels, setHiddenLabels] = useState<string[]>(() => {
+    try {
+      const saved = localStorage.getItem(`roommate_hidden_categories_${groupId}`);
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  function saveHiddenLabels(labels: string[]) {
+    setHiddenLabels(labels);
+    try {
+      localStorage.setItem(`roommate_hidden_categories_${groupId}`, JSON.stringify(labels));
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  // Fetch custom categories from DB for this flat
   const { data: dbCategories = [] } = useQuery<CategoryItem[]>({
     queryKey: ["group-categories", groupId],
     queryFn: async () => {
@@ -92,37 +133,65 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
       return (data || []).map((c: any) => ({
         id: c.id,
         label: c.name,
-        emoji: c.emoji || "🧾",
+        emoji: c.emoji || getCategoryEmoji(c.name),
+        isCustom: true,
       }));
     },
     enabled: !!groupId && isOpen,
   });
 
-  // Effective categories: if DB has custom categories, use them; else fallback to defaults
+  // Effective categories: NEVER wipe defaults! Merge defaults + custom tags
   const activeCategories: CategoryItem[] = React.useMemo(() => {
-    if (dbCategories.length > 0) {
-      return dbCategories;
-    }
-    return DEFAULT_CATEGORIES;
-  }, [dbCategories]);
+    // 1. Filter defaults that have not been explicitly hidden/removed
+    const visibleDefaults = DEFAULT_CATEGORIES.filter(
+      (d) => !hiddenLabels.includes(d.label.toLowerCase())
+    );
 
-  // Add Category Mutation
+    // 2. Track existing labels to prevent duplicates
+    const labelSet = new Set(visibleDefaults.map((d) => d.label.toLowerCase()));
+    const customList: CategoryItem[] = [];
+
+    // 3. Append DB custom categories
+    for (const cat of dbCategories) {
+      if (!hiddenLabels.includes(cat.label.toLowerCase()) && !labelSet.has(cat.label.toLowerCase())) {
+        labelSet.add(cat.label.toLowerCase());
+        customList.push(cat);
+      }
+    }
+
+    return [...visibleDefaults, ...customList];
+  }, [dbCategories, hiddenLabels]);
+
+  // Add Category Mutation - Automatically computes emoji from name
   const addCategoryMutation = useMutation({
-    mutationFn: async ({ name, emoji }: { name: string; emoji: string }) => {
+    mutationFn: async ({ name }: { name: string }) => {
       const trimmed = name.trim();
-      if (!trimmed) throw new Error("Category name required");
+      if (!trimmed) throw new Error("Please enter a category name");
+
+      // Unhide if was hidden
+      if (hiddenLabels.includes(trimmed.toLowerCase())) {
+        saveHiddenLabels(hiddenLabels.filter((l) => l !== trimmed.toLowerCase()));
+      }
+
+      const assignedEmoji = getCategoryEmoji(trimmed);
 
       const { data, error } = await supabase
         .from("group_categories")
         .insert({
           group_id: groupId,
           name: trimmed,
-          emoji: emoji || "🧾",
+          emoji: assignedEmoji,
         })
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        // If unique constraint error (already exists in DB), unhide it
+        if (error.code === "23505") {
+          return { name: trimmed, emoji: assignedEmoji };
+        }
+        throw error;
+      }
       return data;
     },
     onSuccess: () => {
@@ -135,34 +204,32 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
     },
   });
 
-  // Delete Category Mutation
+  // Delete / Hide Category Function
   const deleteCategoryMutation = useMutation({
-    mutationFn: async (categoryId: string) => {
-      const { error } = await supabase
-        .from("group_categories")
-        .delete()
-        .eq("id", categoryId);
-
-      if (error) throw error;
+    mutationFn: async (cat: CategoryItem) => {
+      if (cat.id) {
+        // Custom category in DB: delete from DB
+        const { error } = await supabase
+          .from("group_categories")
+          .delete()
+          .eq("id", cat.id);
+        if (error) throw error;
+      } else {
+        // Default category: mark as hidden
+        const updated = [...hiddenLabels, cat.label.toLowerCase()];
+        saveHiddenLabels(updated);
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["group-categories", groupId] });
     },
   });
 
-  // Reset to Defaults Mutation (copies DEFAULT_CATEGORIES into DB)
+  // Reset to Defaults
   const resetCategoriesMutation = useMutation({
     mutationFn: async () => {
+      saveHiddenLabels([]);
       await supabase.from("group_categories").delete().eq("group_id", groupId);
-
-      const toInsert = DEFAULT_CATEGORIES.map((c) => ({
-        group_id: groupId,
-        name: c.label,
-        emoji: c.emoji,
-      }));
-
-      const { error } = await supabase.from("group_categories").insert(toInsert);
-      if (error) throw error;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["group-categories", groupId] });
@@ -191,7 +258,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
     return m.display_name;
   }
 
-  // Setup defaults on open
+  // Setup defaults on modal open
   useEffect(() => {
     if (isOpen) {
       if (uniqueMembers.length > 0) {
@@ -213,7 +280,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
     }
   }, [isOpen, uniqueMembers, user]);
 
-  // Click outside to close auto-suggestion dropdown
+  // Click outside listener for auto-suggestions dropdown
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -255,11 +322,12 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
   async function handleCreateNewTagOnFly(name: string) {
     const trimmed = name.trim();
     if (!trimmed) return;
+    const emoji = getCategoryEmoji(trimmed);
     try {
-      await addCategoryMutation.mutateAsync({ name: trimmed, emoji: "🧾" });
-      handleSelectTag("🧾", trimmed);
+      await addCategoryMutation.mutateAsync({ name: trimmed });
+      handleSelectTag(emoji, trimmed);
     } catch {
-      handleSelectTag("🧾", trimmed);
+      handleSelectTag(emoji, trimmed);
     }
   }
 
@@ -325,7 +393,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
             className="fixed inset-0 bg-black/60 backdrop-blur-sm"
           />
 
-          {/* Modal Centered Card - No Bottom Slider */}
+          {/* Modal Centered Card */}
           <motion.div
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
@@ -362,7 +430,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
               </div>
             )}
 
-            {/* CATEGORY MANAGEMENT PANEL (OVERLAY VIEW) */}
+            {/* CATEGORY MANAGEMENT PANEL */}
             {showManageTags ? (
               <div className="pt-3 space-y-4">
                 <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-white/10">
@@ -386,60 +454,46 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                   </div>
                 )}
 
-                {/* Create New Category Form */}
-                <div className="p-3 bg-slate-50 dark:bg-white/5 rounded-xl border border-slate-200/80 dark:border-white/10 space-y-2.5">
+                {/* Clean Add Category Form - No Manual Emoji Picker */}
+                <div className="p-3 bg-slate-50 dark:bg-white/5 rounded-xl border border-slate-200/80 dark:border-white/10 space-y-2">
                   <span className="text-[11px] font-semibold text-[var(--text-muted)] uppercase tracking-wider block">
-                    Create New Category
+                    Add New Category
                   </span>
                   <div className="flex items-center gap-2">
-                    <select
-                      value={newCatEmoji}
-                      onChange={(e) => setNewCatEmoji(e.target.value)}
-                      className="px-2.5 py-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-lg text-base cursor-pointer focus:outline-none"
-                    >
-                      {EMOJI_OPTIONS.map((em) => (
-                        <option key={em} value={em}>
-                          {em}
-                        </option>
-                      ))}
-                    </select>
                     <input
                       type="text"
-                      placeholder="Category name (e.g. Swiggy, Netflix)"
+                      placeholder="e.g. Laundry, Gym, Movie, Electricity..."
                       value={newCatName}
                       onChange={(e) => setNewCatName(e.target.value)}
                       onKeyDown={(e) => {
                         if (e.key === "Enter" && newCatName.trim()) {
                           e.preventDefault();
-                          addCategoryMutation.mutate({
-                            name: newCatName.trim(),
-                            emoji: newCatEmoji,
-                          });
+                          addCategoryMutation.mutate({ name: newCatName.trim() });
                         }
                       }}
-                      className="flex-1 px-3 py-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-lg text-xs text-[var(--text-primary)] focus:outline-none focus:border-indigo-500"
+                      className="flex-1 px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-lg text-xs text-[var(--text-primary)] focus:outline-none focus:border-indigo-500"
                     />
                     <button
                       type="button"
                       disabled={!newCatName.trim() || addCategoryMutation.isPending}
-                      onClick={() =>
-                        addCategoryMutation.mutate({
-                          name: newCatName.trim(),
-                          emoji: newCatEmoji,
-                        })
-                      }
-                      className="px-3.5 py-1.5 btn-primary text-xs font-semibold rounded-lg shadow-xs disabled:opacity-50 flex items-center gap-1 cursor-pointer"
+                      onClick={() => addCategoryMutation.mutate({ name: newCatName.trim() })}
+                      className="px-4 py-2 btn-primary text-xs font-semibold rounded-lg shadow-xs disabled:opacity-50 flex items-center gap-1 cursor-pointer shrink-0"
                     >
                       <Plus className="w-3.5 h-3.5" />
                       <span>Add</span>
                     </button>
                   </div>
+                  <p className="text-[11px] text-[var(--text-muted)] italic">
+                    Type a category name and a smart matching emoji will be assigned automatically!
+                  </p>
                 </div>
 
-                {/* Existing Categories List */}
-                <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
+                {/* Structured Categories List */}
+                <div className="space-y-2">
                   <div className="flex items-center justify-between text-xs text-[var(--text-muted)] px-1">
-                    <span>Active Tags ({activeCategories.length})</span>
+                    <span className="font-semibold uppercase tracking-wider text-[10px]">
+                      Active Categories ({activeCategories.length})
+                    </span>
                     <button
                       type="button"
                       onClick={() => resetCategoriesMutation.mutate()}
@@ -451,24 +505,41 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                     </button>
                   </div>
 
-                  <div className="flex flex-wrap gap-1.5 pt-1">
+                  {/* Proper Organized Table / List */}
+                  <div className="border border-slate-200 dark:border-white/10 rounded-xl overflow-hidden divide-y divide-slate-100 dark:divide-white/5 max-h-56 overflow-y-auto">
                     {activeCategories.map((cat) => (
                       <div
                         key={cat.label}
-                        className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-xs font-medium text-[var(--text-primary)] flex items-center gap-1.5"
+                        className="p-2.5 px-3 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-white/5 transition"
                       >
-                        <span>{cat.emoji}</span>
-                        <span>{cat.label}</span>
-                        {cat.id && (
+                        <div className="flex items-center gap-2.5">
+                          <span className="w-7 h-7 rounded-lg bg-slate-100 dark:bg-white/10 flex items-center justify-center text-sm shrink-0 border border-slate-200/60 dark:border-white/10">
+                            {cat.emoji}
+                          </span>
+                          <span className="text-xs font-semibold text-[var(--text-primary)]">
+                            {cat.label}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <span
+                            className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${
+                              cat.isCustom
+                                ? "bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400"
+                                : "bg-slate-100 dark:bg-white/5 text-[var(--text-muted)]"
+                            }`}
+                          >
+                            {cat.isCustom ? "Custom" : "Default"}
+                          </span>
                           <button
                             type="button"
-                            onClick={() => deleteCategoryMutation.mutate(cat.id!)}
-                            className="text-slate-400 hover:text-rose-500 p-0.5 rounded cursor-pointer"
-                            title="Delete category"
+                            onClick={() => deleteCategoryMutation.mutate(cat)}
+                            className="p-1 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded transition cursor-pointer"
+                            title={`Delete ${cat.label}`}
                           >
-                            <Trash2 className="w-3 h-3" />
+                            <Trash2 className="w-3.5 h-3.5" />
                           </button>
-                        )}
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -480,7 +551,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                     onClick={() => setShowManageTags(false)}
                     className="px-4 py-2 btn-primary text-xs font-semibold rounded-xl shadow-xs cursor-pointer"
                   >
-                    Done Managing Tags
+                    Done Managing Categories
                   </button>
                 </div>
               </div>
@@ -523,7 +594,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                   </div>
                 </div>
 
-                {/* What was it for + Auto Suggestions + Category Chips */}
+                {/* What was it for + Auto Suggestions + Wrapped Category Chips */}
                 <div className="relative">
                   <label className="block text-[11px] font-semibold uppercase tracking-wider text-[var(--text-muted)] mb-1">
                     What was this for?
@@ -566,7 +637,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                         ))
                       ) : null}
 
-                      {/* On-the-fly Category Creator */}
+                      {/* On-the-fly Category Creator with Auto Emoji */}
                       {!exactMatchExists && details.trim().length > 0 && (
                         <button
                           type="button"
@@ -574,13 +645,15 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                           className="w-full px-3 py-2 text-left text-xs text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 flex items-center gap-1.5 font-semibold transition cursor-pointer"
                         >
                           <Plus className="w-3.5 h-3.5" />
-                          <span>Use & save "{details.trim()}" as a new category</span>
+                          <span>
+                            Use & save "{getCategoryEmoji(details.trim())} {details.trim()}" as a new category
+                          </span>
                         </button>
                       )}
                     </div>
                   )}
 
-                  {/* Wrapped Category Chips - Absolutely NO Horizontal Scroll */}
+                  {/* Wrapped Category Chips - Zero Horizontal Scroll */}
                   <div className="flex flex-wrap items-center gap-1.5 mt-2">
                     {activeCategories.map((tag) => (
                       <button
