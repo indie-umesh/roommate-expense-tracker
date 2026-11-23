@@ -1,0 +1,92 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const title = "Roommate Expense Guides & Blog — Practical Advice for Shared Living";
+const description = "Expert guides on splitting rent, managing flat groceries, solving asynchronous paydays, and finding the best free expense tools for roommates.";
+const keywords = "roommate expense guides, how to split rent, roommate bills, splitwise alternative blog, flat budgeting tips";
+
+const articles = [
+  {
+    slug: "why-google-sheets-fails-for-roommates",
+    title: "Why Google Sheets Fails for Roommates (The Entry Friction Problem)",
+    description: "Spreadsheets have great math, but terrible mobile UX. Here is why flatmates abandon Google Sheets within 3 weeks and how 3-tap logging changes everything.",
+    date: "2026-11-20",
+    readTime: "5 min read",
+    category: "Productivity & UX"
+  },
+  {
+    slug: "how-to-manage-different-paydays-with-roommates",
+    title: "How to Manage Different Paydays Between Roommates Without Fighting",
+    description: "What happens when Ritesh gets paid on the 1st, Aman on the 5th, and Umesh on the 15th? A practical system to cover bills without resentment.",
+    date: "2026-11-18",
+    readTime: "6 min read",
+    category: "Financial Strategy"
+  },
+  {
+    slug: "splitwise-limits-and-best-free-alternatives-2026",
+    title: "Splitwise Limitations in 2026: Why You Need a Dedicated Free Alternative",
+    description: "An honest review of Splitwise's 3-expense/day cap, 10-second wait timers, and Pro paywalls—plus the top free alternatives for shared flats.",
+    date: "2026-11-15",
+    readTime: "7 min read",
+    category: "App Comparisons"
+  },
+  {
+    slug: "how-to-split-rent-and-groceries-equitably",
+    title: "How to Split Rent, Groceries, and Utilities Fairly (Formulas That Work)",
+    description: "Master bedrooms, personal snacks vs shared oil, and air conditioning power surges. Formulas and ground rules for fair room expense sharing.",
+    date: "2026-11-12",
+    readTime: "6 min read",
+    category: "Flatmate Etiquette"
+  }
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  keywords={keywords}
+  breadcrumbs={[
+    { name: "Home", url: "https://roommatesexpensemanager.com" },
+    { name: "Blog", url: "https://roommatesexpensemanager.com/blog" }
+  ]}
+>
+  <section class="pt-16 pb-12 max-w-5xl mx-auto px-4 space-y-4">
+    <div class="space-y-2">
+      <span class="text-xs font-bold uppercase tracking-wider text-indigo-400">Knowledge Base</span>
+      <h1 class="text-3xl sm:text-5xl font-black text-white tracking-tight">
+        Guides to Zero-Stress Shared Living
+      </h1>
+      <p class="text-sm text-slate-400 max-w-2xl">
+        Actionable articles, mathematical breakdowns, and real flatmate stories on managing money together without tension.
+      </p>
+    </div>
+
+    <!-- Articles Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-8">
+      {articles.map((art) => (
+        <article class="p-6 rounded-3xl bg-slate-900/60 border border-slate-800 hover:border-indigo-500/50 transition flex flex-col justify-between space-y-4 group">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between text-xs text-slate-500">
+              <span class="px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 font-medium">{art.category}</span>
+              <span>{art.readTime}</span>
+            </div>
+            <h2 class="text-lg font-bold text-white group-hover:text-indigo-400 transition leading-snug">
+              <a href={`/blog/${art.slug}`}>{art.title}</a>
+            </h2>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              {art.description}
+            </p>
+          </div>
+
+          <div class="pt-4 border-t border-slate-800/80 flex items-center justify-between text-xs">
+            <span class="text-slate-500">{art.date}</span>
+            <a href={`/blog/${art.slug}`} class="text-indigo-400 font-semibold group-hover:translate-x-1 transition flex items-center gap-1">
+              <span>Read Article</span>
+              <span>→</span>
+            </a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

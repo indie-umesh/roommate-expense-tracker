@@ -1,0 +1,87 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const title = "How to Split Rent, Groceries, and Utilities Fairly (Formulas That Work)";
+const description = "Master bedroom vs small room? Who pays for shared cooking oil vs personal snacks? Practical rules and mathematical formulas for roommate expense splitting.";
+const keywords = "how to split rent fairly, split groceries roommates, roommate utility split rules, fair bill splitting flatmates";
+
+const articleSchema = {
+  headline: title,
+  description: description,
+  datePublished: "2026-11-12T08:00:00Z",
+  authorName: "Umesh Jaiswal"
+};
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  keywords={keywords}
+  ogType="article"
+  publishDate="2026-11-12T08:00:00Z"
+  articleSchema={articleSchema}
+  breadcrumbs={[
+    { name: "Home", url: "https://roommatesexpensemanager.com" },
+    { name: "Blog", url: "https://roommatesexpensemanager.com/blog" },
+    { name: "Fair Split Formulas", url: "https://roommatesexpensemanager.com/blog/how-to-split-rent-and-groceries-equitably" }
+  ]}
+>
+  <article class="max-w-3xl mx-auto px-4 py-16 space-y-8 text-slate-300 text-sm sm:text-base leading-relaxed">
+    <header class="space-y-4 border-b border-slate-800 pb-8">
+      <div class="flex items-center gap-2 text-xs text-slate-500 font-medium">
+        <span class="px-2.5 py-0.5 rounded-full bg-purple-950 text-purple-400 border border-purple-800/40">Flatmate Etiquette</span>
+        <span>•</span>
+        <span>November 12, 2026</span>
+        <span>•</span>
+        <span>6 min read</span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-black text-white tracking-tight leading-tight">
+        How to Split Rent, Groceries, and Utilities Fairly (Formulas That Work)
+      </h1>
+      <p class="text-base text-slate-400">
+        Disagreements about room sizes, air conditioning use, and who consumed the last egg ruin more friendships than major life conflicts. Here are proven formulas to keep things 100% fair.
+      </p>
+    </header>
+
+    <section class="space-y-4">
+      <h2 class="text-xl sm:text-2xl font-bold text-white">1. Rent: Square Footage vs Equal Split</h2>
+      <p>
+        If one bedroom is a 200 sq.ft master bedroom with an attached balcony and private bath, and the other is a 110 sq.ft room with a shared hallway bathroom, splitting rent 50/50 is unfair and breeds resentment.
+      </p>
+      <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800 text-xs sm:text-sm space-y-2">
+        <p class="font-bold text-indigo-400">The 50/50 Common Area Formula:</p>
+        <p class="text-slate-400">
+          Allocate <strong>50% of the rent</strong> equally to all roommates for shared spaces (living room, kitchen, balcony, amenities). Allocate the remaining <strong>50% of the rent</strong> strictly proportionally based on private bedroom square footage and private bathroom perks.
+        </p>
+      </div>
+    </section>
+
+    <section class="space-y-4">
+      <h2 class="text-xl sm:text-2xl font-bold text-white">2. Groceries: The "Shared vs Solo" Rule</h2>
+      <p>
+        The golden rule for shared kitchen supplies:
+      </p>
+      <ul class="list-disc list-inside space-y-2 text-slate-400 pl-2">
+        <li><strong>Shared:</strong> Cooking oil, salt, spices, dishwashing soap, trash bags, drinking water cans, milk for tea. Split equally among all flatmates in Roommate.</li>
+        <li><strong>Solo:</strong> Expensive meats, specialty cheeses, premium snacks, protein powder, or alcohol. Kept private; whoever buys it pays 100% for it.</li>
+      </ul>
+    </section>
+
+    <section class="space-y-4">
+      <h2 class="text-xl sm:text-2xl font-bold text-white">3. High Utility Spikes (AC & Heaters)</h2>
+      <p>
+        If one roommate runs a 1.5-ton AC for 14 hours a day during hot summer months while others rely on ceiling fans, splitting the electricity bill equally causes fights.
+      </p>
+      <p>
+        Calculate the baseline winter electricity bill (e.g. ₹800). Any summer spike above that baseline (e.g. bill is ₹3,800, so a ₹3,000 spike) should have 70% paid by the AC user and 30% split across the flat.
+      </p>
+    </section>
+
+    <footer class="pt-8 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p class="text-white font-bold">Log your fair splits in seconds.</p>
+      <a href="http://localhost:5173" class="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-md transition">
+        Open Roommate App →
+      </a>
+    </footer>
+  </article>
+</BaseLayout>

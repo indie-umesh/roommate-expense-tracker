@@ -1,0 +1,57 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ComparisonTable from '../components/ComparisonTable.astro';
+import FaqAccordion from '../components/FaqAccordion.astro';
+
+const title = "Best Settle Up Alternative (2026) — Ad-Free, Lightweight & Fast";
+const description = "Tired of Settle Up's intrusive ads and complex menus? Roommate is the ultra-clean, 3-tap Settle Up alternative with built-in Excel matrix views, 100% free forever.";
+const keywords = "settle up alternative, best settle up alternative, free expense split app, roommate expense tracker, flat bill splitter";
+
+const settleUpFaq = [
+  {
+    question: "Why switch from Settle Up to Roommate?",
+    answer: "Settle Up has become cluttered with pop-up ads, subscription up-sells, and heavy menus. Roommate is laser-focused on one design goal: adding an expense in under 3 taps (<10 seconds), with zero ads and zero cost."
+  },
+  {
+    question: "Does Roommate require an app store download?",
+    answer: "No! Roommate is a progressive web app (PWA). It works on any device (Android, iPhone, Mac, Windows) instantly through your browser, and can be installed to your home screen with 0 MB storage wasted."
+  }
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  keywords={keywords}
+  faqSchema={settleUpFaq}
+  breadcrumbs={[
+    { name: "Home", url: "https://roommatesexpensemanager.com" },
+    { name: "Settle Up Alternative", url: "https://roommatesexpensemanager.com/settle-up-alternative" }
+  ]}
+>
+  <section class="pt-16 pb-16 text-center max-w-3xl mx-auto px-4 space-y-6">
+    <span class="px-3.5 py-1.5 rounded-full bg-emerald-950/70 border border-emerald-800/60 text-xs font-semibold text-emerald-300">
+      Zero Ads • Zero Bloat
+    </span>
+    <h1 class="text-3xl sm:text-5xl font-black text-white tracking-tight">
+      The Clean, Ad-Free <br />
+      <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-emerald-400">Settle Up Alternative</span>
+    </h1>
+    <p class="text-sm text-slate-300 max-w-xl mx-auto">
+      No subscription popups, no intrusive ads, and no multi-screen setup. Fast mobile PIN login and instant debt simplification for roommates.
+    </p>
+    <div class="pt-2">
+      <a href="http://localhost:5173" class="px-8 py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-sm shadow-xl transition">
+        Switch to Roommate Free →
+      </a>
+    </div>
+  </section>
+
+  <section class="py-12 max-w-5xl mx-auto px-4">
+    <ComparisonTable />
+  </section>
+
+  <section class="py-12 max-w-5xl mx-auto px-4">
+    <FaqAccordion items={settleUpFaq} title="Settle Up Alternative FAQ" />
+  </section>
+</BaseLayout>

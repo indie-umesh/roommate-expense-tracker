@@ -1,0 +1,105 @@
+---
+// Interactive Debt Simplification & Entry Speed Demo Component
+---
+
+<div class="card-gradient rounded-3xl p-6 sm:p-8 border border-slate-800 bg-slate-900/60 backdrop-blur-xl shadow-2xl relative overflow-hidden">
+  <div class="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+  <div class="absolute bottom-0 left-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+  <div class="relative z-10 space-y-6">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-5">
+      <div>
+        <span class="inline-block text-[11px] font-bold uppercase tracking-wider text-indigo-400 bg-indigo-950/70 border border-indigo-800/60 px-3 py-1 rounded-full mb-1.5">
+          Live Algorithm Demonstration
+        </span>
+        <h3 class="text-xl sm:text-2xl font-black text-white">
+          Greedy Debt Simplification in Action
+        </h3>
+        <p class="text-xs sm:text-sm text-slate-400">
+          Without debt simplification, 4 flatmates end up doing 6 confusing cross-transfers. Roommate crushes it to just 2 payments.
+        </p>
+      </div>
+
+      <div class="shrink-0 flex items-center gap-2">
+        <span class="px-3 py-1 rounded-lg text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+          Math Guaranteed: Sum = ₹0
+        </span>
+      </div>
+    </div>
+
+    <!-- 3 Flatmate Scenario Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="p-4 rounded-2xl bg-slate-950/70 border border-slate-800">
+        <div class="flex items-center justify-between mb-2">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-lg bg-indigo-600/20 text-indigo-400 font-bold text-xs flex items-center justify-center border border-indigo-500/30">UJ</div>
+            <span class="font-bold text-sm text-white">Umesh (You)</span>
+          </div>
+          <span class="text-xs text-slate-400">Paid: Rent ₹15,000</span>
+        </div>
+        <div class="text-xs text-slate-400 flex justify-between py-1 border-t border-slate-900">
+          <span>Net Balance:</span>
+          <span class="font-bold text-emerald-400">+₹10,000 (Owed)</span>
+        </div>
+      </div>
+
+      <div class="p-4 rounded-2xl bg-slate-950/70 border border-slate-800">
+        <div class="flex items-center justify-between mb-2">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-lg bg-amber-600/20 text-amber-400 font-bold text-xs flex items-center justify-center border border-amber-500/30">AS</div>
+            <span class="font-bold text-sm text-white">Aman</span>
+          </div>
+          <span class="text-xs text-slate-400">Paid: Groceries ₹1,500</span>
+        </div>
+        <div class="text-xs text-slate-400 flex justify-between py-1 border-t border-slate-900">
+          <span>Net Balance:</span>
+          <span class="font-bold text-rose-400">-₹4,000 (Owes)</span>
+        </div>
+      </div>
+
+      <div class="p-4 rounded-2xl bg-slate-950/70 border border-slate-800">
+        <div class="flex items-center justify-between mb-2">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-lg bg-purple-600/20 text-purple-400 font-bold text-xs flex items-center justify-center border border-purple-500/30">RK</div>
+            <span class="font-bold text-sm text-white">Ritesh</span>
+          </div>
+          <span class="text-xs text-slate-400">Paid: Wi-Fi ₹0</span>
+        </div>
+        <div class="text-xs text-slate-400 flex justify-between py-1 border-t border-slate-900">
+          <span>Net Balance:</span>
+          <span class="font-bold text-rose-400">-₹6,000 (Owes)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- The Solution Comparison -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+      <div class="p-5 rounded-2xl bg-rose-950/20 border border-rose-900/40 space-y-3">
+        <div class="flex items-center gap-2 text-rose-400 text-xs font-bold uppercase tracking-wider">
+          <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+          Old Manual Way (6 Headaches)
+        </div>
+        <p class="text-xs text-slate-400">
+          Aman sends ₹5,000 to Umesh, Umesh sends ₹500 to Aman, Ritesh calculates 3 different shares, someone forgets their UPI pin, and group chats blow up.
+        </p>
+      </div>
+
+      <div class="p-5 rounded-2xl bg-emerald-950/20 border border-emerald-900/40 space-y-3">
+        <div class="flex items-center gap-2 text-emerald-400 text-xs font-bold uppercase tracking-wider">
+          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+          Roommate Greedy Simplification (2 Direct UPIs)
+        </div>
+        <div class="space-y-1.5 text-xs text-slate-200">
+          <div class="flex items-center justify-between bg-slate-950/80 p-2 rounded-lg border border-slate-800">
+            <span>👉 <strong>Ritesh</strong> pays <strong>Umesh</strong></span>
+            <span class="font-bold text-emerald-400">₹6,000</span>
+          </div>
+          <div class="flex items-center justify-between bg-slate-950/80 p-2 rounded-lg border border-slate-800">
+            <span>👉 <strong>Aman</strong> pays <strong>Umesh</strong></span>
+            <span class="font-bold text-emerald-400">₹4,000</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

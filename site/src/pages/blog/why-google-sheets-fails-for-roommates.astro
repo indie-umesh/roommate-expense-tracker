@@ -1,0 +1,118 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const title = "Why Google Sheets Fails for Roommates (The Entry Friction Problem)";
+const description = "Spreadsheets have perfect math, but terrible mobile UX. Here is why flatmates abandon Google Sheets within 3 weeks and how 3-tap mobile logging changes everything.";
+const keywords = "why google sheets fails for roommates, entry friction expense tracker, google sheets vs roommate app, split flat expenses";
+
+const articleSchema = {
+  headline: title,
+  description: description,
+  datePublished: "2026-11-20T08:00:00Z",
+  authorName: "Umesh Jaiswal"
+};
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  keywords={keywords}
+  ogType="article"
+  publishDate="2026-11-20T08:00:00Z"
+  articleSchema={articleSchema}
+  breadcrumbs={[
+    { name: "Home", url: "https://roommatesexpensemanager.com" },
+    { name: "Blog", url: "https://roommatesexpensemanager.com/blog" },
+    { name: "Why Google Sheets Fails", url: "https://roommatesexpensemanager.com/blog/why-google-sheets-fails-for-roommates" }
+  ]}
+>
+  <article class="max-w-3xl mx-auto px-4 py-16 space-y-8 text-slate-300 text-sm sm:text-base leading-relaxed">
+    <header class="space-y-4 border-b border-slate-800 pb-8">
+      <div class="flex items-center gap-2 text-xs text-slate-500 font-medium">
+        <span class="px-2.5 py-0.5 rounded-full bg-indigo-950 text-indigo-400 border border-indigo-800/40">Productivity & UX</span>
+        <span>•</span>
+        <span>November 20, 2026</span>
+        <span>•</span>
+        <span>5 min read</span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-black text-white tracking-tight leading-tight">
+        Why Google Sheets Fails for Roommates (The Entry Friction Problem)
+      </h1>
+      <p class="text-base text-slate-400">
+        When three software engineers moved into a flat in Indore, they believed a shared Google Sheet would solve their money management forever. Here is what actually happened.
+      </p>
+    </header>
+
+    <section class="space-y-4">
+      <h2 class="text-xl sm:text-2xl font-bold text-white">The Naive Assumption: "It's Just Math"</h2>
+      <p>
+        At first glance, room expenses look like a simple linear equation. You add up rent, internet, water, and groceries, divide by the number of flatmates, and subtract who paid what.
+      </p>
+      <p>
+        Google Sheets does this math flawlessly. You write <code>=SUM(C2:C30)/3</code>, and the numbers balance instantly. On day one, setting up the columns with neat borders and headers feels like a major life victory.
+      </p>
+    </section>
+
+    <section class="space-y-4">
+      <h2 class="text-xl sm:text-2xl font-bold text-white">The Supermarket Reality: 45 Seconds of Friction</h2>
+      <p>
+        The breakdown never happens in the spreadsheet’s calculation engine. <strong>It happens at the grocery counter at 8:45 PM on a Tuesday.</strong>
+      </p>
+      <p>
+        You just bought milk, bread, and dish soap for ₹280. You pay with UPI. Now, you need to log it so Aman and Ritesh split it. Here is what Google Sheets asks of you:
+      </p>
+      <ul class="list-disc list-inside space-y-2 text-slate-400 pl-2">
+        <li>Pull out your phone, unlock it, and open Google Drive.</li>
+        <li>Wait for the files list to refresh over spotty supermarket 4G.</li>
+        <li>Find "Flat Expenses 2026_Final_v2.xlsx".</li>
+        <li>Wait for the mobile spreadsheet grid to render.</li>
+        <li>Pinch-to-zoom to scroll past 60 rows down to row 61.</li>
+        <li>Double-tap the tiny date cell. The phone keyboard covers half the screen.</li>
+        <li>Type "Nov 14", scroll right, type "Milk/Bread", scroll right, type "280".</li>
+        <li>Accidentally touch the corner of a formula cell and trigger a warning.</li>
+      </ul>
+      <p>
+        Total time: <strong>45 to 60 seconds</strong> of frustration.
+      </p>
+      <p>
+        What do people actually do in that situation? They put their phone in their pocket and tell themselves: <em>"I'll enter this tonight when I get back to my laptop."</em>
+      </p>
+      <p class="font-bold text-rose-400">
+        They never enter it tonight.
+      </p>
+    </section>
+
+    <section class="space-y-4">
+      <h2 class="text-xl sm:text-2xl font-bold text-white">The Month-End Disaster</h2>
+      <p>
+        By day 28 of the month, the spreadsheet is missing 18 small receipts. Someone covered ₹400 for vegetables; someone else paid ₹950 for a gas cylinder; someone ordered Swiggy.
+      </p>
+      <p>
+        Now, instead of a 2-minute settlement, the flat spends 3 hours scrolling through banking transaction histories, SMS alerts, and UPI receipts trying to reconstruct what happened. Trust erodes, and someone always feels shortchanged.
+      </p>
+    </section>
+
+    <section class="space-y-4">
+      <h2 class="text-xl sm:text-2xl font-bold text-white">The 3-Tap Law: The Only Solution That Works</h2>
+      <p>
+        When building <strong>Roommate</strong>, we instituted a strict design rule:
+      </p>
+      <div class="p-5 rounded-2xl bg-indigo-950/60 border border-indigo-800/40 text-white font-medium">
+        💡 <strong>The 3-Tap Law:</strong> Adding an expense must take ≤ 3 taps and under 10 seconds on a smartphone. If any feature slows that down, it gets cut.
+      </div>
+      <p>
+        Because adding a bill takes just 7 seconds, flatmates actually log it right at the counter. And because the app still provides a built-in <strong>Excel Spreadsheet Matrix tab</strong>, you never lose the high-level transparency you loved about spreadsheets in the first place.
+      </p>
+    </section>
+
+    <footer class="pt-8 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>
+        <p class="text-white font-bold">Ready to eliminate entry friction?</p>
+        <p class="text-xs text-slate-500">No download required. Works right in your browser.</p>
+      </div>
+      <a href="http://localhost:5173" class="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-md transition">
+        Launch Roommate Web App →
+      </a>
+    </footer>
+  </article>
+</BaseLayout>

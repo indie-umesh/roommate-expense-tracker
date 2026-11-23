@@ -1,6 +1,14 @@
 {
   "version": 2,
   "skills": {
+    "programmatic-seo": {
+      "source": "coreyhaines31/marketingskills",
+      "commit": "5b2b400eec1e7e1cec76245a715d0b0d4fd2a9c1",
+      "sourceType": "github",
+      "skillPath": "skills/programmatic-seo/SKILL.md",
+      "computedHash": "f37db3caa28d6e8e7d4bc0b73e65db26cae7dfb15b53d97f58a0f2330bca545b",
+      "installMode": "copy"
+    },
     "responsive-design": {
       "source": "wshobson/agents",
       "commit": "91ff75307f5668916f3eb77d5ba556266c961376",
