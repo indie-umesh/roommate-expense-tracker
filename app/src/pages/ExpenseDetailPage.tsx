@@ -6,6 +6,7 @@ import { useAuth } from "../context/AuthContext";
 import { useLanguage } from "../context/LanguageContext";
 import { formatINR, paiseToRupees, rupeesToPaise } from "../lib/money";
 import { formatDateLocale } from "../lib/i18n";
+import { localizeName } from "../lib/transliterate";
 import type { Member, Expense } from "../lib/types";
 import { RecordSettlementModal } from "../components/RecordSettlementModal";
 import {
@@ -99,8 +100,8 @@ export const ExpenseDetailPage: React.FC = () => {
   const payerMember = expense ? memberMap.get(expense.paid_by_member_id) : undefined;
   const payerName = payerMember
     ? payerMember.user_id === user?.id
-      ? `${payerMember.display_name} (${t("you")})`
-      : payerMember.display_name
+      ? `${localizeName(payerMember.display_name, currentLanguage.code)} (${t("you")})`
+      : localizeName(payerMember.display_name, currentLanguage.code)
     : t("roommates");
 
   // Only the person who paid this bill (or admin) can edit details/corrections
@@ -271,7 +272,7 @@ export const ExpenseDetailPage: React.FC = () => {
                         : "btn-surface text-[var(--text-muted)]"
                     }`}
                   >
-                    {m.display_name}
+                    {localizeName(m.display_name, currentLanguage.code)}
                   </button>
                 ))}
               </div>
@@ -302,7 +303,7 @@ export const ExpenseDetailPage: React.FC = () => {
                       >
                         {isChecked && <Check className="w-3.5 h-3.5 stroke-[3]" />}
                       </div>
-                      <span>{m.display_name}</span>
+                      <span>{localizeName(m.display_name, currentLanguage.code)}</span>
                     </button>
                   );
                 })}
@@ -384,7 +385,7 @@ export const ExpenseDetailPage: React.FC = () => {
                       >
                         <div className="flex items-center gap-2">
                           <span className="text-[var(--text-primary)] font-medium">
-                            {m?.display_name || "Roommate"}
+                            {m ? localizeName(m.display_name, currentLanguage.code) : t("roommates")}
                           </span>
                           {isMe && (
                             <span className="text-[10px] text-[var(--text-muted)] font-medium">({t("you")})</span>
@@ -408,7 +409,7 @@ export const ExpenseDetailPage: React.FC = () => {
                                   toMemberId: expense.paid_by_member_id,
                                   amountPaise: split.share_paise,
                                   initialNote: `Paid for: ${expense.details}`,
-                                  contextTitle: `Pay ${m?.display_name || "Roommate"}'s share for ${expense.details}`,
+                                  contextTitle: `Pay ${m ? localizeName(m.display_name, currentLanguage.code) : t("roommates")}'s share for ${expense.details}`,
                                 });
                                 setShowPaymentModal(true);
                               }}

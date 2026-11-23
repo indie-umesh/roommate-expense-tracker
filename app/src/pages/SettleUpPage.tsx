@@ -7,6 +7,7 @@ import { useLanguage } from "../context/LanguageContext";
 import { formatINR } from "../lib/money";
 import { simplifyDebts, calculateBalances } from "../lib/balances";
 import { formatDateLocale } from "../lib/i18n";
+import { localizeName } from "../lib/transliterate";
 import type { Member, Expense, Settlement } from "../lib/types";
 import { RecordSettlementModal } from "../components/RecordSettlementModal";
 import {
@@ -197,11 +198,11 @@ export const SettleUpPage: React.FC = () => {
                     <div>
                       <div className="flex items-center gap-1.5 text-xs text-[var(--text-primary)]">
                         <span className="font-bold text-rose-600 dark:text-rose-400">
-                          {fromMember?.display_name || "Someone"}
+                          {fromMember ? (fromMember.user_id === user?.id ? t("you") : localizeName(fromMember.display_name, currentLanguage.code)) : "Someone"}
                         </span>
                         <ArrowRight className="w-3.5 h-3.5 text-[var(--text-muted)]" />
                         <span className="font-bold text-emerald-600 dark:text-emerald-400">
-                          {toMember?.display_name || "Someone"}
+                          {toMember ? (toMember.user_id === user?.id ? t("you") : localizeName(toMember.display_name, currentLanguage.code)) : "Someone"}
                         </span>
                       </div>
                       <div className="text-xl font-extrabold text-[var(--text-primary)] mt-1">
@@ -273,11 +274,11 @@ export const SettleUpPage: React.FC = () => {
                     <div className="space-y-0.5">
                       <div className="flex items-center gap-1.5 font-medium text-[var(--text-primary)]">
                         <span className="font-semibold text-rose-500 dark:text-rose-400">
-                          {from?.display_name || "Roommate"}
+                          {from ? (from.user_id === user?.id ? t("you") : localizeName(from.display_name, currentLanguage.code)) : t("roommates")}
                         </span>
                         <span className="text-[var(--text-muted)]">{t("pays")}</span>
                         <span className="font-semibold text-emerald-600 dark:text-emerald-400">
-                          {to?.display_name || "Roommate"}
+                          {to ? (to.user_id === user?.id ? t("you") : localizeName(to.display_name, currentLanguage.code)) : t("roommates")}
                         </span>
                       </div>
                       <div className="flex flex-wrap items-center gap-2">

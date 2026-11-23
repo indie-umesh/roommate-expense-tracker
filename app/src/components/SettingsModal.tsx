@@ -2,6 +2,7 @@ import React from "react";
 import { useLanguage } from "../context/LanguageContext";
 import { useTheme } from "../context/ThemeContext";
 import { useAuth } from "../context/AuthContext";
+import { localizeName } from "../lib/transliterate";
 import {
   X,
   Globe,
@@ -20,7 +21,7 @@ interface SettingsModalProps {
 }
 
 export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
-  const { lang, setLanguage, autoDetect, setAutoDetect, availableLanguages, t } = useLanguage();
+  const { lang, setLanguage, autoDetect, setAutoDetect, availableLanguages, currentLanguage, t } = useLanguage();
   const { theme, toggleTheme } = useTheme();
   const { profile, signOut } = useAuth();
 
@@ -168,7 +169,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
             <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200 dark:border-white/10 flex items-center justify-between">
               <div>
                 <p className="text-xs font-bold text-[var(--text-primary)]">
-                  {profile?.display_name || "Roommate User"}
+                  {profile?.display_name ? localizeName(profile.display_name, currentLanguage.code) : "Roommate User"}
                 </p>
                 {profile?.phone && (
                   <p className="text-[11px] text-[var(--text-muted)] flex items-center gap-1 mt-0.5">

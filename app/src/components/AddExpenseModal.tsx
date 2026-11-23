@@ -4,6 +4,7 @@ import { supabase } from "../lib/supabase";
 import { useAuth } from "../context/AuthContext";
 import { useLanguage } from "../context/LanguageContext";
 import { translateCategory } from "../lib/i18n";
+import { localizeName } from "../lib/transliterate";
 import { rupeesToPaise } from "../lib/money";
 import type { Member } from "../lib/types";
 import {
@@ -78,7 +79,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
   onClose,
 }) => {
   const { user } = useAuth();
-  const { t } = useLanguage();
+  const { t, currentLanguage } = useLanguage();
   const queryClient = useQueryClient();
   const inputRef = useRef<HTMLInputElement>(null);
   const detailsInputRef = useRef<HTMLInputElement>(null);
@@ -261,10 +262,11 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
 
   function getMemberLabel(m: Member) {
     const isMe = m.user_id === user?.id;
+    const loc = localizeName(m.display_name, currentLanguage.code);
     if (isMe) {
-      return `${m.display_name.split(" ")[0]} (${t("you")})`;
+      return `${loc.split(" ")[0]} (${t("you")})`;
     }
-    return m.display_name;
+    return loc;
   }
 
   // Setup defaults on modal open

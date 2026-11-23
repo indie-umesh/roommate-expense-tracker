@@ -9,6 +9,7 @@ import type { Group, Member, Expense, Settlement } from "../lib/types";
 import { RemoveMemberModal } from "../components/RemoveMemberModal";
 import { SettingsModal } from "../components/SettingsModal";
 import { useLanguage } from "../context/LanguageContext";
+import { localizeName } from "../lib/transliterate";
 import {
   ChevronLeft,
   Share2,
@@ -402,7 +403,7 @@ export const MembersPage: React.FC = () => {
                 <div className="p-3 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-500/30 rounded-xl text-amber-800 dark:text-amber-300 text-xs font-medium flex items-start gap-2">
                   <AlertCircle className="w-4 h-4 shrink-0 text-amber-500 mt-0.5" />
                   <div>
-                    {t("duplicate_roommate_warning", { name: duplicateCandidate.display_name })}
+                    {t("duplicate_roommate_warning", { name: localizeName(duplicateCandidate.display_name, currentLanguage.code) })}
                   </div>
                 </div>
               )}
@@ -616,12 +617,15 @@ export const MembersPage: React.FC = () => {
           {/* Roommates Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
             {members.map((member) => {
-              const initials = member.display_name
-                .split(" ")
-                .map((n) => n[0])
-                .join("")
-                .slice(0, 2)
-                .toUpperCase();
+              const locName = localizeName(member.display_name, currentLanguage.code);
+              const initials = currentLanguage.code === "hi"
+                ? locName.slice(0, 2)
+                : member.display_name
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")
+                    .slice(0, 2)
+                    .toUpperCase();
 
               const isMe = member.user_id === user?.id;
 
@@ -648,16 +652,16 @@ export const MembersPage: React.FC = () => {
                         <div>
                           <div className="flex items-center gap-1.5 flex-wrap">
                             <h4 className="font-bold text-sm text-[var(--text-primary)]">
-                              {member.display_name}
+                              {localizeName(member.display_name, currentLanguage.code)}
                             </h4>
                             {isMe && (
                               <span className="text-[10px] font-semibold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-200 dark:border-indigo-500/30 px-1.5 py-0.2 rounded">
-                                You
+                                {t("you")}
                               </span>
                             )}
                           </div>
                           <span className="text-[11px] text-[var(--text-muted)] block">
-                            {member.role === "admin" ? "Admin" : "Roommate"} • {member.user_id ? "Active" : "Unclaimed"}
+                            {member.role === "admin" ? t("admin") : t("roommates")} • {member.user_id ? t("active_member") : t("unclaimed_spot")}
                           </span>
 
                           {/* Financial Dues & Settlement Status Badge */}

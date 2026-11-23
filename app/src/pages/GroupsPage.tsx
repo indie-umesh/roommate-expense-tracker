@@ -6,6 +6,7 @@ import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
 import { useLanguage } from "../context/LanguageContext";
 import { SettingsModal } from "../components/SettingsModal";
+import { localizeName } from "../lib/transliterate";
 import type { Group } from "../lib/types";
 import { Users, Plus, ArrowRight, LogOut, KeyRound, Sun, Moon, Globe } from "lucide-react";
 
@@ -101,7 +102,7 @@ export const GroupsPage: React.FC = () => {
               <p className="text-xs text-[var(--text-muted)] font-normal mt-0.5">
                 {t("signed_in_as")}{" "}
                 <span className="font-medium text-indigo-600 dark:text-indigo-400">
-                  {profile?.display_name || "User"}
+                  {profile?.display_name ? localizeName(profile.display_name, currentLanguage.code) : "User"}
                 </span>
               </p>
             </div>
@@ -278,7 +279,7 @@ export const GroupsPage: React.FC = () => {
                   </div>
                   <div>
                     <h3 className="font-semibold text-sm text-[var(--text-primary)]">
-                      {group.name}
+                      {localizeName(group.name, currentLanguage.code)}
                     </h3>
                     <p className="text-xs text-[var(--text-muted)]">
                       Code: <span className="font-semibold text-indigo-600 dark:text-indigo-400">{group.invite_code}</span>

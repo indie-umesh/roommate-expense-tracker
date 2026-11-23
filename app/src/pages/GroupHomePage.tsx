@@ -8,6 +8,7 @@ import { useLanguage } from "../context/LanguageContext";
 import { formatINR } from "../lib/money";
 import { simplifyDebts, calculateBalances } from "../lib/balances";
 import { formatDateLocale } from "../lib/i18n";
+import { localizeName } from "../lib/transliterate";
 import type { Group, Member, Expense, Settlement } from "../lib/types";
 import { BottomNav } from "../components/BottomNav";
 import type { NavTab } from "../components/BottomNav";
@@ -378,13 +379,13 @@ export const GroupHomePage: React.FC = () => {
             </div>
             <div className="min-w-0">
               <h1 className="font-bold text-sm sm:text-base text-[var(--text-primary)] tracking-tight truncate leading-tight">
-                {group?.name || "Indore Flat"}
+                {group?.name ? localizeName(group.name, currentLanguage.code) : "Indore Flat"}
               </h1>
               <p className="text-[11px] sm:text-xs text-[var(--text-muted)] font-normal truncate whitespace-nowrap mt-0.5 flex items-center">
                 <span>{members.length === 1 ? t("roommate_count_one") : t("roommate_count_other", { count: members.length })}</span>
                 <span className="mx-1.5 opacity-40">·</span>
                 <span className="truncate">
-                  {t("signed_in_as")} <strong className="text-indigo-600 dark:text-indigo-400 font-semibold">{profile?.display_name || "User"}</strong>
+                  {t("signed_in_as")} <strong className="text-indigo-600 dark:text-indigo-400 font-semibold">{profile?.display_name ? localizeName(profile.display_name, currentLanguage.code) : "User"}</strong>
                 </span>
               </p>
             </div>
@@ -591,8 +592,10 @@ export const GroupHomePage: React.FC = () => {
                       </p>
                     ) : (
                       simplifiedTransfers.slice(0, 3).map((tItem, idx) => {
-                        const fromName = memberMap.get(tItem.fromMemberId)?.display_name || "Someone";
-                        const toName = memberMap.get(tItem.toMemberId)?.display_name || "Someone";
+                        const fromM = memberMap.get(tItem.fromMemberId);
+                        const toM = memberMap.get(tItem.toMemberId);
+                        const fromName = fromM ? (fromM.user_id === user?.id ? t("you") : localizeName(fromM.display_name, currentLanguage.code)) : "Someone";
+                        const toName = toM ? (toM.user_id === user?.id ? t("you") : localizeName(toM.display_name, currentLanguage.code)) : "Someone";
                         return (
                           <div
                             key={idx}
@@ -695,7 +698,7 @@ export const GroupHomePage: React.FC = () => {
                                 {expense.details}
                               </h4>
                               <p className="text-[11px] text-[var(--text-muted)] mt-0.5 font-medium">
-                                {isPayerMe ? t("you") : payer?.display_name || t("roommates")} {t("paid_by")} •{" "}
+                                {isPayerMe ? t("you") : payer ? localizeName(payer.display_name, currentLanguage.code) : t("roommates")} {t("paid_by")} •{" "}
                                 {formatDateLocale(expense.spent_on, currentLanguage.code, {
                                   month: "short",
                                   day: "numeric",
@@ -807,8 +810,10 @@ export const GroupHomePage: React.FC = () => {
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {simplifiedTransfers.map((tItem, idx) => {
-                    const fromName = memberMap.get(tItem.fromMemberId)?.display_name || "Someone";
-                    const toName = memberMap.get(tItem.toMemberId)?.display_name || "Someone";
+                    const fromM = memberMap.get(tItem.fromMemberId);
+                    const toM = memberMap.get(tItem.toMemberId);
+                    const fromName = fromM ? (fromM.user_id === user?.id ? t("you") : localizeName(fromM.display_name, currentLanguage.code)) : "Someone";
+                    const toName = toM ? (toM.user_id === user?.id ? t("you") : localizeName(toM.display_name, currentLanguage.code)) : "Someone";
 
                     return (
                       <div
@@ -901,11 +906,11 @@ export const GroupHomePage: React.FC = () => {
                         <div className="space-y-0.5">
                           <div className="flex items-center gap-1.5 font-medium text-[var(--text-primary)]">
                             <span className="font-semibold text-rose-500 dark:text-rose-400">
-                              {from?.display_name || "Roommate"}
+                              {from ? (from.user_id === user?.id ? t("you") : localizeName(from.display_name, currentLanguage.code)) : t("roommates")}
                             </span>
                             <span className="text-[var(--text-muted)]">{t("pays")}</span>
                             <span className="font-semibold text-emerald-600 dark:text-emerald-400">
-                              {to?.display_name || "Roommate"}
+                              {to ? (to.user_id === user?.id ? t("you") : localizeName(to.display_name, currentLanguage.code)) : t("roommates")}
                             </span>
                           </div>
                           <div className="flex flex-wrap items-center gap-2">
@@ -1026,7 +1031,7 @@ export const GroupHomePage: React.FC = () => {
                     <div className="p-3 bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-500/40 rounded-xl text-amber-800 dark:text-amber-300 text-xs font-semibold flex items-start gap-2">
                       <AlertCircle className="w-4 h-4 shrink-0 text-amber-500 mt-0.5" />
                       <div>
-                        {t("duplicate_roommate_warning", { name: duplicateCandidate.display_name })}
+                        {t("duplicate_roommate_warning", { name: localizeName(duplicateCandidate.display_name, currentLanguage.code) })}
                       </div>
                     </div>
                   )}
@@ -1265,11 +1270,13 @@ export const GroupHomePage: React.FC = () => {
                         <div className="flex items-start justify-between">
                           <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-white/5 border border-indigo-100 dark:border-white/10 text-indigo-600 dark:text-indigo-400 font-bold text-xs flex items-center justify-center shrink-0">
-                              {member.display_name.slice(0, 2).toUpperCase()}
+                              {currentLanguage.code === "hi"
+                                ? localizeName(member.display_name, currentLanguage.code).slice(0, 2)
+                                : member.display_name.slice(0, 2).toUpperCase()}
                             </div>
                             <div>
                               <h4 className="font-semibold text-sm text-[var(--text-primary)] flex items-center gap-1.5 flex-wrap">
-                                <span>{member.display_name}</span>
+                                <span>{localizeName(member.display_name, currentLanguage.code)}</span>
                                 {member.user_id === user?.id && (
                                   <span className="text-[10px] font-semibold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-200 dark:border-indigo-500/30 px-1.5 py-0.2 rounded-md">
                                     {t("you")}

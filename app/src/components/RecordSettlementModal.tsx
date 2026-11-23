@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../context/AuthContext";
 import { useLanguage } from "../context/LanguageContext";
+import { localizeName } from "../lib/transliterate";
 import { rupeesToPaise, paiseToRupees } from "../lib/money";
 import type { Member } from "../lib/types";
 import { X, Check, Loader2, ArrowRight, ArrowLeftRight, Receipt } from "lucide-react";
@@ -43,7 +44,7 @@ export const RecordSettlementModal: React.FC<RecordSettlementModalProps> = ({
   onSuccess,
 }) => {
   const { user } = useAuth();
-  const { t } = useLanguage();
+  const { t, currentLanguage } = useLanguage();
   const queryClient = useQueryClient();
 
   const myMember = members.find((m) => m.user_id === user?.id);
@@ -240,7 +241,7 @@ export const RecordSettlementModal: React.FC<RecordSettlementModalProps> = ({
                           }`}
                         >
                           {isSelected && <Check className="w-3.5 h-3.5 stroke-[3]" />}
-                          <span>{m.display_name}</span>
+                          <span>{localizeName(m.display_name, currentLanguage.code)}</span>
                           {m.id === myMember?.id && (
                             <span className="text-[10px] opacity-80">({t("you")})</span>
                           )}
@@ -277,7 +278,7 @@ export const RecordSettlementModal: React.FC<RecordSettlementModalProps> = ({
                           }`}
                         >
                           {isSelected && <Check className="w-3.5 h-3.5 stroke-[3]" />}
-                          <span>{m.display_name}</span>
+                          <span>{localizeName(m.display_name, currentLanguage.code)}</span>
                           {m.id === myMember?.id && (
                             <span className="text-[10px] opacity-80">({t("you")})</span>
                           )}

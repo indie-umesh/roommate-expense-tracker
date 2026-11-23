@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../lib/supabase";
 import { formatINR } from "../lib/money";
 import { useLanguage } from "../context/LanguageContext";
+import { localizeName } from "../lib/transliterate";
 import type { Member, Expense } from "../lib/types";
 import type { MemberBalance } from "../lib/balances";
 import {
@@ -37,7 +38,7 @@ export const RemoveMemberModal: React.FC<RemoveMemberModalProps> = ({
   onGoToSettleUp,
 }) => {
   const queryClient = useQueryClient();
-  const { t } = useLanguage();
+  const { t, currentLanguage } = useLanguage();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const deleteMemberMutation = useMutation({
@@ -101,8 +102,8 @@ export const RemoveMemberModal: React.FC<RemoveMemberModalProps> = ({
             <div>
               <h3 className="font-bold text-base text-[var(--text-primary)] leading-tight">
                 {isLocked
-                  ? t("cannot_remove_title", { name: member.display_name })
-                  : t("remove_title", { name: member.display_name })}
+                  ? t("cannot_remove_title", { name: localizeName(member.display_name, currentLanguage.code) })
+                  : t("remove_title", { name: localizeName(member.display_name, currentLanguage.code) })}
               </h3>
               <p className="text-xs text-[var(--text-muted)] mt-1 font-medium">
                 {isLocked
@@ -208,7 +209,7 @@ export const RemoveMemberModal: React.FC<RemoveMemberModalProps> = ({
                 </div>
               </div>
               <p className="text-xs text-[var(--text-muted)] leading-relaxed">
-                {t("confirm_remove_prompt", { name: member.display_name })}
+                {t("confirm_remove_prompt", { name: localizeName(member.display_name, currentLanguage.code) })}
               </p>
             </div>
           )}

@@ -5,6 +5,7 @@ import { supabase } from "../lib/supabase";
 import { useAuth } from "../context/AuthContext";
 import { useLanguage } from "../context/LanguageContext";
 import { rupeesToPaise } from "../lib/money";
+import { localizeName } from "../lib/transliterate";
 import type { Member } from "../lib/types";
 import { X, Check, Loader2 } from "lucide-react";
 
@@ -12,7 +13,7 @@ export const AddExpensePage: React.FC = () => {
   const { groupId } = useParams<{ groupId: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { t } = useLanguage();
+  const { t, currentLanguage } = useLanguage();
   const queryClient = useQueryClient();
 
   const amountInputRef = useRef<HTMLInputElement>(null);
@@ -184,7 +185,7 @@ export const AddExpensePage: React.FC = () => {
                       : "bg-[#121826] text-slate-300 border border-white/10 hover:bg-white/10"
                   }`}
                 >
-                  {isMe ? `${t("you")} (${member.display_name})` : member.display_name}
+                  {isMe ? `${t("you")} (${localizeName(member.display_name, currentLanguage.code)})` : localizeName(member.display_name, currentLanguage.code)}
                 </button>
               );
             })}
@@ -219,7 +220,7 @@ export const AddExpensePage: React.FC = () => {
                       : "bg-[#121826] border-white/10 text-slate-400"
                   }`}
                 >
-                  <span className="truncate">{member.display_name}</span>
+                  <span className="truncate">{localizeName(member.display_name, currentLanguage.code)}</span>
                   {isChecked && (
                     <div className="w-4 h-4 rounded-full bg-indigo-500 text-white flex items-center justify-center shrink-0">
                       <Check className="w-2.5 h-2.5 stroke-[3]" />

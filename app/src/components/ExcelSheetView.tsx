@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { formatINR } from "../lib/money";
 import { useLanguage } from "../context/LanguageContext";
 import { formatDateLocale } from "../lib/i18n";
+import { localizeName } from "../lib/transliterate";
 import type { Member, Expense } from "../lib/types";
 import { Table, LayoutList, Search, Download } from "lucide-react";
 
@@ -24,7 +25,7 @@ export const ExcelSheetView: React.FC<ExcelSheetViewProps> = ({
   const memberMap = new Map(members.map((m) => [m.id, m]));
 
   function getMemberDisplayName(m: Member) {
-    return m.display_name;
+    return localizeName(m.display_name, currentLanguage.code);
   }
 
   // Filter expenses
@@ -246,7 +247,7 @@ export const ExcelSheetView: React.FC<ExcelSheetViewProps> = ({
 
                   <div className="mt-2 flex items-center justify-between text-[11px] text-[var(--text-muted)]">
                     <div>
-                      {t("paid_by")}: <span className="font-medium text-[var(--text-primary)]">{payer?.display_name || t("roommates")}</span>
+                      {t("paid_by")}: <span className="font-medium text-[var(--text-primary)]">{payer ? localizeName(payer.display_name, currentLanguage.code) : t("roommates")}</span>
                     </div>
                     <div>
                       {t("split_count", { count: expense.splits?.length || 0 })}
@@ -263,7 +264,7 @@ export const ExcelSheetView: React.FC<ExcelSheetViewProps> = ({
                           key={split.member_id}
                           className="text-[10px] bg-slate-50 dark:bg-white/5 text-[var(--text-muted)] px-1.5 py-0.5 rounded border border-slate-100 dark:border-white/5"
                         >
-                          {m.display_name}: {formatINR(split.share_paise)}
+                          {localizeName(m.display_name, currentLanguage.code)}: {formatINR(split.share_paise)}
                         </span>
                       );
                     })}
@@ -316,7 +317,7 @@ export const ExcelSheetView: React.FC<ExcelSheetViewProps> = ({
                     </td>
                     <td className="py-3 px-4 whitespace-nowrap">
                       <span className="font-medium text-[var(--text-primary)] bg-slate-100 dark:bg-white/5 px-2 py-0.5 rounded text-[11px]">
-                        {payer?.display_name || t("roommates")}
+                        {payer ? localizeName(payer.display_name, currentLanguage.code) : t("roommates")}
                       </span>
                     </td>
                     {members.map((m) => {
