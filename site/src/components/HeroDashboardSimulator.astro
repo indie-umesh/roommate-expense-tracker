@@ -6,13 +6,13 @@ import BrandLogo from './BrandLogo.astro';
 
 <div class="w-full max-w-5xl mx-auto space-y-4" id="dashboard-simulator-root">
   <!-- Top Control Bar: Device Switcher, Theme Status & Auto-Play Controls -->
-  <div class="flex flex-wrap items-center justify-between gap-3 px-2 sm:px-4">
-    <!-- Device Mode Switcher -->
-    <div class="flex items-center gap-1 p-1 bg-slate-200/80 dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-2xl shadow-inner">
+  <div class="flex flex-col sm:flex-row items-center justify-between gap-3 px-2 sm:px-4">
+    <!-- Device Mode Switcher (Centered on mobile) -->
+    <div class="flex items-center justify-center gap-1 p-1 bg-[#f5f5f7] dark:bg-[#1d1d1f] border border-black/8 dark:border-white/10 rounded-2xl shadow-xs w-full sm:w-auto">
       <button
         type="button"
         id="btn-device-desktop"
-        class="flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer bg-[#0066cc] text-white"
+        class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer bg-[#0066cc] text-white"
         aria-label="Desktop Browser View"
       >
         <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -24,27 +24,27 @@ import BrandLogo from './BrandLogo.astro';
       <button
         type="button"
         id="btn-device-mobile"
-        class="flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+        class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer text-[#86868b] dark:text-[#a1a1a6] hover:text-[#1d1d1f] dark:hover:text-white"
         aria-label="Mobile Phone View"
       >
         <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
         </svg>
-        <span>Mobile Phone (iPhone)</span>
+        <span>Mobile Phone</span>
       </button>
     </div>
 
     <!-- Live Step Status & Auto-Play Controls -->
-    <div class="flex items-center gap-2 text-xs">
-      <div class="hidden sm:flex items-center gap-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-3 py-1.5 rounded-xl text-slate-700 dark:text-slate-300 shadow-xs">
+    <div class="flex items-center justify-center gap-2 text-xs w-full sm:w-auto">
+      <div class="flex items-center gap-1.5 bg-[#f5f5f7] dark:bg-[#1d1d1f] border border-black/8 dark:border-white/10 px-3 py-1.5 rounded-xl text-[#1d1d1f] dark:text-white shadow-xs">
         <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-        <span id="sim-step-label" class="font-semibold">Step 1: 3-Tap Mobile Entry (&lt;10s)</span>
+        <span id="sim-step-label" class="font-semibold text-[11px] sm:text-xs">Step 1: 3-Tap Entry (&lt;10s)</span>
       </div>
 
       <button
         type="button"
         id="btn-sim-toggle"
-        class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 font-semibold cursor-pointer transition active:scale-95 shadow-xs"
+        class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#f5f5f7] hover:bg-[#ebebee] dark:bg-[#1d1d1f] dark:hover:bg-[#28282b] text-[#1d1d1f] dark:text-white border border-black/8 dark:border-white/10 font-semibold cursor-pointer transition active:scale-95 shadow-xs text-[11px] sm:text-xs"
       >
         <span id="sim-play-icon">⏸</span>
         <span id="sim-play-text">Pause Demo</span>
@@ -437,33 +437,37 @@ import BrandLogo from './BrandLogo.astro';
             </div>
 
             <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-[10px] shadow-xs">
-              <table class="w-full text-left">
+              <table class="w-full table-fixed text-left text-[10px]">
                 <thead>
                   <tr class="bg-slate-100 dark:bg-slate-900 text-slate-500 font-bold">
-                    <th class="p-2">Bill</th>
-                    <th class="p-2">Total</th>
-                    <th class="p-2 text-center text-indigo-500">Amar</th>
-                    <th class="p-2 text-center text-amber-500">Akbar</th>
+                    <th class="p-1.5 w-[28%]">Bill</th>
+                    <th class="p-1.5 w-[21%]">Total</th>
+                    <th class="p-1.5 text-center text-indigo-500 w-[17%]">Amar</th>
+                    <th class="p-1.5 text-center text-amber-500 w-[17%]">Akbar</th>
+                    <th class="p-1.5 text-center text-purple-500 w-[17%]">Anthony</th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
                   <tr id="mobile-sheet-new-row" class="hidden bg-indigo-50 dark:bg-indigo-950/40 font-semibold">
-                    <td class="p-2 font-medium">🍕 Swiggy</td>
-                    <td class="p-2">₹1,200</td>
-                    <td class="p-2 text-center font-mono">₹400</td>
-                    <td class="p-2 text-center font-mono">₹400</td>
+                    <td class="p-1.5 font-medium truncate">🍕 Swiggy</td>
+                    <td class="p-1.5 font-mono">₹1.2k</td>
+                    <td class="p-1.5 text-center font-mono">₹400</td>
+                    <td class="p-1.5 text-center font-mono">₹400</td>
+                    <td class="p-1.5 text-center font-mono">₹400</td>
                   </tr>
                   <tr>
-                    <td class="p-2 font-medium">Rent</td>
-                    <td class="p-2 font-bold">₹15,000</td>
-                    <td class="p-2 text-center font-mono">₹5,000</td>
-                    <td class="p-2 text-center font-mono">₹5,000</td>
+                    <td class="p-1.5 font-medium truncate">Rent</td>
+                    <td class="p-1.5 font-bold font-mono">₹15k</td>
+                    <td class="p-1.5 text-center font-mono">₹5k</td>
+                    <td class="p-1.5 text-center font-mono">₹5k</td>
+                    <td class="p-1.5 text-center font-mono">₹5k</td>
                   </tr>
                   <tr>
-                    <td class="p-2 font-medium">Groceries</td>
-                    <td class="p-2 font-bold">₹3,000</td>
-                    <td class="p-2 text-center font-mono">₹1,000</td>
-                    <td class="p-2 text-center font-mono">₹1,000</td>
+                    <td class="p-1.5 font-medium truncate">Groceries</td>
+                    <td class="p-1.5 font-bold font-mono">₹3k</td>
+                    <td class="p-1.5 text-center font-mono">₹1k</td>
+                    <td class="p-1.5 text-center font-mono">₹1k</td>
+                    <td class="p-1.5 text-center font-mono">₹1k</td>
                   </tr>
                 </tbody>
               </table>
@@ -629,17 +633,21 @@ import BrandLogo from './BrandLogo.astro';
     function setDevice(mobileMode) {
       isMobile = mobileMode;
       if (mobileMode) {
-        desktopBtn.className = "flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white";
-        mobileBtn.className = "flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer bg-indigo-600 text-white shadow-md shadow-indigo-600/30";
+        desktopBtn.className = "flex-1 sm:flex-none flex items-center justify-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer text-[#86868b] dark:text-[#a1a1a6] hover:text-[#1d1d1f] dark:hover:text-white";
+        mobileBtn.className = "flex-1 sm:flex-none flex items-center justify-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer bg-[#0066cc] text-white shadow-sm";
         frameDesktop.classList.add("hidden");
         frameMobile.classList.remove("hidden");
       } else {
-        desktopBtn.className = "flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer bg-indigo-600 text-white shadow-md shadow-indigo-600/30";
-        mobileBtn.className = "flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white";
+        desktopBtn.className = "flex-1 sm:flex-none flex items-center justify-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer bg-[#0066cc] text-white shadow-sm";
+        mobileBtn.className = "flex-1 sm:flex-none flex items-center justify-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer text-[#86868b] dark:text-[#a1a1a6] hover:text-[#1d1d1f] dark:hover:text-white";
         frameDesktop.classList.remove("hidden");
         frameMobile.classList.add("hidden");
       }
     }
+
+    // Auto-detect mobile screen on load
+    const isSmallScreen = window.innerWidth < 768;
+    setDevice(isSmallScreen);
 
     desktopBtn?.addEventListener("click", () => setDevice(false));
     mobileBtn?.addEventListener("click", () => setDevice(true));

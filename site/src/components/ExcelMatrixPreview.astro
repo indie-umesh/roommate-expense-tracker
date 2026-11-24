@@ -1,91 +1,173 @@
 ---
 // Excel Sheet Matrix View Preview Component
+// 100% Responsive on Mobile & Tablet with ZERO horizontal scrolling
 ---
 
-<div class="rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 backdrop-blur-xl shadow-xl relative overflow-hidden transition-colors duration-200">
-  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+<div class="rounded-2xl sm:rounded-3xl p-4 sm:p-8 border border-black/8 dark:border-white/10 bg-white dark:bg-[#161617] shadow-xl relative overflow-hidden transition-colors duration-200">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
     <div>
       <div class="flex items-center gap-2 mb-1">
-        <span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/40">
+        <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
           Live Excel Matrix
         </span>
-        <span class="text-xs text-slate-500 dark:text-slate-400">Auto-calculated paise accuracy</span>
+        <span class="text-xs text-[#86868b]">Auto-calculated paise accuracy</span>
       </div>
-      <h3 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">Full Flat Spreadsheet (Rows = Expenses, Columns = Shares)</h3>
+      <h3 class="text-lg sm:text-2xl font-bold text-[#1d1d1f] dark:text-white">
+        Full Flat Spreadsheet (Rows = Bills, Columns = Shares)
+      </h3>
     </div>
     
     <div class="flex items-center gap-2">
-      <span class="text-xs px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold border border-slate-200 dark:border-slate-700 flex items-center gap-1.5 shadow-xs">
-        <svg class="w-4 h-4 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <span class="text-xs px-3 py-1.5 rounded-full bg-[#f5f5f7] dark:bg-[#2c2c2e] text-[#1d1d1f] dark:text-white font-semibold border border-black/8 dark:border-white/10 flex items-center gap-1.5 shadow-xs">
+        <svg class="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
         </svg>
-        Export .xlsx
+        <span>Export .xlsx</span>
       </span>
     </div>
   </div>
 
-  <!-- Interactive Spreadsheet Mock -->
-  <div class="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-xs shadow-sm">
-    <table class="w-full text-left border-collapse">
+  <!-- DESKTOP / TABLET VIEW (Visible on sm and up) -->
+  <div class="hidden sm:block overflow-hidden rounded-2xl border border-black/8 dark:border-white/10 bg-[#fbfbfd] dark:bg-[#1c1c1e] text-xs shadow-xs">
+    <table class="w-full table-fixed text-left border-collapse">
       <thead>
-        <tr class="bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 font-bold uppercase tracking-wider text-[11px]">
-          <th class="p-3.5">Date</th>
-          <th class="p-3.5">Expense Details</th>
-          <th class="p-3.5">Total Amount</th>
-          <th class="p-3.5">Paid By</th>
-          <th class="p-3.5 text-center text-indigo-600 dark:text-indigo-400">Amar's Share</th>
-          <th class="p-3.5 text-center text-amber-600 dark:text-amber-400">Akbar's Share</th>
-          <th class="p-3.5 text-center text-purple-600 dark:text-purple-400">Anthony's Share</th>
+        <tr class="bg-[#f5f5f7] dark:bg-[#252527] border-b border-black/8 dark:border-white/10 text-[#86868b] font-bold uppercase text-[10px] tracking-wider">
+          <th class="p-3 w-[12%]">Date</th>
+          <th class="p-3 w-[26%]">Expense Details</th>
+          <th class="p-3 w-[17%]">Total</th>
+          <th class="p-3 w-[15%]">Paid By</th>
+          <th class="p-3 text-center text-[#0066cc] w-[10%]">Amar</th>
+          <th class="p-3 text-center text-amber-600 w-[10%]">Akbar</th>
+          <th class="p-3 text-center text-purple-600 w-[10%]">Anthony</th>
         </tr>
       </thead>
-      <tbody class="divide-y divide-slate-200/80 dark:divide-slate-800/80 text-slate-700 dark:text-slate-300">
-        <tr class="hover:bg-white dark:hover:bg-slate-900/50 transition">
-          <td class="p-3.5 font-mono text-slate-500 dark:text-slate-400">Nov 01</td>
-          <td class="p-3.5 font-medium text-slate-900 dark:text-white">Flat Rent</td>
-          <td class="p-3.5 font-bold text-slate-900 dark:text-white">₹15,000</td>
-          <td class="p-3.5 font-semibold text-indigo-600 dark:text-indigo-400">Amar</td>
-          <td class="p-3.5 text-center font-mono">₹5,000</td>
-          <td class="p-3.5 text-center font-mono">₹5,000</td>
-          <td class="p-3.5 text-center font-mono">₹5,000</td>
+      <tbody class="divide-y divide-black/5 dark:divide-white/5 text-[#1d1d1f] dark:text-[#f5f5f7]">
+        <tr class="hover:bg-white dark:hover:bg-[#2a2a2c] transition">
+          <td class="p-3 font-mono text-[#86868b]">Nov 01</td>
+          <td class="p-3 font-medium">Flat Rent</td>
+          <td class="p-3 font-bold">₹15,000</td>
+          <td class="p-3 font-semibold text-[#0066cc]">Amar</td>
+          <td class="p-3 text-center font-mono">₹5,000</td>
+          <td class="p-3 text-center font-mono">₹5,000</td>
+          <td class="p-3 text-center font-mono">₹5,000</td>
         </tr>
-        <tr class="hover:bg-white dark:hover:bg-slate-900/50 transition">
-          <td class="p-3.5 font-mono text-slate-500 dark:text-slate-400">Nov 05</td>
-          <td class="p-3.5 font-medium text-slate-900 dark:text-white">DMart Groceries</td>
-          <td class="p-3.5 font-bold text-slate-900 dark:text-white">₹3,000</td>
-          <td class="p-3.5 font-semibold text-amber-600 dark:text-amber-400">Akbar</td>
-          <td class="p-3.5 text-center font-mono">₹1,000</td>
-          <td class="p-3.5 text-center font-mono">₹1,000</td>
-          <td class="p-3.5 text-center font-mono">₹1,000</td>
+        <tr class="hover:bg-white dark:hover:bg-[#2a2a2c] transition">
+          <td class="p-3 font-mono text-[#86868b]">Nov 05</td>
+          <td class="p-3 font-medium">DMart Groceries</td>
+          <td class="p-3 font-bold">₹3,000</td>
+          <td class="p-3 font-semibold text-amber-600">Akbar</td>
+          <td class="p-3 text-center font-mono">₹1,000</td>
+          <td class="p-3 text-center font-mono">₹1,000</td>
+          <td class="p-3 text-center font-mono">₹1,000</td>
         </tr>
-        <tr class="hover:bg-white dark:hover:bg-slate-900/50 transition">
-          <td class="p-3.5 font-mono text-slate-500 dark:text-slate-400">Nov 08</td>
-          <td class="p-3.5 font-medium text-slate-900 dark:text-white">Fiber Broadband</td>
-          <td class="p-3.5 font-bold text-slate-900 dark:text-white">₹999</td>
-          <td class="p-3.5 font-semibold text-purple-600 dark:text-purple-400">Anthony</td>
-          <td class="p-3.5 text-center font-mono">₹333</td>
-          <td class="p-3.5 text-center font-mono">₹333</td>
-          <td class="p-3.5 text-center font-mono">₹333</td>
+        <tr class="hover:bg-white dark:hover:bg-[#2a2a2c] transition">
+          <td class="p-3 font-mono text-[#86868b]">Nov 08</td>
+          <td class="p-3 font-medium">Fiber Broadband</td>
+          <td class="p-3 font-bold">₹999</td>
+          <td class="p-3 font-semibold text-purple-600">Anthony</td>
+          <td class="p-3 text-center font-mono">₹333</td>
+          <td class="p-3 text-center font-mono">₹333</td>
+          <td class="p-3 text-center font-mono">₹333</td>
         </tr>
-        <tr class="hover:bg-white dark:hover:bg-slate-900/50 transition">
-          <td class="p-3.5 font-mono text-slate-500 dark:text-slate-400">Nov 14</td>
-          <td class="p-3.5 font-medium text-slate-900 dark:text-white">Gas Cylinder Refill</td>
-          <td class="p-3.5 font-bold text-slate-900 dark:text-white">₹950</td>
-          <td class="p-3.5 font-semibold text-indigo-600 dark:text-indigo-400">Amar</td>
-          <td class="p-3.5 text-center font-mono">₹317</td>
-          <td class="p-3.5 text-center font-mono">₹317</td>
-          <td class="p-3.5 text-center font-mono">₹316</td>
+        <tr class="hover:bg-white dark:hover:bg-[#2a2a2c] transition">
+          <td class="p-3 font-mono text-[#86868b]">Nov 14</td>
+          <td class="p-3 font-medium">Gas Cylinder Refill</td>
+          <td class="p-3 font-bold">₹950</td>
+          <td class="p-3 font-semibold text-[#0066cc]">Amar</td>
+          <td class="p-3 text-center font-mono">₹317</td>
+          <td class="p-3 text-center font-mono">₹317</td>
+          <td class="p-3 text-center font-mono">₹316</td>
         </tr>
       </tbody>
       <tfoot>
-        <tr class="bg-indigo-50 dark:bg-indigo-950/40 border-t-2 border-indigo-200 dark:border-indigo-500/50 text-slate-900 dark:text-white font-bold text-xs">
-          <td colspan="4" class="p-3.5 text-right font-black uppercase tracking-wider text-slate-600 dark:text-slate-300">
+        <tr class="bg-[#0066cc]/5 dark:bg-[#0066cc]/15 border-t-2 border-[#0066cc]/20 font-bold text-xs">
+          <td colspan="4" class="p-3 text-right font-black uppercase tracking-wider text-[#1d1d1f] dark:text-white">
             Net Settle Balance:
           </td>
-          <td class="p-3.5 text-center font-mono text-emerald-600 dark:text-emerald-400 font-black">+₹9,299</td>
-          <td class="p-3.5 text-center font-mono text-rose-600 dark:text-rose-400 font-black">-₹3,650</td>
-          <td class="p-3.5 text-center font-mono text-rose-600 dark:text-rose-400 font-black">-₹5,649</td>
+          <td class="p-3 text-center font-mono text-emerald-600 dark:text-emerald-400 font-bold">+₹9,299</td>
+          <td class="p-3 text-center font-mono text-rose-600 dark:text-rose-400 font-bold">-₹3,650</td>
+          <td class="p-3 text-center font-mono text-rose-600 dark:text-rose-400 font-bold">-₹5,649</td>
         </tr>
       </tfoot>
     </table>
+  </div>
+
+  <!-- MOBILE VIEW (Visible on small screens < sm: ZERO horizontal scroll!) -->
+  <div class="sm:hidden space-y-3">
+    <!-- Expense Row 1 -->
+    <div class="p-3.5 rounded-xl bg-[#fbfbfd] dark:bg-[#1c1c1e] border border-black/6 dark:border-white/8 space-y-2">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="text-[10px] font-mono text-[#86868b]">Nov 01</span>
+          <span class="text-xs font-bold text-[#1d1d1f] dark:text-white">Flat Rent</span>
+        </div>
+        <div class="text-right">
+          <span class="text-xs font-bold text-[#1d1d1f] dark:text-white">₹15,000</span>
+          <span class="text-[10px] text-[#0066cc] block font-semibold">Paid by Amar</span>
+        </div>
+      </div>
+      <div class="grid grid-cols-3 gap-1 pt-1 border-t border-black/5 dark:border-white/5 text-center text-[10px]">
+        <div class="bg-white dark:bg-[#252527] py-1 rounded">Amar: ₹5k</div>
+        <div class="bg-white dark:bg-[#252527] py-1 rounded">Akbar: ₹5k</div>
+        <div class="bg-white dark:bg-[#252527] py-1 rounded">Anthony: ₹5k</div>
+      </div>
+    </div>
+
+    <!-- Expense Row 2 -->
+    <div class="p-3.5 rounded-xl bg-[#fbfbfd] dark:bg-[#1c1c1e] border border-black/6 dark:border-white/8 space-y-2">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="text-[10px] font-mono text-[#86868b]">Nov 05</span>
+          <span class="text-xs font-bold text-[#1d1d1f] dark:text-white">DMart Groceries</span>
+        </div>
+        <div class="text-right">
+          <span class="text-xs font-bold text-[#1d1d1f] dark:text-white">₹3,000</span>
+          <span class="text-[10px] text-amber-600 block font-semibold">Paid by Akbar</span>
+        </div>
+      </div>
+      <div class="grid grid-cols-3 gap-1 pt-1 border-t border-black/5 dark:border-white/5 text-center text-[10px]">
+        <div class="bg-white dark:bg-[#252527] py-1 rounded">Amar: ₹1k</div>
+        <div class="bg-white dark:bg-[#252527] py-1 rounded">Akbar: ₹1k</div>
+        <div class="bg-white dark:bg-[#252527] py-1 rounded">Anthony: ₹1k</div>
+      </div>
+    </div>
+
+    <!-- Expense Row 3 -->
+    <div class="p-3.5 rounded-xl bg-[#fbfbfd] dark:bg-[#1c1c1e] border border-black/6 dark:border-white/8 space-y-2">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="text-[10px] font-mono text-[#86868b]">Nov 08</span>
+          <span class="text-xs font-bold text-[#1d1d1f] dark:text-white">Fiber Broadband</span>
+        </div>
+        <div class="text-right">
+          <span class="text-xs font-bold text-[#1d1d1f] dark:text-white">₹999</span>
+          <span class="text-[10px] text-purple-600 block font-semibold">Paid by Anthony</span>
+        </div>
+      </div>
+      <div class="grid grid-cols-3 gap-1 pt-1 border-t border-black/5 dark:border-white/5 text-center text-[10px]">
+        <div class="bg-white dark:bg-[#252527] py-1 rounded">Amar: ₹333</div>
+        <div class="bg-white dark:bg-[#252527] py-1 rounded">Akbar: ₹333</div>
+        <div class="bg-white dark:bg-[#252527] py-1 rounded">Anthony: ₹333</div>
+      </div>
+    </div>
+
+    <!-- Mobile Net Balance Summary Card -->
+    <div class="p-3.5 rounded-xl bg-[#0066cc]/10 dark:bg-[#0066cc]/20 border border-[#0066cc]/25 space-y-2">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-bold text-[#1d1d1f] dark:text-white">Net Settle Balance</span>
+        <span class="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-bold">Sum = ₹0.00</span>
+      </div>
+      <div class="grid grid-cols-3 gap-1 text-center text-[11px] font-bold">
+        <div class="bg-white dark:bg-[#1c1c1e] py-1.5 rounded text-emerald-600 dark:text-emerald-400">
+          Amar<br /><span class="font-mono text-xs">+₹9,299</span>
+        </div>
+        <div class="bg-white dark:bg-[#1c1c1e] py-1.5 rounded text-rose-600 dark:text-rose-400">
+          Akbar<br /><span class="font-mono text-xs">-₹3,650</span>
+        </div>
+        <div class="bg-white dark:bg-[#1c1c1e] py-1.5 rounded text-rose-600 dark:text-rose-400">
+          Anthony<br /><span class="font-mono text-xs">-₹5,649</span>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

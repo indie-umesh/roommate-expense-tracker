@@ -127,14 +127,14 @@ const breadcrumbs = [
             </button>
           </div>
 
-          <div class="overflow-x-auto rounded-xl border border-black/8 dark:border-white/10">
-            <table class="w-full text-left text-[13px]">
-              <thead class="bg-[#f5f5f7] dark:bg-[#161617] text-[#86868b] border-b border-black/5 dark:border-white/10 uppercase text-[11px] font-semibold">
+          <div class="overflow-hidden rounded-xl border border-black/8 dark:border-white/10">
+            <table class="w-full table-fixed text-left text-[11px] sm:text-[13px]">
+              <thead class="bg-[#f5f5f7] dark:bg-[#161617] text-[#86868b] border-b border-black/5 dark:border-white/10 uppercase text-[9px] sm:text-[11px] font-semibold">
                 <tr>
-                  <th class="p-3">Item / Activity</th>
-                  <th class="p-3">Amount (₹)</th>
-                  <th class="p-3">Paid By</th>
-                  <th class="p-3 text-right">Action</th>
+                  <th class="p-2 sm:p-3 w-[44%] sm:w-[45%]">Item / Activity</th>
+                  <th class="p-2 sm:p-3 w-[24%] sm:w-[25%]">Amount</th>
+                  <th class="p-2 sm:p-3 w-[24%] sm:w-[22%]">Paid By</th>
+                  <th class="p-2 sm:p-3 text-right w-[8%]">✕</th>
                 </tr>
               </thead>
               <tbody id="picnic-items-body" class="divide-y divide-black/5 dark:divide-white/10">
@@ -385,16 +385,16 @@ const breadcrumbs = [
         </p>
       </div>
 
-      <div class="overflow-x-auto rounded-[18px] border border-black/8 dark:border-white/10 text-[13px]">
-        <table class="w-full text-left">
-          <thead class="bg-[#f5f5f7] dark:bg-[#161617] text-[#86868b] uppercase text-[11px] font-semibold border-b border-black/5 dark:border-white/10">
+      <div class="overflow-hidden rounded-[18px] border border-black/8 dark:border-white/10 text-[11px] sm:text-[13px]">
+        <table class="w-full table-fixed text-left">
+          <thead class="bg-[#f5f5f7] dark:bg-[#161617] text-[#86868b] uppercase text-[9px] sm:text-[11px] font-semibold border-b border-black/5 dark:border-white/10">
             <tr>
-              <th class="p-3">S.No</th>
-              <th class="p-3">Category</th>
-              <th class="p-3">Description</th>
-              <th class="p-3">Amount</th>
-              <th class="p-3">Paid By</th>
-              <th class="p-3">Split Method</th>
+              <th class="hidden sm:table-cell p-2 sm:p-3 sm:w-[8%]">S.No</th>
+              <th class="p-2 sm:p-3 w-[26%] sm:w-[18%]">Category</th>
+              <th class="p-2 sm:p-3 w-[38%] sm:w-[32%]">Description</th>
+              <th class="p-2 sm:p-3 w-[20%] sm:w-[16%]">Amount</th>
+              <th class="p-2 sm:p-3 w-[16%] sm:w-[14%]">Paid By</th>
+              <th class="hidden sm:table-cell p-2 sm:p-3 sm:w-[12%]">Split</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-black/5 dark:divide-white/10 text-[#1d1d1f] dark:text-[#f5f5f7]">

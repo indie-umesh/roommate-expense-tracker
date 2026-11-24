@@ -127,14 +127,14 @@ const breadcrumbs = [
             </button>
           </div>
 
-          <div class="overflow-x-auto rounded-xl border border-black/8 dark:border-white/10">
-            <table class="w-full text-left text-[13px]">
-              <thead class="bg-[#f5f5f7] dark:bg-[#161617] text-[#86868b] border-b border-black/5 dark:border-white/10 uppercase text-[11px] font-semibold">
+          <div class="overflow-hidden rounded-xl border border-black/8 dark:border-white/10">
+            <table class="w-full table-fixed text-left text-[11px] sm:text-[13px]">
+              <thead class="bg-[#f5f5f7] dark:bg-[#161617] text-[#86868b] border-b border-black/5 dark:border-white/10 uppercase text-[9px] sm:text-[11px] font-semibold">
                 <tr>
-                  <th class="p-3">Expense Name</th>
-                  <th class="p-3">Total (₹)</th>
-                  <th class="p-3">Paid By</th>
-                  <th class="p-3 text-right">Action</th>
+                  <th class="p-2 sm:p-3 w-[44%] sm:w-[45%]">Expense Name</th>
+                  <th class="p-2 sm:p-3 w-[24%] sm:w-[25%]">Total (₹)</th>
+                  <th class="p-2 sm:p-3 w-[24%] sm:w-[22%]">Paid By</th>
+                  <th class="p-2 sm:p-3 text-right w-[8%]">✕</th>
                 </tr>
               </thead>
               <tbody id="trip-items-body" class="divide-y divide-black/5 dark:divide-white/10">
