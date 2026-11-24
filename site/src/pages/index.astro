@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import HeroDashboardSimulator from '../components/HeroDashboardSimulator.astro';
 import InteractiveDebtSimplifier from '../components/InteractiveDebtSimplifier.astro';
 import ExcelMatrixPreview from '../components/ExcelMatrixPreview.astro';
 import ComparisonTable from '../components/ComparisonTable.astro';
@@ -28,7 +29,7 @@ const homeFaq = [
   },
   {
     question: "How does Roommate solve roommates having different paydays?",
-    answer: "Most roommates get paid on different dates (e.g. Ritesh on the 1st, Aman on the 5th, Umesh on the 15th). Roommate maintains a real-time running net balance ledger so you can cover each other throughout the month without stressing. When month-end arrives, settling all dues takes under 5 minutes."
+    answer: "Most roommates get paid on different dates (e.g. Anthony on the 1st, Akbar on the 5th, Amar on the 15th). Roommate maintains a real-time running net balance ledger so you can cover each other throughout the month without stressing. When month-end arrives, settling all dues takes under 5 minutes."
   }
 ];
 ---
@@ -107,10 +108,17 @@ const homeFaq = [
         </div>
       </div>
 
-      <!-- Live Demo / Interactive Algorithm Showcase -->
-      <div class="mt-14 max-w-4xl mx-auto">
-        <InteractiveDebtSimplifier />
+      <!-- Real Interactive Dashboard UI Simulator (Auto-Animated + Mobile & Desktop View) -->
+      <div class="mt-14 max-w-5xl mx-auto">
+        <HeroDashboardSimulator />
       </div>
+    </div>
+  </section>
+
+  <!-- Debt Simplification Algorithm Showcase Section -->
+  <section class="py-12 bg-slate-950/60 border-t border-slate-850">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <InteractiveDebtSimplifier />
     </div>
   </section>
 
@@ -217,13 +225,13 @@ const homeFaq = [
         <div class="space-y-2">
           <span class="text-xs font-bold uppercase tracking-wider text-indigo-400">The Origin Story</span>
           <h2 class="text-2xl sm:text-3xl font-black text-white">
-            Built for Ritesh, Aman, and Umesh (Indore, India)
+            Built for Amar, Akbar, and Anthony
           </h2>
         </div>
 
         <div class="space-y-4 text-xs sm:text-sm text-slate-300 leading-relaxed">
           <p>
-            In our shared flat in Indore, we ran into a classic problem: <strong>our paydays fall on completely different dates</strong>. Ritesh gets paid on the <strong>1st</strong>, Aman on the <strong>5th</strong>, and Umesh on the <strong>15th</strong>.
+            In our shared flat, we ran into a classic problem: <strong>our paydays fall on completely different dates</strong>. Anthony gets paid on the <strong>1st</strong>, Akbar on the <strong>5th</strong>, and Amar on the <strong>15th</strong>.
           </p>
           <p>
             Because of that, whoever had cash on hand covered rent, groceries, and bills for the first two weeks, and we reconciled later. We tried tracking this in a Google Sheet for months. <strong>It failed miserably.</strong>
