@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import BrandLogo from '../components/BrandLogo.astro';
+import { APP_URL } from '../config/site';
 
 interface Props {
   title: string;
@@ -39,7 +40,7 @@ const {
 } = Astro.props;
 
 const siteUrl = "https://roommatesexpensemanager.com";
-const appUrl = import.meta.env.DEV ? "http://localhost:5173" : (import.meta.env.PUBLIC_APP_URL || "/#demo");
+const appUrl = APP_URL;
 
 // Base JSON-LD SoftwareApplication Schema
 const softwareSchema = {

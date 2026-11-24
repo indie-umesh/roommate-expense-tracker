@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import FaqAccordion from '../components/FaqAccordion.astro';
 import AnimatedFlatmates from '../components/AnimatedFlatmates.astro';
+import { APP_URL } from '../config/site';
 
 const title = "Split Expenses Calculator — Roommate";
 const description = "Free online split expenses calculator. Split travel, food, and trip bills with friends in India. Zero signup, no daily limits, 1-click Excel export.";
@@ -245,7 +246,7 @@ const breadcrumbs = [
           </button>
 
           <a
-            href="http://localhost:5173"
+            href={APP_URL}
             class="w-full sm:w-auto apple-btn-primary"
           >
             Start Free in Roommate Web App
@@ -320,7 +321,7 @@ const breadcrumbs = [
         Start tracking shared expenses for free. No credit card, no app download required. Works seamlessly on iPhone, Android, and desktop.
       </p>
       <div class="pt-3">
-        <a href="http://localhost:5173" class="apple-btn-primary">
+        <a href={APP_URL} class="apple-btn-primary">
           Launch Roommate Free Web App
         </a>
       </div>

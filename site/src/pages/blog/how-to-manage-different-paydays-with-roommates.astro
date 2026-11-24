@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { APP_URL } from '../../config/site';
 
 const title = "Managing Different Paydays — Roommate";
 const description = "When Anthony gets paid on the 1st, Akbar on the 5th, and Amar on the 15th, who covers rent? A proven cash-flow guide for roommates to avoid money stress.";
@@ -85,7 +86,7 @@ const articleSchema = {
         <p class="text-xs text-[#86868b]">Zero friction, zero limits, instant PIN access.</p>
       </div>
       <div class="flex items-center gap-3">
-        <a href="http://localhost:5173" class="apple-btn-primary">
+        <a href={APP_URL} class="apple-btn-primary">
           Try Roommate Free
         </a>
         <a href="/blog" class="apple-btn-secondary">

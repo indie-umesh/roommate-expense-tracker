@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { APP_URL } from '../config/site';
 import ExcelMatrixPreview from '../components/ExcelMatrixPreview.astro';
 import FaqAccordion from '../components/FaqAccordion.astro';
 
@@ -51,7 +52,7 @@ const templateFaq = [
 
       <div class="flex items-center justify-center gap-6 pt-2">
         <a
-          href="http://localhost:5173"
+          href={APP_URL}
           class="apple-btn-primary"
         >
           Use Interactive Web App

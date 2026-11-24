@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { APP_URL } from '../../config/site';
 
 const title = "Splitting Rent & Groceries — Roommate";
 const description = "Master bedroom vs small room? Who pays for shared oil vs personal snacks? Practical formulas and rules to split flat rent and groceries without disputes.";
@@ -83,7 +84,7 @@ const articleSchema = {
         <p class="text-xs text-[#86868b]">Free forever, zero caps, and instant PIN login.</p>
       </div>
       <div class="flex items-center gap-3">
-        <a href="http://localhost:5173" class="apple-btn-primary">
+        <a href={APP_URL} class="apple-btn-primary">
           Open Roommate App
         </a>
         <a href="/blog" class="apple-btn-secondary">

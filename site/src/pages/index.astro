@@ -5,6 +5,7 @@ import InteractiveDebtSimplifier from '../components/InteractiveDebtSimplifier.a
 import ExcelMatrixPreview from '../components/ExcelMatrixPreview.astro';
 import ComparisonTable from '../components/ComparisonTable.astro';
 import FaqAccordion from '../components/FaqAccordion.astro';
+import { APP_URL } from '../config/site';
 
 const title = "Roommate — Free Shared Expense Tracker";
 const description = "The zero-friction roommate expense tracker. Log shared bills in under 3 taps, view live Excel matrices, and simplify debts with zero daily limits.";
@@ -70,7 +71,7 @@ const homeFaq = [
       <!-- Apple Action Blue CTA Group -->
       <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-6 pt-2">
         <a
-          href="http://localhost:5173"
+          href={APP_URL}
           class="apple-btn-primary"
         >
           Start Tracking Free
@@ -258,7 +259,7 @@ const homeFaq = [
 
       <div class="pt-4 flex flex-wrap items-center gap-3 sm:gap-6">
         <a
-          href="http://localhost:5173"
+          href={APP_URL}
           class="apple-btn-primary"
         >
           Try Roommate Free
@@ -292,7 +293,7 @@ const homeFaq = [
       </p>
       <div class="pt-3">
         <a
-          href="http://localhost:5173"
+          href={APP_URL}
           class="apple-btn-primary"
         >
           Launch Roommate App Free

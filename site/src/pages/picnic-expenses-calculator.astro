@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import FaqAccordion from '../components/FaqAccordion.astro';
 import AnimatedFlatmates from '../components/AnimatedFlatmates.astro';
+import { APP_URL } from '../config/site';
 
 const title = "Picnic Expenses Calculator — Roommate";
 const description = "Free online picnic expenses calculator. Split food, drinks, travel, and venue tickets among friends or office colleagues. Download Excel format instantly.";
@@ -267,7 +268,7 @@ const breadcrumbs = [
           </button>
 
           <a
-            href="http://localhost:5173"
+            href={APP_URL}
             class="w-full sm:w-auto apple-btn-primary"
           >
             Track in Roommate App Free
@@ -459,7 +460,7 @@ const breadcrumbs = [
         Don't stress over who paid for ice, charcoal, or parking. Create a free Roommate group, share the link, and let everyone see their balance live.
       </p>
       <div class="pt-3">
-        <a href="http://localhost:5173" class="apple-btn-primary">
+        <a href={APP_URL} class="apple-btn-primary">
           Create Free Picnic Group Now
         </a>
       </div>
