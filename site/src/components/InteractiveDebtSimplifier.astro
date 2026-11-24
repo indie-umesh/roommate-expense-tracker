@@ -1,105 +1,71 @@
 ---
-// Interactive Debt Simplification & Entry Speed Demo Component
+import AnimatedFlatmates from './AnimatedFlatmates.astro';
 ---
 
-<div class="rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 backdrop-blur-xl shadow-xl relative overflow-hidden transition-colors duration-200">
-  <div class="absolute top-0 right-0 w-64 h-64 bg-indigo-500/5 dark:bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
-  <div class="absolute bottom-0 left-0 w-64 h-64 bg-emerald-500/5 dark:bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+<div class="rounded-[28px] p-6 sm:p-10 border border-black/8 dark:border-white/10 bg-white dark:bg-[#1d1d1f] apple-product-shadow relative overflow-hidden transition-colors duration-200 apple-reveal">
+  
+  <!-- Subtle Ambient Glow -->
+  <div class="absolute top-0 right-0 w-80 h-80 bg-[#0066cc]/5 dark:bg-[#0066cc]/10 rounded-full blur-3xl pointer-events-none"></div>
 
-  <div class="relative z-10 space-y-6">
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-5">
+  <div class="relative z-10 space-y-8">
+    
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-black/5 dark:border-white/10 pb-6">
       <div>
-        <span class="inline-block text-[11px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/70 border border-indigo-200 dark:border-indigo-800/60 px-3 py-1 rounded-full mb-1.5">
+        <span class="inline-block text-[12px] font-semibold tracking-tight text-[#0066cc] dark:text-[#2997ff] uppercase tracking-wider mb-1.5">
           Live Algorithm Demonstration
         </span>
-        <h3 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
+        <h3 class="apple-display-lg text-[#1d1d1f] dark:text-white">
           Greedy Debt Simplification in Action
         </h3>
-        <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
-          Without debt simplification, 4 flatmates end up doing 6 confusing cross-transfers. Roommate crushes it to just 2 payments.
+        <p class="text-[15px] sm:text-[16px] text-[#86868b] dark:text-[#a1a1a6] mt-1 max-w-xl">
+          Without debt simplification, 3 flatmates end up doing 6 confusing cross-transfers. Roommate minimizes it to just 2 direct settlements.
         </p>
       </div>
 
-      <div class="shrink-0 flex items-center gap-2">
-        <span class="px-3 py-1 rounded-lg text-xs font-semibold bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20">
-          Math Guaranteed: Sum = ₹0
+      <div class="shrink-0 flex items-center">
+        <span class="px-4 py-1.5 rounded-full text-[12px] font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+          Math Invariant: Sum of Balances = ₹0
         </span>
       </div>
     </div>
 
-    <!-- 3 Flatmate Scenario Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800">
-        <div class="flex items-center justify-between mb-2">
-          <div class="flex items-center gap-2">
-            <div class="w-8 h-8 rounded-lg bg-indigo-100 dark:bg-indigo-600/20 text-indigo-600 dark:text-indigo-400 font-bold text-xs flex items-center justify-center border border-indigo-200 dark:border-indigo-500/30">AM</div>
-            <span class="font-bold text-sm text-slate-900 dark:text-white">Amar (You)</span>
-          </div>
-          <span class="text-xs text-slate-500 dark:text-slate-400">Paid: Rent ₹15,000</span>
-        </div>
-        <div class="text-xs text-slate-600 dark:text-slate-400 flex justify-between py-1 border-t border-slate-200 dark:border-slate-900">
-          <span>Net Balance:</span>
-          <span class="font-bold text-emerald-600 dark:text-emerald-400">+₹10,000 (Owed)</span>
-        </div>
-      </div>
-
-      <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800">
-        <div class="flex items-center justify-between mb-2">
-          <div class="flex items-center gap-2">
-            <div class="w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-600/20 text-amber-600 dark:text-amber-400 font-bold text-xs flex items-center justify-center border border-amber-200 dark:border-amber-500/30">AK</div>
-            <span class="font-bold text-sm text-slate-900 dark:text-white">Akbar</span>
-          </div>
-          <span class="text-xs text-slate-500 dark:text-slate-400">Paid: Groceries ₹1,500</span>
-        </div>
-        <div class="text-xs text-slate-600 dark:text-slate-400 flex justify-between py-1 border-t border-slate-200 dark:border-slate-900">
-          <span>Net Balance:</span>
-          <span class="font-bold text-rose-600 dark:text-rose-400">-₹4,000 (Owes)</span>
-        </div>
-      </div>
-
-      <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800">
-        <div class="flex items-center justify-between mb-2">
-          <div class="flex items-center gap-2">
-            <div class="w-8 h-8 rounded-lg bg-purple-100 dark:bg-purple-600/20 text-purple-600 dark:text-purple-400 font-bold text-xs flex items-center justify-center border border-purple-200 dark:border-purple-500/30">AN</div>
-            <span class="font-bold text-sm text-slate-900 dark:text-white">Anthony</span>
-          </div>
-          <span class="text-xs text-slate-500 dark:text-slate-400">Paid: Wi-Fi ₹0</span>
-        </div>
-        <div class="text-xs text-slate-600 dark:text-slate-400 flex justify-between py-1 border-t border-slate-200 dark:border-slate-900">
-          <span>Net Balance:</span>
-          <span class="font-bold text-rose-600 dark:text-rose-400">-₹6,000 (Owes)</span>
-        </div>
-      </div>
+    <!-- Animated Characters Trio Showcase -->
+    <div class="pt-2 pb-4">
+      <AnimatedFlatmates character="trio" showSpeech={true} />
     </div>
 
     <!-- The Solution Comparison -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-      <div class="p-5 rounded-2xl bg-rose-50 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-900/40 space-y-3">
-        <div class="flex items-center gap-2 text-rose-600 dark:text-rose-400 text-xs font-bold uppercase tracking-wider">
-          <span class="w-2 h-2 rounded-full bg-rose-500"></span>
-          Old Manual Way (6 Headaches)
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+      <!-- Old Manual Way -->
+      <div class="p-6 rounded-[20px] bg-[#fbfbfd] dark:bg-[#161617] border border-rose-500/20 space-y-3 apple-card-interactive">
+        <div class="flex items-center gap-2 text-rose-600 dark:text-rose-400 text-[13px] font-semibold">
+          <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+          <span>Old Manual Way (6 Confusing Transfers)</span>
         </div>
-        <p class="text-xs text-slate-600 dark:text-slate-400">
-          Akbar sends ₹5,000 to Amar, Amar sends ₹500 to Akbar, Anthony calculates 3 different shares, someone forgets their UPI pin, and group chats blow up.
+        <p class="text-[14px] text-[#86868b] dark:text-[#a1a1a6] leading-relaxed">
+          Akbar sends ₹5,000 to Amar, Amar sends ₹500 to Akbar, Anthony calculates 3 separate shares, someone forgets their UPI PIN, and flat group chats blow up with arguments.
         </p>
       </div>
 
-      <div class="p-5 rounded-2xl bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-900/40 space-y-3">
-        <div class="flex items-center gap-2 text-emerald-700 dark:text-emerald-400 text-xs font-bold uppercase tracking-wider">
-          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-          Roommate Greedy Simplification (2 Direct UPIs)
+      <!-- Roommate Way -->
+      <div class="p-6 rounded-[20px] bg-[#fbfbfd] dark:bg-[#161617] border border-emerald-500/30 space-y-3 apple-card-interactive">
+        <div class="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 text-[13px] font-semibold">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+          <span>Roommate Greedy Algorithm (2 Direct UPIs)</span>
         </div>
-        <div class="space-y-1.5 text-xs text-slate-800 dark:text-slate-200">
-          <div class="flex items-center justify-between bg-white dark:bg-slate-950/80 p-2 rounded-lg border border-slate-200 dark:border-slate-800 shadow-xs">
+        <div class="space-y-2 text-[14px]">
+          <div class="flex items-center justify-between bg-white dark:bg-[#1d1d1f] p-3 rounded-xl border border-black/5 dark:border-white/10 shadow-xs">
             <span>👉 <strong>Anthony</strong> pays <strong>Amar</strong></span>
-            <span class="font-bold text-emerald-600 dark:text-emerald-400">₹6,000</span>
+            <span class="font-semibold text-emerald-600 dark:text-emerald-400">₹6,000 via UPI</span>
           </div>
-          <div class="flex items-center justify-between bg-white dark:bg-slate-950/80 p-2 rounded-lg border border-slate-200 dark:border-slate-800 shadow-xs">
+          <div class="flex items-center justify-between bg-white dark:bg-[#1d1d1f] p-3 rounded-xl border border-black/5 dark:border-white/10 shadow-xs">
             <span>👉 <strong>Akbar</strong> pays <strong>Amar</strong></span>
-            <span class="font-bold text-emerald-600 dark:text-emerald-400">₹4,000</span>
+            <span class="font-semibold text-emerald-600 dark:text-emerald-400">₹4,000 via UPI</span>
           </div>
         </div>
       </div>
     </div>
+
   </div>
 </div>

@@ -41,8 +41,11 @@ const homeFaq = [
   faqSchema={homeFaq}
 >
   <!-- 1. HERO PRODUCT TILE (Canvas: Pure White / Pure Black) -->
-  <section class="pt-16 pb-20 bg-white dark:bg-black transition-colors duration-200">
-    <div class="max-w-[1024px] mx-auto px-4 sm:px-6 text-center space-y-6">
+  <section class="pt-16 pb-20 bg-white dark:bg-black transition-colors duration-200 relative overflow-hidden">
+    <!-- Ambient Hardware Glow -->
+    <div class="apple-hero-glow"></div>
+
+    <div class="max-w-[1024px] mx-auto px-4 sm:px-6 text-center space-y-6 relative z-10 apple-reveal">
       
       <!-- Eyebrow / Tagline -->
       <p class="text-[14px] sm:text-[17px] font-semibold text-[#86868b] tracking-tight">

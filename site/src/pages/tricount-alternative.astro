@@ -29,29 +29,61 @@ const tricountFaq = [
     { name: "Tricount Alternative", url: "https://roommatesexpensemanager.com/tricount-alternative" }
   ]}
 >
-  <section class="pt-16 pb-16 text-center max-w-3xl mx-auto px-4 space-y-6">
-    <span class="px-3.5 py-1.5 rounded-full bg-indigo-950/70 border border-indigo-800/60 text-xs font-semibold text-indigo-300">
-      The Better Tool for Flatmates
-    </span>
-    <h1 class="text-3xl sm:text-5xl font-black text-white tracking-tight">
-      The Modern, Zero-Friction <br />
-      <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-indigo-400">Tricount Alternative</span>
-    </h1>
-    <p class="text-sm text-slate-300 max-w-xl mx-auto">
-      Tricount is built for weekend trips; Roommate is built for monthly shared living. Add expenses in &lt;10s, view full spreadsheet matrices, and settle in 5 minutes.
-    </p>
-    <div class="pt-2">
-      <a href="http://localhost:5173" class="px-8 py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-sm shadow-xl transition">
-        Launch Roommate Free →
-      </a>
+  <!-- Hero Section (Apple Clean Canvas) -->
+  <section class="pt-16 pb-16 bg-white dark:bg-black transition-colors duration-200">
+    <div class="max-w-[1024px] mx-auto px-4 sm:px-6 text-center space-y-5">
+      <p class="text-[14px] sm:text-[17px] font-semibold text-[#86868b] tracking-tight">
+        The Better Tool for Flatmates
+      </p>
+
+      <div class="space-y-2">
+        <h1 class="apple-hero-display text-[#1d1d1f] dark:text-white">
+          The Modern Tricount Alternative
+        </h1>
+        <p class="text-[20px] sm:text-[28px] font-semibold text-[#86868b] dark:text-[#a1a1a6] tracking-tight">
+          Built specifically for ongoing monthly shared living
+        </p>
+      </div>
+
+      <p class="text-[16px] sm:text-[17px] text-[#86868b] dark:text-[#a1a1a6] max-w-2xl mx-auto leading-relaxed">
+        Tricount is built for weekend trips; Roommate is built for monthly shared living. Add expenses in &lt;10s, view full spreadsheet matrices, and settle in 5 minutes.
+      </p>
+
+      <div class="flex items-center justify-center gap-6 pt-2">
+        <a
+          href="http://localhost:5173"
+          class="apple-btn-primary"
+        >
+          Launch Roommate Free
+        </a>
+      </div>
     </div>
   </section>
 
-  <section class="py-12 max-w-5xl mx-auto px-4">
-    <ComparisonTable highlightCompetitor="tricount" />
+  <!-- Comparison Section (Apple Parchment) -->
+  <section class="py-20 bg-[#f5f5f7] dark:bg-[#161617] border-t border-black/5 dark:border-white/10 transition-colors duration-200">
+    <div class="max-w-[1024px] mx-auto px-4 sm:px-6 space-y-10">
+      <div class="text-center max-w-2xl mx-auto space-y-2">
+        <p class="text-[14px] sm:text-[17px] font-semibold text-[#86868b] tracking-tight">Head to Head</p>
+        <h2 class="apple-display-lg text-[#1d1d1f] dark:text-white">
+          Tricount vs. Roommate
+        </h2>
+      </div>
+
+      <div>
+        <ComparisonTable highlightCompetitor="tricount" />
+      </div>
+    </div>
   </section>
 
-  <section class="py-12 max-w-5xl mx-auto px-4">
-    <FaqAccordion items={tricountFaq} title="Tricount Alternative FAQ" />
+  <!-- FAQ Section (Apple Pure Canvas) -->
+  <section class="py-20 bg-white dark:bg-black border-t border-black/5 dark:border-white/10 transition-colors duration-200">
+    <div class="max-w-[1024px] mx-auto px-4 sm:px-6">
+      <FaqAccordion
+        items={tricountFaq}
+        title="Tricount Alternative FAQ"
+        subtitle="Why roommates choose Roommate over Tricount."
+      />
+    </div>
   </section>
 </BaseLayout>

@@ -1,0 +1,265 @@
+---
+interface Props {
+  character?: 'amar' | 'akbar' | 'anthony' | 'trio';
+  size?: 'sm' | 'md' | 'lg';
+  showSpeech?: boolean;
+  className?: string;
+}
+
+const {
+  character = 'trio',
+  size = 'md',
+  showSpeech = true,
+  className = ''
+} = Astro.props;
+
+const sizeMap = {
+  sm: 'w-12 h-12',
+  md: 'w-20 h-20 sm:w-24 sm:h-24',
+  lg: 'w-28 h-28 sm:w-36 sm:h-36'
+};
+---
+
+{character === 'trio' ? (
+  <div class={`relative flex items-end justify-center gap-4 sm:gap-8 py-4 ${className}`}>
+    <!-- Ambient Backdrop Light Glow -->
+    <div class="absolute inset-0 bg-radial from-[#0066cc]/10 via-transparent to-transparent blur-2xl pointer-events-none -z-10"></div>
+
+    <!-- Character 1: Amar (The Organized Lead) -->
+    <div class="group relative flex flex-col items-center cursor-pointer transition-transform duration-300 hover:scale-105">
+      {showSpeech && (
+        <div class="speech-bubble mb-2 px-3 py-1 rounded-full bg-white dark:bg-[#1d1d1f] border border-black/8 dark:border-white/10 shadow-md text-[11px] sm:text-[12px] font-semibold text-[#1d1d1f] dark:text-white whitespace-nowrap animate-float-slow">
+          <span>Amar: ☕ "Paid rent ₹15,000"</span>
+        </div>
+      )}
+      
+      <div class="character-avatar character-amar relative w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-gradient-to-b from-[#e1f0ff] to-[#c7e3ff] dark:from-[#003366] dark:to-[#001f3f] p-1.5 border-2 border-[#0066cc]/30 shadow-lg">
+        <svg viewBox="0 0 100 100" class="w-full h-full overflow-visible">
+          <!-- Body / Polo Shirt -->
+          <path d="M25,85 Q20,100 20,100 L80,100 Q80,100 75,85 Q65,65 50,65 Q35,65 25,85 Z" fill="#0066cc" />
+          <path d="M45,65 L50,80 L55,65 Z" fill="#ffffff" opacity="0.9" />
+          <!-- Neck -->
+          <rect x="44" y="55" width="12" height="12" rx="3" fill="#fcd0a1" />
+          <!-- Head -->
+          <ellipse cx="50" cy="42" rx="20" ry="22" fill="#fcd0a1" />
+          <!-- Hair -->
+          <path d="M28,38 Q32,18 50,18 Q68,18 72,38 Q65,24 50,25 Q35,26 28,38 Z" fill="#1d1d1f" />
+          <!-- Glasses -->
+          <rect x="35" y="36" width="12" height="10" rx="3" fill="none" stroke="#1d1d1f" stroke-width="2" />
+          <rect x="53" y="36" width="12" height="10" rx="3" fill="none" stroke="#1d1d1f" stroke-width="2" />
+          <line x1="47" y1="41" x2="53" y2="41" stroke="#1d1d1f" stroke-width="2" />
+          <!-- Eyes with blinking -->
+          <circle cx="41" cy="41" r="2" fill="#1d1d1f" class="animate-blink" />
+          <circle cx="59" cy="41" r="2" fill="#1d1d1f" class="animate-blink" />
+          <!-- Smile -->
+          <path d="M44,52 Q50,57 56,52" fill="none" stroke="#1d1d1f" stroke-width="2" stroke-linecap="round" />
+          <!-- Coffee Mug -->
+          <g class="coffee-cup animate-wiggle origin-bottom-right">
+            <rect x="70" y="68" width="14" height="16" rx="3" fill="#ffffff" stroke="#0066cc" stroke-width="1.5" />
+            <path d="M84,72 Q89,72 89,76 Q89,80 84,80" fill="none" stroke="#0066cc" stroke-width="1.5" />
+            <!-- Steam -->
+            <path d="M74,64 Q76,60 74,56" fill="none" stroke="#86868b" stroke-width="1" class="animate-steam" />
+            <path d="M80,64 Q82,60 80,56" fill="none" stroke="#86868b" stroke-width="1" class="animate-steam delay-150" />
+          </g>
+        </svg>
+      </div>
+      <span class="mt-1.5 text-[13px] font-semibold text-[#1d1d1f] dark:text-white">Amar</span>
+      <span class="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">+₹10,000 (Owed)</span>
+    </div>
+
+    <!-- Center Floating Money Particle / Settlement Wave -->
+    <div class="hidden sm:flex flex-col items-center justify-center -translate-y-6">
+      <div class="w-10 h-10 rounded-full bg-emerald-500/10 dark:bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center animate-bounce-gentle">
+        <span class="text-[18px]">⚡</span>
+      </div>
+      <span class="text-[10px] uppercase tracking-wider font-semibold text-emerald-600 dark:text-emerald-400 mt-1">Sum = ₹0</span>
+    </div>
+
+    <!-- Character 2: Akbar (The Grocery Specialist) -->
+    <div class="group relative flex flex-col items-center cursor-pointer transition-transform duration-300 hover:scale-105">
+      {showSpeech && (
+        <div class="speech-bubble mb-2 px-3 py-1 rounded-full bg-white dark:bg-[#1d1d1f] border border-black/8 dark:border-white/10 shadow-md text-[11px] sm:text-[12px] font-semibold text-[#1d1d1f] dark:text-white whitespace-nowrap animate-float-slow delay-100">
+          <span>Akbar: 🥦 "Got veggies & milk"</span>
+        </div>
+      )}
+
+      <div class="character-avatar character-akbar relative w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-gradient-to-b from-[#e8f7ee] to-[#c7eed6] dark:from-[#004d26] dark:to-[#002613] p-1.5 border-2 border-emerald-500/30 shadow-lg">
+        <svg viewBox="0 0 100 100" class="w-full h-full overflow-visible">
+          <!-- Body / Hoodie -->
+          <path d="M25,85 Q20,100 20,100 L80,100 Q80,100 75,85 Q65,65 50,65 Q35,65 25,85 Z" fill="#10b981" />
+          <path d="M38,65 Q50,78 62,65" fill="#059669" />
+          <!-- Neck -->
+          <rect x="44" y="55" width="12" height="12" rx="3" fill="#e8b284" />
+          <!-- Head -->
+          <ellipse cx="50" cy="42" rx="20" ry="22" fill="#e8b284" />
+          <!-- Hair (Slightly curly / textured) -->
+          <path d="M26,38 Q30,16 50,16 Q70,16 74,38 Q70,22 60,20 Q50,22 40,20 Q32,22 26,38 Z" fill="#2d1d15" />
+          <!-- Eyes -->
+          <circle cx="42" cy="40" r="2.2" fill="#1d1d1f" class="animate-blink delay-200" />
+          <circle cx="58" cy="40" r="2.2" fill="#1d1d1f" class="animate-blink delay-200" />
+          <!-- Friendly Winking or Smile -->
+          <path d="M44,52 Q50,58 56,52" fill="none" stroke="#1d1d1f" stroke-width="2" stroke-linecap="round" />
+          <!-- Glowing Smartphone with UPI Checkmark -->
+          <g class="phone-hand animate-tilt origin-bottom-left">
+            <rect x="16" y="66" width="14" height="22" rx="3" fill="#1d1d1f" stroke="#ffffff" stroke-width="1" />
+            <rect x="18" y="68" width="10" height="16" rx="2" fill="#10b981" />
+            <path d="M20,76 L22,78 L26,73" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            <!-- Notification pulse ring -->
+            <circle cx="23" cy="76" r="8" fill="none" stroke="#10b981" stroke-width="1" class="animate-ping" opacity="0.4" />
+          </g>
+        </svg>
+      </div>
+      <span class="mt-1.5 text-[13px] font-semibold text-[#1d1d1f] dark:text-white">Akbar</span>
+      <span class="text-[11px] text-rose-500 font-medium">-₹4,000 (Owes)</span>
+    </div>
+
+    <!-- Character 3: Anthony (The Chill Roommate) -->
+    <div class="group relative flex flex-col items-center cursor-pointer transition-transform duration-300 hover:scale-105">
+      {showSpeech && (
+        <div class="speech-bubble mb-2 px-3 py-1 rounded-full bg-white dark:bg-[#1d1d1f] border border-black/8 dark:border-white/10 shadow-md text-[11px] sm:text-[12px] font-semibold text-[#1d1d1f] dark:text-white whitespace-nowrap animate-float-slow delay-200">
+          <span>Anthony: 👍 "Sending ₹6,000 on UPI!"</span>
+        </div>
+      )}
+
+      <div class="character-avatar character-anthony relative w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-gradient-to-b from-[#f3e8ff] to-[#ddd6fe] dark:from-[#3b0764] dark:to-[#1e0338] p-1.5 border-2 border-purple-500/30 shadow-lg">
+        <svg viewBox="0 0 100 100" class="w-full h-full overflow-visible">
+          <!-- Body / Casual T-shirt -->
+          <path d="M25,85 Q20,100 20,100 L80,100 Q80,100 75,85 Q65,65 50,65 Q35,65 25,85 Z" fill="#8b5cf6" />
+          <path d="M42,65 Q50,72 58,65" fill="#fcd0a1" />
+          <!-- Neck -->
+          <rect x="44" y="55" width="12" height="12" rx="3" fill="#fcd0a1" />
+          <!-- Head -->
+          <ellipse cx="50" cy="42" rx="20" ry="22" fill="#fcd0a1" />
+          <!-- Hair (Wavy / chill side-part) -->
+          <path d="M26,38 Q30,16 52,16 Q72,16 75,34 Q70,20 54,20 Q36,20 26,38 Z" fill="#4a2810" />
+          <!-- Eyes -->
+          <circle cx="42" cy="41" r="2" fill="#1d1d1f" class="animate-blink delay-300" />
+          <circle cx="58" cy="41" r="2" fill="#1d1d1f" class="animate-blink delay-300" />
+          <!-- Wide Chill Smile -->
+          <path d="M42,50 Q50,59 58,50" fill="none" stroke="#1d1d1f" stroke-width="2" stroke-linecap="round" />
+          <!-- Thumbs-up Hand Gesture -->
+          <g class="thumbs-up animate-wave origin-bottom-right">
+            <ellipse cx="76" cy="74" rx="6" ry="6" fill="#fcd0a1" stroke="#8b5cf6" stroke-width="1" />
+            <rect x="73" y="65" width="5" height="10" rx="2.5" fill="#fcd0a1" stroke="#8b5cf6" stroke-width="1" />
+            <!-- Sparkle -->
+            <path d="M84,62 L86,66 L90,68 L86,70 L84,74 L82,70 L78,68 L82,66 Z" fill="#f59e0b" class="animate-pulse" />
+          </g>
+        </svg>
+      </div>
+      <span class="mt-1.5 text-[13px] font-semibold text-[#1d1d1f] dark:text-white">Anthony</span>
+      <span class="text-[11px] text-rose-500 font-medium">-₹6,000 (Owes)</span>
+    </div>
+  </div>
+) : (
+  <div class={`relative inline-flex flex-col items-center ${className}`}>
+    <div class={`character-avatar character-${character} relative ${sizeMap[size]} rounded-full p-1 border shadow-md ${
+      character === 'amar' ? 'bg-gradient-to-b from-[#e1f0ff] to-[#c7e3ff] dark:from-[#003366] dark:to-[#001f3f] border-[#0066cc]/40' :
+      character === 'akbar' ? 'bg-gradient-to-b from-[#e8f7ee] to-[#c7eed6] dark:from-[#004d26] dark:to-[#002613] border-emerald-500/40' :
+      'bg-gradient-to-b from-[#f3e8ff] to-[#ddd6fe] dark:from-[#3b0764] dark:to-[#1e0338] border-purple-500/40'
+    }`}>
+      {character === 'amar' && (
+        <svg viewBox="0 0 100 100" class="w-full h-full overflow-visible">
+          <path d="M25,85 Q20,100 20,100 L80,100 Q80,100 75,85 Q65,65 50,65 Q35,65 25,85 Z" fill="#0066cc" />
+          <path d="M45,65 L50,80 L55,65 Z" fill="#ffffff" opacity="0.9" />
+          <rect x="44" y="55" width="12" height="12" rx="3" fill="#fcd0a1" />
+          <ellipse cx="50" cy="42" rx="20" ry="22" fill="#fcd0a1" />
+          <path d="M28,38 Q32,18 50,18 Q68,18 72,38 Q65,24 50,25 Q35,26 28,38 Z" fill="#1d1d1f" />
+          <rect x="35" y="36" width="12" height="10" rx="3" fill="none" stroke="#1d1d1f" stroke-width="2" />
+          <rect x="53" y="36" width="12" height="10" rx="3" fill="none" stroke="#1d1d1f" stroke-width="2" />
+          <line x1="47" y1="41" x2="53" y2="41" stroke="#1d1d1f" stroke-width="2" />
+          <circle cx="41" cy="41" r="2" fill="#1d1d1f" class="animate-blink" />
+          <circle cx="59" cy="41" r="2" fill="#1d1d1f" class="animate-blink" />
+          <path d="M44,52 Q50,57 56,52" fill="none" stroke="#1d1d1f" stroke-width="2" stroke-linecap="round" />
+        </svg>
+      )}
+
+      {character === 'akbar' && (
+        <svg viewBox="0 0 100 100" class="w-full h-full overflow-visible">
+          <path d="M25,85 Q20,100 20,100 L80,100 Q80,100 75,85 Q65,65 50,65 Q35,65 25,85 Z" fill="#10b981" />
+          <path d="M38,65 Q50,78 62,65" fill="#059669" />
+          <rect x="44" y="55" width="12" height="12" rx="3" fill="#e8b284" />
+          <ellipse cx="50" cy="42" rx="20" ry="22" fill="#e8b284" />
+          <path d="M26,38 Q30,16 50,16 Q70,16 74,38 Q70,22 60,20 Q50,22 40,20 Q32,22 26,38 Z" fill="#2d1d15" />
+          <circle cx="42" cy="40" r="2.2" fill="#1d1d1f" class="animate-blink delay-200" />
+          <circle cx="58" cy="40" r="2.2" fill="#1d1d1f" class="animate-blink delay-200" />
+          <path d="M44,52 Q50,58 56,52" fill="none" stroke="#1d1d1f" stroke-width="2" stroke-linecap="round" />
+        </svg>
+      )}
+
+      {character === 'anthony' && (
+        <svg viewBox="0 0 100 100" class="w-full h-full overflow-visible">
+          <path d="M25,85 Q20,100 20,100 L80,100 Q80,100 75,85 Q65,65 50,65 Q35,65 25,85 Z" fill="#8b5cf6" />
+          <path d="M42,65 Q50,72 58,65" fill="#fcd0a1" />
+          <rect x="44" y="55" width="12" height="12" rx="3" fill="#fcd0a1" />
+          <ellipse cx="50" cy="42" rx="20" ry="22" fill="#fcd0a1" />
+          <path d="M26,38 Q30,16 52,16 Q72,16 75,34 Q70,20 54,20 Q36,20 26,38 Z" fill="#4a2810" />
+          <circle cx="42" cy="41" r="2" fill="#1d1d1f" class="animate-blink delay-300" />
+          <circle cx="58" cy="41" r="2" fill="#1d1d1f" class="animate-blink delay-300" />
+          <path d="M42,50 Q50,59 58,50" fill="none" stroke="#1d1d1f" stroke-width="2" stroke-linecap="round" />
+        </svg>
+      )}
+    </div>
+  </div>
+)}
+
+<style>
+  @keyframes blink {
+    0%, 90%, 100% { transform: scaleY(1); }
+    95% { transform: scaleY(0.1); }
+  }
+  .animate-blink {
+    animation: blink 4s infinite ease-in-out;
+    transform-origin: center;
+  }
+
+  @keyframes float-slow {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+  .animate-float-slow {
+    animation: float-slow 4s infinite ease-in-out;
+  }
+
+  @keyframes bounce-gentle {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+  .animate-bounce-gentle {
+    animation: bounce-gentle 2.5s infinite ease-in-out;
+  }
+
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-3deg); }
+    75% { transform: rotate(3deg); }
+  }
+  .animate-wiggle {
+    animation: wiggle 3s infinite ease-in-out;
+  }
+
+  @keyframes tilt {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(4deg); }
+  }
+  .animate-tilt {
+    animation: tilt 3s infinite ease-in-out;
+  }
+
+  @keyframes wave {
+    0%, 100% { transform: rotate(0deg); }
+    30% { transform: rotate(8deg); }
+    60% { transform: rotate(-4deg); }
+  }
+  .animate-wave {
+    animation: wave 2.5s infinite ease-in-out;
+  }
+
+  @keyframes steam {
+    0% { opacity: 0; transform: translateY(0); }
+    50% { opacity: 0.6; }
+    100% { opacity: 0; transform: translateY(-6px); }
+  }
+  .animate-steam {
+    animation: steam 2s infinite ease-out;
+  }
+</style>

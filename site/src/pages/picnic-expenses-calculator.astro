@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import FaqAccordion from '../components/FaqAccordion.astro';
+import AnimatedFlatmates from '../components/AnimatedFlatmates.astro';
 
 const title = "Picnic Expenses Calculator — Roommate";
 const description = "Free online picnic expenses calculator. Split food, drinks, travel, and venue tickets among friends or office colleagues. Download Excel format instantly.";
@@ -89,6 +90,25 @@ const breadcrumbs = [
             >
               Update Members
             </button>
+          </div>
+
+          <!-- Animated Attendees Strip -->
+          <div class="flex flex-wrap items-center gap-3 pt-1">
+            <span class="text-[12px] text-[#86868b]">Picnic Crew:</span>
+            <div class="flex items-center gap-2">
+              <div class="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#f5f5f7] dark:bg-[#161617] border border-black/5 dark:border-white/10 text-[12px] font-medium">
+                <AnimatedFlatmates character="amar" size="sm" showSpeech={false} />
+                <span>Amar</span>
+              </div>
+              <div class="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#f5f5f7] dark:bg-[#161617] border border-black/5 dark:border-white/10 text-[12px] font-medium">
+                <AnimatedFlatmates character="akbar" size="sm" showSpeech={false} />
+                <span>Akbar</span>
+              </div>
+              <div class="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#f5f5f7] dark:bg-[#161617] border border-black/5 dark:border-white/10 text-[12px] font-medium">
+                <AnimatedFlatmates character="anthony" size="sm" showSpeech={false} />
+                <span>Anthony</span>
+              </div>
+            </div>
           </div>
         </div>
 
