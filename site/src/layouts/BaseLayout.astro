@@ -39,7 +39,7 @@ const {
 } = Astro.props;
 
 const siteUrl = "https://roommatesexpensemanager.com";
-const appUrl = "http://localhost:5173";
+const appUrl = import.meta.env.DEV ? "http://localhost:5173" : (import.meta.env.PUBLIC_APP_URL || "https://roommate-app.pages.dev");
 
 // Base JSON-LD SoftwareApplication Schema
 const softwareSchema = {
@@ -137,7 +137,8 @@ const articleJsonLd = articleSchema ? {
     <meta name="description" content={description} />
     <meta name="keywords" content={keywords} />
     <meta name="author" content="Roommate Team" />
-    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <!-- Search Engine Indexing Control (Blocked for temporary domain) -->
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content={ogType} />
