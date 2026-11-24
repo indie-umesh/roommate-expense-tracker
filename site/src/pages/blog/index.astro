@@ -10,7 +10,7 @@ const articles = [
     slug: "why-google-sheets-fails-for-roommates",
     title: "Why Google Sheets Fails for Roommates (The Entry Friction Problem)",
     description: "Spreadsheets have great math, but terrible mobile UX. Here is why flatmates abandon Google Sheets within 3 weeks and how 3-tap logging changes everything.",
-    date: "2026-11-20",
+    date: "Nov 20, 2026",
     readTime: "5 min read",
     category: "Productivity & UX"
   },
@@ -18,7 +18,7 @@ const articles = [
     slug: "how-to-manage-different-paydays-with-roommates",
     title: "How to Manage Different Paydays Between Roommates Without Fighting",
     description: "What happens when Anthony gets paid on the 1st, Akbar on the 5th, and Amar on the 15th? A practical system to cover bills without resentment.",
-    date: "2026-11-18",
+    date: "Nov 18, 2026",
     readTime: "6 min read",
     category: "Financial Strategy"
   },
@@ -26,7 +26,7 @@ const articles = [
     slug: "splitwise-limits-and-best-free-alternatives-2026",
     title: "Splitwise Limitations in 2026: Why You Need a Dedicated Free Alternative",
     description: "An honest review of Splitwise's 3-expense/day cap, 10-second wait timers, and Pro paywalls—plus the top free alternatives for shared flats.",
-    date: "2026-11-15",
+    date: "Nov 15, 2026",
     readTime: "7 min read",
     category: "App Comparisons"
   },
@@ -34,7 +34,7 @@ const articles = [
     slug: "how-to-split-rent-and-groceries-equitably",
     title: "How to Split Rent, Groceries, and Utilities Fairly (Formulas That Work)",
     description: "Master bedrooms, personal snacks vs shared oil, and air conditioning power surges. Formulas and ground rules for fair room expense sharing.",
-    date: "2026-11-12",
+    date: "Nov 12, 2026",
     readTime: "6 min read",
     category: "Flatmate Etiquette"
   }
@@ -50,43 +50,54 @@ const articles = [
     { name: "Blog", url: "https://roommatesexpensemanager.com/blog" }
   ]}
 >
-  <section class="pt-16 pb-12 max-w-5xl mx-auto px-4 space-y-4">
-    <div class="space-y-2">
-      <span class="text-xs font-bold uppercase tracking-wider text-indigo-400">Knowledge Base</span>
-      <h1 class="text-3xl sm:text-5xl font-black text-white tracking-tight">
-        Guides to Zero-Stress Shared Living
-      </h1>
-      <p class="text-sm text-slate-400 max-w-2xl">
-        Actionable articles, mathematical breakdowns, and real flatmate stories on managing money together without tension.
-      </p>
-    </div>
+  <section class="pt-16 pb-20 bg-white dark:bg-black transition-colors duration-200">
+    <div class="max-w-[1024px] mx-auto px-4 sm:px-6 space-y-10">
+      
+      <!-- Editorial Header -->
+      <div class="max-w-2xl space-y-3">
+        <span class="text-xs font-semibold uppercase tracking-wider text-[#0066cc] dark:text-[#2997ff]">
+          Knowledge Base & Guides
+        </span>
+        <h1 class="apple-hero-display text-[#1d1d1f] dark:text-white">
+          Guides to Zero-Stress Shared Living
+        </h1>
+        <p class="text-[17px] sm:text-[18px] text-[#86868b] dark:text-[#a1a1a6] leading-relaxed">
+          Actionable playbooks, mathematical split formulas, and real flatmate stories on managing money together without tension.
+        </p>
+      </div>
 
-    <!-- Articles Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-8">
-      {articles.map((art) => (
-        <article class="p-6 rounded-3xl bg-slate-900/60 border border-slate-800 hover:border-indigo-500/50 transition flex flex-col justify-between space-y-4 group">
-          <div class="space-y-3">
-            <div class="flex items-center justify-between text-xs text-slate-500">
-              <span class="px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 font-medium">{art.category}</span>
-              <span>{art.readTime}</span>
+      <!-- Articles Grid (Apple Editorial 2-Col Cards) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+        {articles.map((art) => (
+          <article class="p-7 rounded-[24px] bg-[#fbfbfd] dark:bg-[#1d1d1f] border border-black/8 dark:border-white/10 apple-card-interactive flex flex-col justify-between space-y-5 group shadow-sm hover:shadow-md">
+            <div class="space-y-3.5">
+              <div class="flex items-center justify-between text-xs">
+                <span class="px-3 py-1 rounded-full bg-[#f5f5f7] dark:bg-[#262629] text-[#0066cc] dark:text-[#2997ff] font-semibold border border-black/5 dark:border-white/5">
+                  {art.category}
+                </span>
+                <span class="text-[#86868b] font-medium">{art.readTime}</span>
+              </div>
+              
+              <h2 class="text-[19px] sm:text-[21px] font-semibold text-[#1d1d1f] dark:text-white group-hover:text-[#0066cc] dark:group-hover:text-[#2997ff] transition leading-snug">
+                <a href={`/blog/${art.slug}`}>{art.title}</a>
+              </h2>
+              
+              <p class="text-[14px] text-[#86868b] dark:text-[#a1a1a6] leading-relaxed">
+                {art.description}
+              </p>
             </div>
-            <h2 class="text-lg font-bold text-white group-hover:text-indigo-400 transition leading-snug">
-              <a href={`/blog/${art.slug}`}>{art.title}</a>
-            </h2>
-            <p class="text-xs text-slate-400 leading-relaxed">
-              {art.description}
-            </p>
-          </div>
 
-          <div class="pt-4 border-t border-slate-800/80 flex items-center justify-between text-xs">
-            <span class="text-slate-500">{art.date}</span>
-            <a href={`/blog/${art.slug}`} class="text-indigo-400 font-semibold group-hover:translate-x-1 transition flex items-center gap-1">
-              <span>Read Article</span>
-              <span>→</span>
-            </a>
-          </div>
-        </article>
-      ))}
+            <div class="pt-4 border-t border-black/6 dark:border-white/8 flex items-center justify-between text-xs text-[#86868b]">
+              <span>{art.date}</span>
+              <a href={`/blog/${art.slug}`} class="apple-btn-secondary text-[13px] py-1.5 px-3.5">
+                <span>Read Guide</span>
+                <span aria-hidden="true">›</span>
+              </a>
+            </div>
+          </article>
+        ))}
+      </div>
+
     </div>
   </section>
 </BaseLayout>

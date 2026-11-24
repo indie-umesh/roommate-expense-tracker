@@ -119,20 +119,47 @@
 }
 
 .apple-btn-secondary {
-  color: #0066cc;
+  background-color: #f5f5f7;
+  color: #1d1d1f;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  border-radius: 9999px;
+  padding: 10px 22px;
   font-size: 17px;
   font-weight: 400;
+  line-height: 1.2;
   display: inline-flex;
-  items-center: center;
-  gap: 4px;
+  align-items: center;
+  gap: 6px;
   text-decoration: none;
   cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .dark .apple-btn-secondary {
-  color: #2997ff;
+  background-color: #1d1d1f;
+  color: #f5f5f7;
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 .apple-btn-secondary:hover {
-  text-decoration: underline;
+  background-color: #ebebee;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
+  text-decoration: none;
+}
+.dark .apple-btn-secondary:hover {
+  background-color: #28282b;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+}
+.apple-btn-secondary:active {
+  transform: scale(0.96);
+}
+.apple-btn-secondary > span:last-child {
+  color: #0066cc;
+  font-weight: 600;
+}
+.dark .apple-btn-secondary > span:last-child {
+  color: #2997ff;
 }
 
 /* Apple Product Shadow & Hover Physics */

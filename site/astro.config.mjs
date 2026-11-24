@@ -6,6 +6,10 @@ import sitemap from '@astrojs/sitemap';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://roommatesexpensemanager.com',
+  server: {
+    host: true,
+    port: 4321
+  },
   integrations: [sitemap()],
   vite: {
     plugins: [tailwindcss()]

@@ -271,9 +271,9 @@ const articleJsonLd = articleSchema ? {
     <!-- Apple Museum Gallery Footer (Parchment #f5f5f7 / #161617) -->
     <footer class="bg-[#f5f5f7] dark:bg-[#161617] border-t border-black/5 dark:border-white/10 text-[#86868b] text-[12px] py-14 transition-colors duration-200">
       <div class="max-w-[1024px] mx-auto px-4 sm:px-6">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 pb-10 border-b border-black/5 dark:border-white/10">
+        <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-x-4 sm:gap-x-6 gap-y-8 pb-10 border-b border-black/5 dark:border-white/10">
           <!-- Col 1: About & Positioning -->
-          <div class="lg:col-span-2 space-y-3">
+          <div class="col-span-2 lg:col-span-2 space-y-3">
             <a href="/" class="flex items-center group focus:outline-none" title="Return to Homepage">
               <BrandLogo size={22} textClassName="text-[#1d1d1f] dark:text-white font-semibold text-[13px] group-hover:text-[#0066cc] dark:group-hover:text-[#2997ff] transition" />
             </a>
@@ -286,11 +286,11 @@ const articleJsonLd = articleSchema ? {
           </div>
 
           <!-- Col 2: Core Keywords & Tool Pages -->
-          <div class="space-y-2">
+          <div class="col-span-1 space-y-2">
             <h4 class="text-[12px] font-semibold text-[#1d1d1f] dark:text-white">Expense Tools</h4>
-            <ul class="space-y-1.5 text-[12px]">
-              <li><a href="/picnic-expenses-calculator" class="hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors font-medium">Picnic Expenses Calculator</a></li>
-              <li><a href="/split-expenses-calculator-online" class="hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors font-medium">Split Expenses Calculator Online</a></li>
+            <ul class="space-y-1.5 text-[11px] sm:text-[12px]">
+              <li><a href="/picnic-expenses-calculator" class="hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors font-medium">Picnic Calculator</a></li>
+              <li><a href="/split-expenses-calculator-online" class="hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors font-medium">Split Expenses Online</a></li>
               <li><a href="/" class="hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors">Roommate Expense App</a></li>
               <li><a href="/shared-expense-tracker-app-free" class="hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors">Shared Expense Free</a></li>
               <li><a href="/roommate-expense-tracker-excel" class="hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors">Excel Matrix Ledger</a></li>
@@ -299,9 +299,9 @@ const articleJsonLd = articleSchema ? {
           </div>
 
           <!-- Col 3: Competitor Alternatives -->
-          <div class="space-y-2">
+          <div class="col-span-1 space-y-2">
             <h4 class="text-[12px] font-semibold text-[#1d1d1f] dark:text-white">Alternatives</h4>
-            <ul class="space-y-1.5 text-[12px]">
+            <ul class="space-y-1.5 text-[11px] sm:text-[12px]">
               <li><a href="/splitwise-alternative" class="hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors">Splitwise Alternative</a></li>
               <li><a href="/splitwise-alternative#limits" class="hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors">Splitwise Daily Limit</a></li>
               <li><a href="/tricount-alternative" class="hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors">Tricount Alternative</a></li>
@@ -311,14 +311,26 @@ const articleJsonLd = articleSchema ? {
           </div>
 
           <!-- Col 4: Expert Blog Guides -->
-          <div class="space-y-2">
+          <div class="col-span-1 space-y-2">
             <h4 class="text-[12px] font-semibold text-[#1d1d1f] dark:text-white">Guides & Blog</h4>
-            <ul class="space-y-1.5 text-[12px]">
-              <li><a href="/blog/why-google-sheets-fails-for-roommates" class="hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors">Why Google Sheets Fails</a></li>
+            <ul class="space-y-1.5 text-[11px] sm:text-[12px]">
+              <li><a href="/blog/why-google-sheets-fails-for-roommates" class="hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors">Why Sheets Fails</a></li>
               <li><a href="/blog/how-to-manage-different-paydays-with-roommates" class="hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors">Managing Paydays</a></li>
-              <li><a href="/blog/splitwise-limits-and-best-free-alternatives-2026" class="hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors">Free Bill Split Apps</a></li>
+              <li><a href="/blog/splitwise-limits-and-best-free-alternatives-2026" class="hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors">Splitwise Limits 2026</a></li>
               <li><a href="/blog/how-to-split-rent-and-groceries-equitably" class="hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors">Fair Rent Split Rules</a></li>
               <li><a href="/blog" class="hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors font-medium">All Guides <span aria-hidden="true">›</span></a></li>
+            </ul>
+          </div>
+
+          <!-- Col 5: Quick Access (Mobile col-span-1, desktop col-span-1) -->
+          <div class="col-span-1 space-y-2">
+            <h4 class="text-[12px] font-semibold text-[#1d1d1f] dark:text-white">Quick Access</h4>
+            <ul class="space-y-1.5 text-[11px] sm:text-[12px]">
+              <li><a href={appUrl} class="text-[#0066cc] dark:text-[#2997ff] font-medium hover:underline">Launch Web App</a></li>
+              <li><a href="http://localhost:5173/superadmin" class="hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors">Admin Portal</a></li>
+              <li><button type="button" class="text-left hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors cursor-pointer" onclick="document.getElementById('site-suggestion-modal')?.classList.remove('hidden'); document.getElementById('site-suggestion-modal')?.classList.add('flex');">Give Feedback</button></li>
+              <li><span class="text-[#86868b]">Zero Hidden Fees</span></li>
+              <li><span class="text-[#86868b]">No App Store Required</span></li>
             </ul>
           </div>
         </div>
