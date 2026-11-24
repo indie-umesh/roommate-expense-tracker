@@ -12,7 +12,7 @@
     "site:dev": "npm --prefix site run dev",
     "site:build": "npm --prefix site run build",
     "build:all": "npm --prefix app run build && npm --prefix site run build",
-    "build": "npm --prefix site install && npm --prefix site run build && node -e \"fs.cpSync('site/dist', 'dist', {recursive: true})\"",
+    "build": "node scripts/build.js",
     "build:app": "npm --prefix app install && npm --prefix app run build && node -e \"fs.cpSync('app/dist', 'dist', {recursive: true})\"",
     "test": "npm --prefix app run test",
     "db:migrate": "node supabase/migrate.js",
