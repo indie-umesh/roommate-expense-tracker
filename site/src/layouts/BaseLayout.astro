@@ -166,7 +166,7 @@ const articleJsonLd = articleSchema ? {
     {faqJsonLd && <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />}
     {articleJsonLd && <script type="application/ld+json" set:html={JSON.stringify(articleJsonLd)} />}
 
-    <!-- Anti-FOUC Theme Initialization (Default: Light Mode) -->
+    <!-- Anti-FOUC Theme & Ribbon Initialization -->
     <script is:inline>
       (function() {
         try {
@@ -176,16 +176,41 @@ const articleJsonLd = articleSchema ? {
           } else {
             document.documentElement.classList.remove('dark');
           }
+          if (localStorage.getItem('roommate_hide_ribbon') === 'true') {
+            document.documentElement.classList.add('hide-ribbon');
+          }
         } catch (_) {}
       })();
     </script>
+    <style is:inline>
+      html.hide-ribbon #top-announcement-ribbon {
+        display: none !important;
+      }
+    </style>
   </head>
 
   <body class="bg-white dark:bg-black text-[#1d1d1f] dark:text-[#f5f5f7] min-h-screen flex flex-col font-sans transition-colors duration-200">
-    <!-- Top Announcement Bar (Apple Sub-Banner Style) -->
-    <aside aria-label="Announcement" class="bg-[#f5f5f7] dark:bg-[#161617] text-[#1d1d1f] dark:text-[#f5f5f7] border-b border-black/5 dark:border-white/10 text-[12px] sm:text-[13px] py-2 px-4 text-center">
+    <!-- Top Announcement Bar (Apple Sub-Banner Style - Closable) -->
+    <aside
+      id="top-announcement-ribbon"
+      aria-label="Announcement"
+      class="relative bg-[#f5f5f7] dark:bg-[#161617] text-[#1d1d1f] dark:text-[#f5f5f7] border-b border-black/5 dark:border-white/10 text-[12px] sm:text-[13px] py-2 px-8 sm:px-12 text-center transition-colors duration-200"
+    >
       <span>Tired of Splitwise's 3-expense/day cap? Switch to Roommate — 100% Free Forever, No Wait Times.</span>
       <a href="/splitwise-alternative" class="text-[#0066cc] dark:text-[#2997ff] hover:underline font-normal ml-1">See comparison <span aria-hidden="true">›</span></a>
+
+      <button
+        type="button"
+        id="btn-close-announcement"
+        class="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full flex items-center justify-center text-[#86868b] hover:text-[#1d1d1f] dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition cursor-pointer"
+        aria-label="Dismiss announcement"
+        title="Close announcement"
+      >
+        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
     </aside>
 
     <!-- Global Navigation Header (Apple 48px Frosted Glass) -->
@@ -397,6 +422,27 @@ const articleJsonLd = articleSchema ? {
 
     <!-- Global Theme Switch & Suggestion Handlers -->
     <script is:inline>
+      // Closable Top Announcement Ribbon
+      const closeRibbonBtn = document.getElementById('btn-close-announcement');
+      const announcementRibbon = document.getElementById('top-announcement-ribbon');
+      if (closeRibbonBtn && announcementRibbon) {
+        closeRibbonBtn.addEventListener('click', () => {
+          announcementRibbon.style.transition = 'opacity 0.2s ease, max-height 0.25s ease, padding 0.25s ease';
+          announcementRibbon.style.opacity = '0';
+          announcementRibbon.style.overflow = 'hidden';
+          announcementRibbon.style.maxHeight = '0px';
+          announcementRibbon.style.paddingTop = '0px';
+          announcementRibbon.style.paddingBottom = '0px';
+          announcementRibbon.style.borderBottomWidth = '0px';
+          setTimeout(() => {
+            document.documentElement.classList.add('hide-ribbon');
+          }, 250);
+          try {
+            localStorage.setItem('roommate_hide_ribbon', 'true');
+          } catch (_) {}
+        });
+      }
+
       document.getElementById('site-theme-toggle')?.addEventListener('click', () => {
         const isDark = document.documentElement.classList.toggle('dark');
         try {
