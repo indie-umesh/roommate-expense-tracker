@@ -12,6 +12,8 @@ import { AddExpensePage } from "./pages/AddExpensePage";
 import { ExpenseDetailPage } from "./pages/ExpenseDetailPage";
 import { SettleUpPage } from "./pages/SettleUpPage";
 import { MembersPage } from "./pages/MembersPage";
+import { SuperadminPage } from "./pages/SuperadminPage";
+import { SuggestionModal } from "./components/SuggestionModal";
 import type { Group } from "./lib/types";
 
 const queryClient = new QueryClient({
@@ -96,6 +98,8 @@ const PublicOnlyRoute: React.FC<{ children: React.ReactNode }> = ({ children }) 
 };
 
 export function App() {
+  const [isSuggestionOpen, setIsSuggestionOpen] = React.useState(false);
+
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
@@ -104,6 +108,7 @@ export function App() {
             <BrowserRouter>
             <Routes>
               <Route path="/" element={<RootRedirect />} />
+              <Route path="/superadmin" element={<SuperadminPage />} />
               <Route
                 path="/login"
                 element={
@@ -170,6 +175,23 @@ export function App() {
               />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
+
+            {/* Global Floating Suggestion / Feedback Button */}
+            <button
+              type="button"
+              onClick={() => setIsSuggestionOpen(true)}
+              className="fixed bottom-20 sm:bottom-6 right-4 sm:right-6 z-40 bg-white dark:bg-[#1d1d1f] hover:bg-slate-100 dark:hover:bg-slate-800 text-[#1d1d1f] dark:text-white border border-black/10 dark:border-white/10 shadow-lg px-3.5 py-2 rounded-full text-xs font-semibold flex items-center gap-2 cursor-pointer transition active:scale-95"
+              title="Submit Suggestion or Feedback"
+            >
+              <span className="text-sm">💡</span>
+              <span className="hidden sm:inline">Suggestions</span>
+            </button>
+
+            {/* Suggestion Modal with Genuine Contact & Cloudflare Turnstile */}
+            <SuggestionModal
+              isOpen={isSuggestionOpen}
+              onClose={() => setIsSuggestionOpen(false)}
+            />
           </BrowserRouter>
         </AuthProvider>
       </LanguageProvider>
