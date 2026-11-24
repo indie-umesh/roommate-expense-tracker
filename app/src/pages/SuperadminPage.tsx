@@ -175,28 +175,53 @@ export const SuperadminPage: React.FC = () => {
           </div>
 
           <form onSubmit={handlePinSubmit} className="space-y-4">
-            <div>
+            <div className="space-y-3">
+              {/* 6 Visual PIN Boxes */}
+              <div className="flex justify-center gap-2">
+                {[0, 1, 2, 3, 4, 5].map((idx) => {
+                  const isFilled = pinInput.length > idx;
+                  const isCurrent = pinInput.length === idx;
+                  return (
+                    <div
+                      key={idx}
+                      className={`w-10 h-12 rounded-xl border flex items-center justify-center text-lg font-bold transition-all ${
+                        isFilled
+                          ? "border-[#0066cc] bg-[#0066cc]/10 text-[#0066cc]"
+                          : isCurrent
+                          ? "border-[#0066cc] ring-2 ring-[#0066cc]/20 bg-transparent"
+                          : "border-black/15 dark:border-white/15 bg-transparent"
+                      }`}
+                    >
+                      {isFilled ? "●" : ""}
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Clean input without awkward tracking distortion */}
               <input
                 type="password"
+                inputMode="numeric"
                 maxLength={6}
                 value={pinInput}
                 onChange={(e) => {
                   setPinInput(e.target.value.replace(/\D/g, ""));
                   setPinError(false);
                 }}
-                placeholder="Enter 6-digit PIN"
-                className="w-full text-center tracking-[0.5em] text-xl font-mono py-2.5 rounded-xl border border-black/15 dark:border-white/15 bg-transparent text-[#1d1d1f] dark:text-white focus:outline-none focus:border-[#0066cc]"
+                placeholder="Enter 6-digit Master PIN"
+                className="w-full text-center text-xs py-2 rounded-xl border border-black/10 dark:border-white/10 bg-transparent text-[#1d1d1f] dark:text-white placeholder:text-[#86868b] focus:outline-none focus:border-[#0066cc]"
                 autoFocus
               />
+
               {pinError && (
-                <p className="text-xs text-rose-500 font-medium mt-1.5">Invalid Superadmin PIN. Try again.</p>
+                <p className="text-xs text-rose-500 font-medium">Invalid Superadmin PIN. Try again.</p>
               )}
             </div>
 
             <button
               type="submit"
               disabled={pinInput.length < 4}
-              className="w-full py-2.5 rounded-xl bg-[#0066cc] hover:bg-[#0071e3] text-white text-sm font-medium transition active:scale-95 disabled:opacity-50 flex items-center justify-center gap-1.5 cursor-pointer"
+              className="w-full py-2.5 rounded-xl bg-[#0066cc] hover:bg-[#0071e3] text-white text-sm font-medium transition active:scale-95 disabled:opacity-50 flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
             >
               <span>Unlock Superadmin</span>
               <ArrowRight className="w-4 h-4" />
