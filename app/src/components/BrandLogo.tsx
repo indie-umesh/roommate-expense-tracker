@@ -19,8 +19,8 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="100%" height="100%" className="w-full h-full drop-shadow-xs">
           <defs>
             <linearGradient id="reactLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#0077ed" />
-              <stop offset="100%" stopColor="#0055b3" />
+              <stop offset="0%" stopColor="#00c48c" />
+              <stop offset="100%" stopColor="#00805a" />
             </linearGradient>
             <linearGradient id="reactLogoRim" x1="0%" y1="0%" x2="0%" y2="100%">
               <stop offset="0%" stopColor="#ffffff" stopOpacity="0.45" />
@@ -39,7 +39,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
             <path d="M43,36 H66 C78,36 85,44 85,55 C85,66 78,73 65,73 H43" strokeWidth="8" />
             <path d="M61,72 L82,88" strokeWidth="8.5" />
           </g>
-          <circle cx="64" cy="55" r="3.5" fill="#30d158" />
+          <circle cx="64" cy="55" r="3.5" fill="#ff385c" />
         </svg>
       </div>
 

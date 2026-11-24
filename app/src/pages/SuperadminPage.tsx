@@ -172,7 +172,7 @@ export const SuperadminPage: React.FC = () => {
     return (
       <div className="min-h-screen bg-slate-50 dark:bg-black flex items-center justify-center p-4">
         <div className="w-full max-w-sm bg-white dark:bg-[#1d1d1f] border border-black/10 dark:border-white/10 rounded-2xl p-6 sm:p-8 shadow-xl text-center space-y-5">
-          <div className="w-12 h-12 rounded-2xl bg-[#0066cc]/10 text-[#0066cc] flex items-center justify-center mx-auto">
+          <div className="w-12 h-12 rounded-2xl bg-[#00966d]/10 text-[#00966d] flex items-center justify-center mx-auto">
             <Lock className="w-6 h-6" />
           </div>
           <div>
@@ -192,9 +192,9 @@ export const SuperadminPage: React.FC = () => {
                       key={idx}
                       className={`w-10 h-12 rounded-xl border flex items-center justify-center text-lg font-bold transition-all ${
                         isFilled
-                          ? "border-[#0066cc] bg-[#0066cc]/10 text-[#0066cc]"
+                          ? "border-[#00966d] bg-[#00966d]/10 text-[#00966d]"
                           : isCurrent
-                          ? "border-[#0066cc] ring-2 ring-[#0066cc]/20 bg-transparent"
+                          ? "border-[#00966d] ring-2 ring-[#00966d]/20 bg-transparent"
                           : "border-black/15 dark:border-white/15 bg-transparent"
                       }`}
                     >
@@ -215,7 +215,7 @@ export const SuperadminPage: React.FC = () => {
                   setPinError(false);
                 }}
                 placeholder="Enter 6-digit Master PIN"
-                className="w-full text-center text-xs py-2 rounded-xl border border-black/10 dark:border-white/10 bg-transparent text-[#1d1d1f] dark:text-white placeholder:text-[#86868b] focus:outline-none focus:border-[#0066cc]"
+                className="w-full text-center text-xs py-2 rounded-xl border border-black/10 dark:border-white/10 bg-transparent text-[#1d1d1f] dark:text-white placeholder:text-[#86868b] focus:outline-none focus:border-[#00966d]"
                 autoFocus
               />
 
@@ -227,7 +227,7 @@ export const SuperadminPage: React.FC = () => {
             <button
               type="submit"
               disabled={pinInput.length < 4}
-              className="w-full py-2.5 rounded-xl bg-[#0066cc] hover:bg-[#0071e3] text-white text-sm font-medium transition active:scale-95 disabled:opacity-50 flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
+              className="w-full py-2.5 rounded-xl bg-[#00966d] hover:bg-[#00ab7d] text-white text-sm font-medium transition active:scale-95 disabled:opacity-50 flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
             >
               <span>Unlock Superadmin</span>
               <ArrowRight className="w-4 h-4" />
@@ -339,9 +339,9 @@ export const SuperadminPage: React.FC = () => {
           <div className="p-4 rounded-2xl bg-white dark:bg-[#1d1d1f] border border-black/8 dark:border-white/10 space-y-1">
             <div className="flex items-center justify-between text-[#86868b]">
               <span className="text-xs font-semibold">Suggestions</span>
-              <MessageSquare className="w-4 h-4 text-[#0066cc]" />
+              <MessageSquare className="w-4 h-4 text-[#00966d]" />
             </div>
-            <p className="text-2xl font-bold text-[#0066cc] dark:text-[#2997ff]">
+            <p className="text-2xl font-bold text-[#00966d] dark:text-[#00e599]">
               {statsLoading ? "..." : stats?.totalSuggestions}
             </p>
             <span className="text-[10px] text-[#86868b]">Feedback Submissions</span>
@@ -369,7 +369,7 @@ export const SuperadminPage: React.FC = () => {
                 onClick={() => setSelectedTab("suggestions")}
                 className={`px-4 py-2 rounded-xl text-xs font-semibold transition cursor-pointer ${
                   selectedTab === "suggestions"
-                    ? "bg-[#0066cc] text-white"
+                    ? "bg-[#00966d] text-white"
                     : "text-[#86868b] hover:text-[#1d1d1f] dark:hover:text-white"
                 }`}
               >
@@ -380,7 +380,7 @@ export const SuperadminPage: React.FC = () => {
                 onClick={() => setSelectedTab("groups")}
                 className={`px-4 py-2 rounded-xl text-xs font-semibold transition cursor-pointer ${
                   selectedTab === "groups"
-                    ? "bg-[#0066cc] text-white"
+                    ? "bg-[#00966d] text-white"
                     : "text-[#86868b] hover:text-[#1d1d1f] dark:hover:text-white"
                 }`}
               >
@@ -399,7 +399,7 @@ export const SuperadminPage: React.FC = () => {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search contact or keyword..."
-                    className="pl-8 pr-3 py-1.5 rounded-lg border border-black/10 dark:border-white/10 bg-white dark:bg-[#1d1d1f] text-xs text-[#1d1d1f] dark:text-white focus:outline-none focus:border-[#0066cc]"
+                    className="pl-8 pr-3 py-1.5 rounded-lg border border-black/10 dark:border-white/10 bg-white dark:bg-[#1d1d1f] text-xs text-[#1d1d1f] dark:text-white focus:outline-none focus:border-[#00966d]"
                   />
                 </div>
 
@@ -463,7 +463,7 @@ export const SuperadminPage: React.FC = () => {
                               {item.contact_type === "phone" ? (
                                 <Phone className="w-3.5 h-3.5 text-emerald-500" />
                               ) : (
-                                <Mail className="w-3.5 h-3.5 text-[#0066cc]" />
+                                <Mail className="w-3.5 h-3.5 text-[#00966d]" />
                               )}
                               <span>{item.contact_value}</span>
                             </span>
@@ -502,7 +502,7 @@ export const SuperadminPage: React.FC = () => {
                                 e.stopPropagation();
                                 setActiveSuggestion(item);
                               }}
-                              className="text-[#0066cc] dark:text-[#2997ff] font-semibold hover:underline"
+                              className="text-[#00966d] dark:text-[#00e599] font-semibold hover:underline"
                             >
                               View Details
                             </button>
@@ -541,7 +541,7 @@ export const SuperadminPage: React.FC = () => {
                             <span>🏠</span>
                             <span>{g.name}</span>
                           </td>
-                          <td className="p-3.5 font-mono text-[#0066cc] dark:text-[#2997ff] font-semibold">
+                          <td className="p-3.5 font-mono text-[#00966d] dark:text-[#00e599] font-semibold">
                             {g.invite_code}
                           </td>
                           <td className="p-3.5 font-mono text-[#86868b]">
@@ -573,7 +573,7 @@ export const SuperadminPage: React.FC = () => {
             {/* Modal Header */}
             <div className="px-5 py-4 border-b border-black/8 dark:border-white/10 flex items-center justify-between bg-slate-50 dark:bg-black/40">
               <div className="flex items-center gap-2">
-                <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#0066cc]/10 text-[#0066cc]">
+                <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#00966d]/10 text-[#00966d]">
                   {activeSuggestion.category.replace("_", " ")}
                 </span>
                 <span className="text-xs text-[#86868b]">
@@ -605,7 +605,7 @@ export const SuperadminPage: React.FC = () => {
                     </>
                   ) : (
                     <>
-                      <Mail className="w-4 h-4 text-[#0066cc]" />
+                      <Mail className="w-4 h-4 text-[#00966d]" />
                       <a href={`mailto:${activeSuggestion.contact_value}`} className="hover:underline">
                         {activeSuggestion.contact_value}
                       </a>
@@ -631,7 +631,7 @@ export const SuperadminPage: React.FC = () => {
                 <select
                   value={selectedStatus}
                   onChange={(e) => setSelectedStatus(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl border border-black/10 dark:border-white/10 bg-transparent text-xs font-semibold text-[#1d1d1f] dark:text-white focus:outline-none focus:border-[#0066cc]"
+                  className="w-full px-3 py-2 rounded-xl border border-black/10 dark:border-white/10 bg-transparent text-xs font-semibold text-[#1d1d1f] dark:text-white focus:outline-none focus:border-[#00966d]"
                 >
                   <option value="new">New (Unreviewed)</option>
                   <option value="reviewed">Reviewed</option>
@@ -649,7 +649,7 @@ export const SuperadminPage: React.FC = () => {
                   value={editingNotes}
                   onChange={(e) => setEditingNotes(e.target.value)}
                   placeholder="Add private notes on follow-up, phone call, or status..."
-                  className="w-full px-3 py-2 rounded-xl border border-black/10 dark:border-white/10 bg-transparent text-xs text-[#1d1d1f] dark:text-white placeholder:text-[#86868b] focus:outline-none focus:border-[#0066cc] resize-none"
+                  className="w-full px-3 py-2 rounded-xl border border-black/10 dark:border-white/10 bg-transparent text-xs text-[#1d1d1f] dark:text-white placeholder:text-[#86868b] focus:outline-none focus:border-[#00966d] resize-none"
                 />
               </div>
             </div>
@@ -687,7 +687,7 @@ export const SuperadminPage: React.FC = () => {
                     });
                   }}
                   disabled={updateMutation.isPending}
-                  className="px-4 py-1.5 rounded-lg bg-[#0066cc] hover:bg-[#0071e3] text-white text-xs font-medium transition cursor-pointer active:scale-95 disabled:opacity-50"
+                  className="px-4 py-1.5 rounded-lg bg-[#00966d] hover:bg-[#00ab7d] text-white text-xs font-medium transition cursor-pointer active:scale-95 disabled:opacity-50"
                 >
                   {updateMutation.isPending ? "Saving..." : "Save Changes"}
                 </button>

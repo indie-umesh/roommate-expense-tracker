@@ -235,7 +235,7 @@ export const AuthPage: React.FC = () => {
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center mb-3">
         <a
           href={MARKETING_HOMEPAGE_URL}
-          className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-[12px] text-[var(--text-muted)] hover:text-[#0066cc] dark:hover:text-[#2997ff] transition"
+          className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-[12px] text-[var(--text-muted)] hover:text-[#00966d] dark:hover:text-[#00e599] transition"
         >
           <span>←</span>
           <span>Return to Homepage</span>

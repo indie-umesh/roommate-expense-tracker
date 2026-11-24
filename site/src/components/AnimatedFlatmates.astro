@@ -23,7 +23,7 @@ const sizeMap = {
 {character === 'trio' ? (
   <div class={`relative w-full max-w-full overflow-hidden flex flex-col items-center py-2 ${className}`}>
     <!-- Ambient Backdrop Light Glow -->
-    <div class="absolute inset-0 bg-radial from-[#0066cc]/10 via-transparent to-transparent blur-2xl pointer-events-none -z-10"></div>
+    <div class="absolute inset-0 bg-radial from-[#00966d]/10 via-transparent to-transparent blur-2xl pointer-events-none -z-10"></div>
 
     <!-- Mobile-Only Unified Speech Callout (Solves clipping on phones) -->
     <div class="sm:hidden w-full max-w-xs mx-auto mb-3 px-3 py-1.5 rounded-full bg-white dark:bg-[#1d1d1f] border border-black/8 dark:border-white/10 text-center text-[11px] font-semibold text-[#1d1d1f] dark:text-white shadow-xs">
@@ -40,10 +40,10 @@ const sizeMap = {
           </div>
         )}
         
-        <div class="character-avatar character-amar relative w-16 h-16 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full bg-gradient-to-b from-[#e1f0ff] to-[#c7e3ff] dark:from-[#003366] dark:to-[#001f3f] p-1 sm:p-1.5 border-2 border-[#0066cc]/30 shadow-lg">
+        <div class="character-avatar character-amar relative w-16 h-16 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full bg-gradient-to-b from-[#e6fcf5] to-[#c3fae8] dark:from-[#003d2b] dark:to-[#00261b] p-1 sm:p-1.5 border-2 border-[#00966d]/30 shadow-lg">
           <svg viewBox="0 0 100 100" class="w-full h-full overflow-visible">
             <!-- Body / Polo Shirt -->
-            <path d="M25,85 Q20,100 20,100 L80,100 Q80,100 75,85 Q65,65 50,65 Q35,65 25,85 Z" fill="#0066cc" />
+            <path d="M25,85 Q20,100 20,100 L80,100 Q80,100 75,85 Q65,65 50,65 Q35,65 25,85 Z" fill="#00966d" />
             <path d="M45,65 L50,80 L55,65 Z" fill="#ffffff" opacity="0.9" />
             <!-- Neck -->
             <rect x="44" y="55" width="12" height="12" rx="3" fill="#fcd0a1" />
@@ -62,8 +62,8 @@ const sizeMap = {
             <path d="M44,52 Q50,57 56,52" fill="none" stroke="#1d1d1f" stroke-width="2" stroke-linecap="round" />
             <!-- Coffee Mug -->
             <g class="coffee-cup animate-wiggle origin-bottom-right">
-              <rect x="70" y="68" width="14" height="16" rx="3" fill="#ffffff" stroke="#0066cc" stroke-width="1.5" />
-              <path d="M84,72 Q89,72 89,76 Q89,80 84,80" fill="none" stroke="#0066cc" stroke-width="1.5" />
+              <rect x="70" y="68" width="14" height="16" rx="3" fill="#ffffff" stroke="#00966d" stroke-width="1.5" />
+              <path d="M84,72 Q89,72 89,76 Q89,80 84,80" fill="none" stroke="#00966d" stroke-width="1.5" />
               <!-- Steam -->
               <path d="M74,64 Q76,60 74,56" fill="none" stroke="#86868b" stroke-width="1" class="animate-steam" />
               <path d="M80,64 Q82,60 80,56" fill="none" stroke="#86868b" stroke-width="1" class="animate-steam delay-150" />
@@ -161,13 +161,13 @@ const sizeMap = {
 ) : (
   <div class={`relative inline-flex flex-col items-center ${className}`}>
     <div class={`character-avatar character-${character} relative ${sizeMap[size]} rounded-full p-1 border shadow-md ${
-      character === 'amar' ? 'bg-gradient-to-b from-[#e1f0ff] to-[#c7e3ff] dark:from-[#003366] dark:to-[#001f3f] border-[#0066cc]/40' :
+      character === 'amar' ? 'bg-gradient-to-b from-[#e6fcf5] to-[#c3fae8] dark:from-[#003d2b] dark:to-[#00261b] border-[#00966d]/40' :
       character === 'akbar' ? 'bg-gradient-to-b from-[#e8f7ee] to-[#c7eed6] dark:from-[#004d26] dark:to-[#002613] border-emerald-500/40' :
       'bg-gradient-to-b from-[#f3e8ff] to-[#ddd6fe] dark:from-[#3b0764] dark:to-[#1e0338] border-purple-500/40'
     }`}>
       {character === 'amar' && (
         <svg viewBox="0 0 100 100" class="w-full h-full overflow-visible">
-          <path d="M25,85 Q20,100 20,100 L80,100 Q80,100 75,85 Q65,65 50,65 Q35,65 25,85 Z" fill="#0066cc" />
+          <path d="M25,85 Q20,100 20,100 L80,100 Q80,100 75,85 Q65,65 50,65 Q35,65 25,85 Z" fill="#00966d" />
           <path d="M45,65 L50,80 L55,65 Z" fill="#ffffff" opacity="0.9" />
           <rect x="44" y="55" width="12" height="12" rx="3" fill="#fcd0a1" />
           <ellipse cx="50" cy="42" rx="20" ry="22" fill="#fcd0a1" />

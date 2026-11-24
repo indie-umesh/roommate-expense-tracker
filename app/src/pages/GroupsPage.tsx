@@ -100,12 +100,12 @@ export const GroupsPage: React.FC = () => {
           >
             <BrandLogo size={34} showText={false} />
             <div>
-              <h1 className="font-bold text-base text-[var(--text-primary)] tracking-tight leading-tight group-hover:text-[#0066cc] dark:group-hover:text-[#2997ff] transition">
+              <h1 className="font-bold text-base text-[var(--text-primary)] tracking-tight leading-tight group-hover:text-[#00966d] dark:group-hover:text-[#00e599] transition">
                 Roommate
               </h1>
               <p className="text-xs text-[var(--text-muted)] font-normal mt-0.5">
                 {t("signed_in_as")}{" "}
-                <span className="font-medium text-[#0066cc] dark:text-[#2997ff]">
+                <span className="font-medium text-[#00966d] dark:text-[#00e599]">
                   {profile?.display_name ? localizeName(profile.display_name, currentLanguage.code) : "User"}
                 </span>
               </p>

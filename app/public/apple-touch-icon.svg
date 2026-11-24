@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="100%" height="100%">
   <defs>
-    <!-- Premium Apple Action Blue & Sapphire Gradient -->
+    <!-- Electric Turquoise & Mint Teal Gradient -->
     <linearGradient id="rmBrandGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0077ed" />
-      <stop offset="100%" stop-color="#0055b3" />
+      <stop offset="0%" stop-color="#00c48c" />
+      <stop offset="100%" stop-color="#00805a" />
     </linearGradient>
 
     <!-- Subtle Inner Bevel / Rim Light -->
@@ -15,7 +15,7 @@
 
     <!-- Soft Depth Filter -->
     <filter id="rmGlow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#004499" flood-opacity="0.35" />
+      <feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#004d36" flood-opacity="0.35" />
     </filter>
   </defs>
 
@@ -42,5 +42,5 @@
   </g>
 
   <!-- Central Dynamic Settlement Sparkle -->
-  <circle cx="64" cy="55" r="3.5" fill="#30d158" />
+  <circle cx="64" cy="55" r="3.5" fill="#ff385c" />
 </svg>

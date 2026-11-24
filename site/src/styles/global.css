@@ -4,9 +4,11 @@
 
 @layer base {
   :root {
-    --colors-primary: #0066cc;
-    --colors-primary-focus: #0071e3;
-    --colors-primary-on-dark: #2997ff;
+    --colors-primary: #00966d;
+    --colors-primary-focus: #00ab7d;
+    --colors-primary-on-dark: #00e599;
+    --colors-accent-pink: #ff385c;
+    --colors-accent-parrot: #10b981;
     --colors-ink: #1d1d1f;
     --colors-body: #1d1d1f;
     --colors-body-muted: #86868b;
@@ -25,9 +27,11 @@
   }
 
   .dark {
-    --colors-primary: #2997ff;
-    --colors-primary-focus: #0071e3;
-    --colors-primary-on-dark: #2997ff;
+    --colors-primary: #00e599;
+    --colors-primary-focus: #00f5a0;
+    --colors-primary-on-dark: #00e599;
+    --colors-accent-pink: #ff385c;
+    --colors-accent-parrot: #10b981;
     --colors-ink: #f5f5f7;
     --colors-body: #f5f5f7;
     --colors-body-muted: #a1a1a6;
@@ -97,31 +101,34 @@
 
 /* Apple Button Styles */
 .apple-btn-primary {
-  background-color: #0066cc;
+  background-color: #00966d;
   color: #ffffff;
   border-radius: 9999px;
   padding: 10px 22px;
   font-size: 17px;
-  font-weight: 400;
+  font-weight: 500;
   line-height: 1.2;
   display: inline-flex;
-  items-center: center;
+  align-items: center;
   justify-content: center;
   text-decoration: none;
   cursor: pointer;
-  transition: background-color 0.15s ease, transform 0.15s ease;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 8px rgba(0, 150, 109, 0.25);
 }
 .apple-btn-primary:hover {
-  background-color: #0071e3;
+  background-color: #00ab7d;
+  box-shadow: 0 4px 14px rgba(0, 150, 109, 0.35);
+  transform: translateY(-1px);
 }
 .apple-btn-primary:active {
-  transform: scale(0.95);
+  transform: scale(0.96);
 }
 
 .apple-btn-secondary {
   background-color: #f5f5f7;
   color: #1d1d1f;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 150, 109, 0.2);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.8);
   border-radius: 9999px;
   padding: 10px 22px;
@@ -138,28 +145,30 @@
 .dark .apple-btn-secondary {
   background-color: #1d1d1f;
   color: #f5f5f7;
-  border-color: rgba(255, 255, 255, 0.12);
+  border-color: rgba(0, 229, 153, 0.2);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 .apple-btn-secondary:hover {
   background-color: #ebebee;
+  border-color: rgba(0, 150, 109, 0.4);
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
   transform: translateY(-1px);
   text-decoration: none;
 }
 .dark .apple-btn-secondary:hover {
   background-color: #28282b;
+  border-color: rgba(0, 229, 153, 0.4);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
 }
 .apple-btn-secondary:active {
   transform: scale(0.96);
 }
 .apple-btn-secondary > span:last-child {
-  color: #0066cc;
+  color: #00966d;
   font-weight: 600;
 }
 .dark .apple-btn-secondary > span:last-child {
-  color: #2997ff;
+  color: #00e599;
 }
 
 /* Apple Product Shadow & Hover Physics */

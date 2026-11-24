@@ -93,7 +93,7 @@ export const SuggestionModal: React.FC<SuggestionModalProps> = ({ isOpen, onClos
         {/* Modal Header */}
         <div className="px-5 py-4 border-b border-[var(--border-card)] flex items-center justify-between bg-slate-50 dark:bg-slate-900/50">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[#0066cc]/10 text-[#0066cc] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-[#00966d]/10 text-[#00966d] flex items-center justify-center">
               <MessageSquare className="w-4 h-4" />
             </div>
             <div>
@@ -120,13 +120,13 @@ export const SuggestionModal: React.FC<SuggestionModalProps> = ({ isOpen, onClos
               </div>
               <h4 className="text-lg font-bold text-[var(--text-primary)]">Thank you for your suggestion!</h4>
               <p className="text-xs text-[var(--text-muted)] max-w-sm mx-auto leading-relaxed">
-                Your feedback has been recorded in our superadmin dashboard. We review every genuine user suggestion to make Roommate better.
+                Your feedback has been received. We review every genuine user suggestion to make Roommate better.
               </p>
               <div className="pt-2">
                 <button
                   type="button"
                   onClick={onClose}
-                  className="px-5 py-2 rounded-full bg-[#0066cc] text-white text-xs font-medium hover:bg-[#0071e3] transition active:scale-95"
+                  className="px-5 py-2 rounded-full bg-[#00966d] text-white text-xs font-medium hover:bg-[#00ab7d] transition active:scale-95"
                 >
                   Done
                 </button>
@@ -151,7 +151,7 @@ export const SuggestionModal: React.FC<SuggestionModalProps> = ({ isOpen, onClos
                   value={contact}
                   onChange={(e) => setContact(e.target.value)}
                   placeholder="e.g. yourname@gmail.com or 9826012345"
-                  className="w-full px-3.5 py-2 rounded-xl border border-[var(--border-card)] bg-transparent text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[#0066cc] transition"
+                  className="w-full px-3.5 py-2 rounded-xl border border-[var(--border-card)] bg-transparent text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[#00966d] transition"
                   required
                 />
                 <p className="text-[11px] text-[var(--text-muted)]">
@@ -180,7 +180,7 @@ export const SuggestionModal: React.FC<SuggestionModalProps> = ({ isOpen, onClos
                 <select
                   value={category}
                   onChange={(e) => setCategory(e.target.value as any)}
-                  className="w-full px-3.5 py-2 rounded-xl border border-[var(--border-card)] bg-[var(--card-surface)] text-sm text-[var(--text-primary)] focus:outline-none focus:border-[#0066cc]"
+                  className="w-full px-3.5 py-2 rounded-xl border border-[var(--border-card)] bg-[var(--card-surface)] text-sm text-[var(--text-primary)] focus:outline-none focus:border-[#00966d]"
                 >
                   <option value="feature_request">✨ Feature Request</option>
                   <option value="suggestion">💡 Improvement Suggestion</option>
@@ -205,7 +205,7 @@ export const SuggestionModal: React.FC<SuggestionModalProps> = ({ isOpen, onClos
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="Describe your idea or the issue you faced in detail..."
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-[var(--border-card)] bg-transparent text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[#0066cc] transition resize-none"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[var(--border-card)] bg-transparent text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[#00966d] transition resize-none"
                   required
                 />
               </div>
@@ -221,7 +221,7 @@ export const SuggestionModal: React.FC<SuggestionModalProps> = ({ isOpen, onClos
                       setTurnstileVerified(e.target.checked);
                       if (e.target.checked) setTurnstileToken(`cf-${Date.now()}`);
                     }}
-                    className="w-4 h-4 rounded text-[#0066cc] focus:ring-[#0066cc] cursor-pointer"
+                    className="w-4 h-4 rounded text-[#00966d] focus:ring-[#00966d] cursor-pointer"
                   />
                   <label htmlFor="turnstile-check" className="text-xs text-[var(--text-primary)] cursor-pointer select-none">
                     I am a human (Cloudflare Turnstile)
@@ -245,7 +245,7 @@ export const SuggestionModal: React.FC<SuggestionModalProps> = ({ isOpen, onClos
                 <button
                   type="submit"
                   disabled={isSubmitting || !contactValidation.isValid || message.trim().length < 10 || !turnstileVerified}
-                  className="px-5 py-2 rounded-xl bg-[#0066cc] text-white text-xs font-medium hover:bg-[#0071e3] disabled:opacity-50 disabled:cursor-not-allowed transition flex items-center gap-1.5 active:scale-95 cursor-pointer shadow-xs"
+                  className="px-5 py-2 rounded-xl bg-[#00966d] text-white text-xs font-medium hover:bg-[#00ab7d] disabled:opacity-50 disabled:cursor-not-allowed transition flex items-center gap-1.5 active:scale-95 cursor-pointer shadow-xs"
                 >
                   {isSubmitting ? (
                     <>

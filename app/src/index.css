@@ -41,7 +41,7 @@
 /* Minimalist Modern UI Components (Flat, Clean, Premium) */
 .btn-primary,
 .btn-3d-indigo {
-  background-color: #4f46e5;
+  background-color: #00966d;
   color: #ffffff;
   font-weight: 600;
   border-radius: 0.75rem;
@@ -50,7 +50,7 @@
 }
 .btn-primary:hover,
 .btn-3d-indigo:hover {
-  background-color: #4338ca;
+  background-color: #00ab7d;
 }
 .btn-primary:active,
 .btn-3d-indigo:active {
