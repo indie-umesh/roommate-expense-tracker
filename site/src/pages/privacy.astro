@@ -1,0 +1,65 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { APP_URL } from '../config/site';
+
+const title = "Privacy Policy — Roommate";
+const description = "Learn how Roommate protects your shared expense data. Zero third-party data selling, encrypted storage, and privacy by design.";
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  canonicalUrl="https://roommatesexpensemanager.com/privacy"
+  breadcrumbs={[
+    { name: "Home", url: "https://roommatesexpensemanager.com" },
+    { name: "Privacy Policy", url: "https://roommatesexpensemanager.com/privacy" }
+  ]}
+>
+  <main class="py-16 bg-white dark:bg-black transition-colors duration-200">
+    <div class="max-w-[760px] mx-auto px-4 sm:px-6 space-y-10 text-[#1d1d1f] dark:text-[#f5f5f7]">
+      <div class="space-y-3 border-b border-black/10 dark:border-white/10 pb-8">
+        <p class="text-xs font-semibold tracking-wider uppercase text-[#00966d] dark:text-[#00e599]">Transparency & Trust</p>
+        <h1 class="text-3xl sm:text-4xl font-bold tracking-tight">Privacy Policy</h1>
+        <p class="text-xs text-[#86868b]">Last Updated: November 24, 2026</p>
+      </div>
+
+      <section class="space-y-4">
+        <h2 class="text-xl font-semibold">1. Our Core Privacy Philosophy</h2>
+        <p class="text-sm leading-relaxed text-[#515154] dark:text-[#a1a1a6]">
+          Roommate was created by roommates, for roommates. We believe that your personal and shared financial records are private. We do not sell, rent, or monetize your contact information or expense habits with advertisers, lenders, or data brokers.
+        </p>
+      </section>
+
+      <section class="space-y-4">
+        <h2 class="text-xl font-semibold">2. Information We Collect</h2>
+        <div class="space-y-3 text-sm leading-relaxed text-[#515154] dark:text-[#a1a1a6]">
+          <p><strong class="text-[#1d1d1f] dark:text-white">Account Information:</strong> When you register or sign in, you provide a mobile phone number and choose a 6-digit PIN. We do not require your full legal name, social security details, or banking credentials.</p>
+          <p><strong class="text-[#1d1d1f] dark:text-white">Expense & Ledger Data:</strong> Descriptions, amounts, categories, and split ratios you create within shared groups.</p>
+          <p><strong class="text-[#1d1d1f] dark:text-white">Feedback & Support:</strong> When you choose to submit a suggestion or bug report, we collect your provided contact value and message.</p>
+        </div>
+      </section>
+
+      <section class="space-y-4">
+        <h2 class="text-xl font-semibold">3. How Your Data is Used & Stored</h2>
+        <div class="space-y-3 text-sm leading-relaxed text-[#515154] dark:text-[#a1a1a6]">
+          <p>Your records are stored securely on Supabase PostgreSQL with strict Row Level Security (RLS) policies. Only authenticated members of a specific group can access or view expenses logged within that group.</p>
+          <p>We do not initiate automated bank debits or link with third-party payment rails without your explicit action. UPI settlements are calculated as mathematical suggestions and settled directly through your personal UPI apps.</p>
+        </div>
+      </section>
+
+      <section class="space-y-4">
+        <h2 class="text-xl font-semibold">4. Data Retention & Deletion</h2>
+        <p class="text-sm leading-relaxed text-[#515154] dark:text-[#a1a1a6]">
+          You have full control over your data. You may delete expenses, remove groups, or request complete account erasure by contacting our team via the feedback mechanism or directly reaching out.
+        </p>
+      </section>
+
+      <section class="space-y-4">
+        <h2 class="text-xl font-semibold">5. Contact Us</h2>
+        <p class="text-sm leading-relaxed text-[#515154] dark:text-[#a1a1a6]">
+          If you have questions about our data practices or need help with your account, please submit a note through our floating feedback modal or visit our <a href={APP_URL} class="text-[#00966d] dark:text-[#00e599] underline">Web App</a>.
+        </p>
+      </section>
+    </div>
+  </main>
+</BaseLayout>
