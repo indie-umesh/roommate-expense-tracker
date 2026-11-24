@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import BrandLogo from '../components/BrandLogo.astro';
 
 interface Props {
   title: string;
@@ -126,6 +127,8 @@ const articleJsonLd = articleSchema ? {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.svg" />
+    <meta name="theme-color" content="#0066cc" />
     <link rel="canonical" href={canonicalUrl} />
 
     <!-- Primary Meta Tags -->
@@ -188,12 +191,9 @@ const articleJsonLd = articleSchema ? {
     <!-- Global Navigation Header (Apple 48px Frosted Glass) -->
     <header class="sticky top-0 z-50 backdrop-blur-md bg-white/80 dark:bg-black/80 border-b border-black/5 dark:border-white/10 transition-colors duration-200">
       <div class="max-w-[1024px] mx-auto px-4 sm:px-6 h-12 flex items-center justify-between gap-4">
-        <!-- Logo -->
-        <a href="/" class="flex items-center gap-2 group focus:outline-none" aria-label="Roommate Homepage">
-          <div class="w-6 h-6 rounded-md bg-[#0066cc] text-white flex items-center justify-center font-semibold text-xs shadow-xs">
-            ₹
-          </div>
-          <span class="font-semibold text-[15px] tracking-tight text-[#1d1d1f] dark:text-white">Roommate</span>
+        <!-- Logo (Always links to homepage) -->
+        <a href="/" class="group focus:outline-none flex items-center" aria-label="Roommate Homepage" title="Return to Homepage">
+          <BrandLogo size={26} />
         </a>
 
         <!-- Desktop Navigation Links (Apple SF Pro Text 12px) -->
@@ -249,10 +249,9 @@ const articleJsonLd = articleSchema ? {
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 pb-10 border-b border-black/5 dark:border-white/10">
           <!-- Col 1: About & Positioning -->
           <div class="lg:col-span-2 space-y-3">
-            <div class="flex items-center gap-2">
-              <div class="w-5 h-5 rounded bg-[#0066cc] text-white flex items-center justify-center font-semibold text-[10px]">₹</div>
-              <span class="text-[#1d1d1f] dark:text-white font-semibold text-[13px]">Roommate Expense Tracker</span>
-            </div>
+            <a href="/" class="flex items-center group focus:outline-none" title="Return to Homepage">
+              <BrandLogo size={22} textClassName="text-[#1d1d1f] dark:text-white font-semibold text-[13px] group-hover:text-[#0066cc] dark:group-hover:text-[#2997ff] transition" />
+            </a>
             <p class="text-[12px] leading-relaxed max-w-sm text-[#86868b]">
               The zero-friction shared expense manager built for flatmates, bachelors, and roommates. Log bills in 3 taps, view live spreadsheet matrices, handle staggered paydays, and settle accounts in under 5 minutes without awkward conversations.
             </p>

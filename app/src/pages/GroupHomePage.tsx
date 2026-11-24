@@ -17,6 +17,8 @@ import { AddExpenseModal } from "../components/AddExpenseModal";
 import { RecordSettlementModal } from "../components/RecordSettlementModal";
 import { RemoveMemberModal } from "../components/RemoveMemberModal";
 import { SettingsModal } from "../components/SettingsModal";
+import { BrandLogo } from "../components/BrandLogo";
+import { MARKETING_HOMEPAGE_URL } from "../lib/config";
 import confetti from "canvas-confetti";
 import {
   Receipt,
@@ -374,9 +376,13 @@ export const GroupHomePage: React.FC = () => {
         <div className="max-w-7xl h-full mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-2 sm:gap-4">
           {/* Left: App Logo & Flat Name */}
           <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
-            <div className="w-9 h-9 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold text-sm shrink-0 shadow-xs">
-              ₹
-            </div>
+            <a
+              href={MARKETING_HOMEPAGE_URL}
+              className="shrink-0 transition-transform duration-150 hover:scale-105 focus:outline-none"
+              title="Return to Roommate Homepage"
+            >
+              <BrandLogo size={34} showText={false} />
+            </a>
             <div className="min-w-0">
               <h1 className="font-bold text-sm sm:text-base text-[var(--text-primary)] tracking-tight truncate leading-tight">
                 {group?.name ? localizeName(group.name, currentLanguage.code) : "Indore Flat"}

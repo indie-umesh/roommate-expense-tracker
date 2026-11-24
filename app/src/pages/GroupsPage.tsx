@@ -6,6 +6,8 @@ import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
 import { useLanguage } from "../context/LanguageContext";
 import { SettingsModal } from "../components/SettingsModal";
+import { BrandLogo } from "../components/BrandLogo";
+import { MARKETING_HOMEPAGE_URL } from "../lib/config";
 import { localizeName } from "../lib/transliterate";
 import type { Group } from "../lib/types";
 import { Users, Plus, ArrowRight, LogOut, KeyRound, Sun, Moon, Globe } from "lucide-react";
@@ -91,22 +93,24 @@ export const GroupsPage: React.FC = () => {
       {/* Top Header */}
       <header className="h-16 bg-white/90 dark:bg-[#111827]/90 backdrop-blur-md border-b border-slate-200/80 dark:border-white/10 flex items-center sticky top-0 z-20 transition-all">
         <div className="max-w-5xl mx-auto w-full h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-bold text-sm shadow-xs">
-              ₹
-            </div>
+          <a
+            href={MARKETING_HOMEPAGE_URL}
+            className="flex items-center gap-3 group focus:outline-none"
+            title="Return to Homepage"
+          >
+            <BrandLogo size={34} showText={false} />
             <div>
-              <h1 className="font-bold text-base text-[var(--text-primary)] tracking-tight leading-tight">
+              <h1 className="font-bold text-base text-[var(--text-primary)] tracking-tight leading-tight group-hover:text-[#0066cc] dark:group-hover:text-[#2997ff] transition">
                 Roommate
               </h1>
               <p className="text-xs text-[var(--text-muted)] font-normal mt-0.5">
                 {t("signed_in_as")}{" "}
-                <span className="font-medium text-indigo-600 dark:text-indigo-400">
+                <span className="font-medium text-[#0066cc] dark:text-[#2997ff]">
                   {profile?.display_name ? localizeName(profile.display_name, currentLanguage.code) : "User"}
                 </span>
               </p>
             </div>
-          </div>
+          </a>
 
           <div className="flex items-center gap-2">
             {/* Language Selector Button */}

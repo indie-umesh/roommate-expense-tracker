@@ -17,6 +17,8 @@ import {
   RefreshCw,
 } from "lucide-react";
 import { supabase } from "../lib/supabase";
+import { BrandLogo } from "../components/BrandLogo";
+import { MARKETING_HOMEPAGE_URL } from "../lib/config";
 
 interface SuggestionItem {
   id: string;
@@ -253,9 +255,13 @@ export const SuperadminPage: React.FC = () => {
       {/* Top Navbar */}
       <header className="sticky top-0 z-40 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-black/8 dark:border-white/10 px-4 sm:px-8 h-14 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-[#0066cc] text-white flex items-center justify-center font-bold text-sm">
-            ₹
-          </div>
+          <a
+            href={MARKETING_HOMEPAGE_URL}
+            className="shrink-0 transition-transform duration-150 hover:scale-105 focus:outline-none"
+            title="Return to Roommate Homepage"
+          >
+            <BrandLogo size={32} showText={false} />
+          </a>
           <div>
             <h1 className="text-sm font-bold tracking-tight text-[#1d1d1f] dark:text-white flex items-center gap-2">
               <span>Roommate Superadmin</span>

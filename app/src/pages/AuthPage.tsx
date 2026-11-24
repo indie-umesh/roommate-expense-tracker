@@ -5,6 +5,8 @@ import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
 import { useLanguage } from "../context/LanguageContext";
 import { SettingsModal } from "../components/SettingsModal";
+import { BrandLogo } from "../components/BrandLogo";
+import { MARKETING_HOMEPAGE_URL } from "../lib/config";
 import {
   Lock,
   User,
@@ -229,11 +231,26 @@ export const AuthPage: React.FC = () => {
         </button>
       </div>
 
+      {/* Top Homepage Return Pill */}
+      <div className="sm:mx-auto sm:w-full sm:max-w-md text-center mb-3">
+        <a
+          href={MARKETING_HOMEPAGE_URL}
+          className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-[12px] text-[var(--text-muted)] hover:text-[#0066cc] dark:hover:text-[#2997ff] transition"
+        >
+          <span>←</span>
+          <span>Return to Homepage</span>
+        </a>
+      </div>
+
       {/* Header */}
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
-        <div className="w-12 h-12 bg-indigo-600 rounded-xl mx-auto flex items-center justify-center text-white font-black text-2xl mb-4 shadow-sm">
-          ₹
-        </div>
+        <a
+          href={MARKETING_HOMEPAGE_URL}
+          className="inline-block transition-transform duration-200 hover:scale-105 mb-2 focus:outline-none"
+          title="Return to Roommate Homepage"
+        >
+          <BrandLogo size={52} showText={false} />
+        </a>
         <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[var(--text-primary)]">
           Roommate
         </h1>
