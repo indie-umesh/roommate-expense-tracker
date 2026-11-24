@@ -1,0 +1,489 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import FaqAccordion from '../components/FaqAccordion.astro';
+
+const title = "Split Expenses Calculator Online Free — Bill Splitter with Friends & Trips";
+const description = "Free online split expenses calculator. Split travel, room, food, and trip bills with friends in India or globally. No signup required, zero daily limits, greedy debt simplification.";
+const keywords = "split expenses calculator online, split expenses online free, split expenses calculator excel, trip expense calculator online, splitwise online calculator free, split expenses calculator online india, split expenses with friends calculator, how to split travel expenses with friends";
+
+const splitFaqs = [
+  {
+    question: "Is this split expenses calculator really free with no limits?",
+    answer: "Yes, 100% free forever. Unlike Splitwise which restricts free users to 3 expenses per day and adds 10-second wait times, our online calculator and web app allow unlimited expenses, unlimited groups, and zero ads."
+  },
+  {
+    question: "How do I split trip or vacation expenses with friends online?",
+    answer: "Enter your friends' names, log the travel costs (flights, Airbnb, rental car, fuel, meals, entry tickets), and our algorithm calculates each person's exact share. It then simplifies all debts into the smallest number of direct payments so no one is stuck doing multiple cross-transfers."
+  },
+  {
+    question: "Does this calculator work for friends in India using UPI?",
+    answer: "Yes! The settlement amounts are calculated with rupee and paise precision. In the full Roommate app, you can settle directly with 1 tap via UPI IDs (Google Pay, PhonePe, Paytm)."
+  },
+  {
+    question: "Can I export the calculated expenses to Excel?",
+    answer: "Yes, you can export the full itemized ledger to .csv and .xlsx with a single click. Every expense row, payer column, and member split is clearly organized."
+  },
+  {
+    question: "What is the best way to handle unequal splits on a group trip?",
+    answer: "For expenses where not everyone participated (e.g. 3 people went scuba diving while 2 stayed back), you can exclude non-participants so only the actual consumers share that specific line item."
+  }
+];
+
+const breadcrumbs = [
+  { name: "Home", url: "https://roommatesexpensemanager.com" },
+  { name: "Split Expenses Calculator Online", url: "https://roommatesexpensemanager.com/split-expenses-calculator-online" }
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  keywords={keywords}
+  faqSchema={splitFaqs}
+  breadcrumbs={breadcrumbs}
+>
+  <!-- Hero Section -->
+  <section class="pt-16 pb-16 bg-white dark:bg-black transition-colors duration-200">
+    <div class="max-w-[1024px] mx-auto px-4 sm:px-6 text-center space-y-5">
+      <p class="text-[14px] sm:text-[17px] font-semibold text-[#86868b] tracking-tight">
+        Zero Limits · Free Bill Splitter Online
+      </p>
+
+      <div class="space-y-2">
+        <h1 class="apple-hero-display text-[#1d1d1f] dark:text-white">
+          Split Expenses Calculator Online.
+        </h1>
+        <p class="text-[20px] sm:text-[28px] font-semibold text-[#86868b] dark:text-[#a1a1a6] tracking-tight">
+          Calculate shared bills for friends, trips, and roommates in seconds.
+        </p>
+      </div>
+
+      <p class="text-[16px] sm:text-[17px] text-[#86868b] dark:text-[#a1a1a6] max-w-2xl mx-auto leading-relaxed">
+        The simplest, fastest online bill split tool. No account required to test. Enter expenses, find who owes what, and settle with the minimum number of UPI or cash transfers.
+      </p>
+
+      <div class="flex items-center justify-center gap-6 pt-2">
+        <a href="#calculator" class="apple-btn-primary">
+          Open Calculator
+        </a>
+        <a href="http://localhost:5173" class="apple-btn-secondary">
+          <span>Launch Web App</span>
+          <span aria-hidden="true">›</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Split Expenses Calculator -->
+  <section id="calculator" class="py-16 bg-[#f5f5f7] dark:bg-[#161617] border-t border-black/5 dark:border-white/10 transition-colors duration-200">
+    <div class="max-w-[1024px] mx-auto px-4 sm:px-6 space-y-8">
+      <div class="text-center max-w-xl mx-auto space-y-1">
+        <h2 class="apple-display-lg text-[#1d1d1f] dark:text-white">
+          Online Trip & Group Expense Calculator
+        </h2>
+        <p class="text-[15px] text-[#86868b]">
+          Live greedy debt simplification. Math guaranteed: Sum of balances = ₹0.
+        </p>
+      </div>
+
+      <!-- Calculator Card -->
+      <div class="rounded-[24px] bg-white dark:bg-[#1d1d1f] border border-black/8 dark:border-white/10 p-6 sm:p-8 apple-product-shadow space-y-6">
+        
+        <!-- Members Input -->
+        <div class="space-y-2">
+          <label class="block text-[14px] font-semibold text-[#1d1d1f] dark:text-white">
+            1. Group Members (comma separated):
+          </label>
+          <div class="flex flex-col sm:flex-row gap-3">
+            <input
+              type="text"
+              id="trip-members"
+              value="Amar, Akbar, Anthony"
+              class="flex-1 px-4 py-2.5 rounded-full border border-black/15 dark:border-white/20 bg-transparent text-[15px] text-[#1d1d1f] dark:text-white focus:outline-none focus:border-[#0066cc]"
+              placeholder="e.g. Amar, Akbar, Anthony"
+            />
+            <button
+              type="button"
+              id="btn-update-trip-members"
+              class="px-5 py-2.5 rounded-full bg-[#0066cc] text-white text-[14px] font-normal hover:bg-[#0071e3] transition active:scale-95 cursor-pointer"
+            >
+              Update Members
+            </button>
+          </div>
+        </div>
+
+        <!-- Expenses Table -->
+        <div class="space-y-3">
+          <div class="flex items-center justify-between">
+            <label class="block text-[14px] font-semibold text-[#1d1d1f] dark:text-white">
+              2. Trip & Shared Expenses:
+            </label>
+            <button
+              type="button"
+              id="btn-add-trip-row"
+              class="text-[13px] text-[#0066cc] dark:text-[#2997ff] font-semibold hover:underline cursor-pointer"
+            >
+              + Add Bill
+            </button>
+          </div>
+
+          <div class="overflow-x-auto rounded-xl border border-black/8 dark:border-white/10">
+            <table class="w-full text-left text-[13px]">
+              <thead class="bg-[#f5f5f7] dark:bg-[#161617] text-[#86868b] border-b border-black/5 dark:border-white/10 uppercase text-[11px] font-semibold">
+                <tr>
+                  <th class="p-3">Expense Name</th>
+                  <th class="p-3">Total (₹)</th>
+                  <th class="p-3">Paid By</th>
+                  <th class="p-3 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody id="trip-items-body" class="divide-y divide-black/5 dark:divide-white/10">
+                <tr>
+                  <td class="p-3">
+                    <input type="text" value="Goa Airbnb Villa" class="w-full bg-transparent text-[#1d1d1f] dark:text-white focus:outline-none" />
+                  </td>
+                  <td class="p-3">
+                    <input type="number" value="15000" class="w-28 px-2 py-1 rounded border border-black/10 dark:border-white/10 bg-transparent text-[#1d1d1f] dark:text-white trip-amount" />
+                  </td>
+                  <td class="p-3">
+                    <select class="trip-payer bg-transparent text-[#1d1d1f] dark:text-white border border-black/10 dark:border-white/10 rounded px-2 py-1">
+                      <option value="Amar" selected>Amar</option>
+                      <option value="Akbar">Akbar</option>
+                      <option value="Anthony">Anthony</option>
+                    </select>
+                  </td>
+                  <td class="p-3 text-right">
+                    <button type="button" class="text-rose-500 hover:text-rose-700 text-xs btn-remove-trip-row">Remove</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="p-3">
+                    <input type="text" value="Beach Shack Dinner" class="w-full bg-transparent text-[#1d1d1f] dark:text-white focus:outline-none" />
+                  </td>
+                  <td class="p-3">
+                    <input type="number" value="3000" class="w-28 px-2 py-1 rounded border border-black/10 dark:border-white/10 bg-transparent text-[#1d1d1f] dark:text-white trip-amount" />
+                  </td>
+                  <td class="p-3">
+                    <select class="trip-payer bg-transparent text-[#1d1d1f] dark:text-white border border-black/10 dark:border-white/10 rounded px-2 py-1">
+                      <option value="Amar">Amar</option>
+                      <option value="Akbar" selected>Akbar</option>
+                      <option value="Anthony">Anthony</option>
+                    </select>
+                  </td>
+                  <td class="p-3 text-right">
+                    <button type="button" class="text-rose-500 hover:text-rose-700 text-xs btn-remove-trip-row">Remove</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="p-3">
+                    <input type="text" value="Self-Drive Car Rental" class="w-full bg-transparent text-[#1d1d1f] dark:text-white focus:outline-none" />
+                  </td>
+                  <td class="p-3">
+                    <input type="number" value="6000" class="w-28 px-2 py-1 rounded border border-black/10 dark:border-white/10 bg-transparent text-[#1d1d1f] dark:text-white trip-amount" />
+                  </td>
+                  <td class="p-3">
+                    <select class="trip-payer bg-transparent text-[#1d1d1f] dark:text-white border border-black/10 dark:border-white/10 rounded px-2 py-1">
+                      <option value="Amar">Amar</option>
+                      <option value="Akbar">Akbar</option>
+                      <option value="Anthony" selected>Anthony</option>
+                    </select>
+                  </td>
+                  <td class="p-3 text-right">
+                    <button type="button" class="text-rose-500 hover:text-rose-700 text-xs btn-remove-trip-row">Remove</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Metric Snapshot -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+          <div class="p-4 rounded-[14px] bg-[#f5f5f7] dark:bg-[#161617] text-center">
+            <span class="block text-[12px] text-[#86868b] uppercase tracking-wider font-semibold">Total Trip Cost</span>
+            <span id="trip-total-cost" class="text-[28px] font-semibold text-[#1d1d1f] dark:text-white">₹24,000</span>
+          </div>
+          <div class="p-4 rounded-[14px] bg-[#f5f5f7] dark:bg-[#161617] text-center">
+            <span class="block text-[12px] text-[#86868b] uppercase tracking-wider font-semibold">Cost Per Person</span>
+            <span id="trip-per-person" class="text-[28px] font-semibold text-[#0066cc] dark:text-[#2997ff]">₹8,000</span>
+          </div>
+          <div class="p-4 rounded-[14px] bg-[#f5f5f7] dark:bg-[#161617] text-center">
+            <span class="block text-[12px] text-[#86868b] uppercase tracking-wider font-semibold">Settlements Needed</span>
+            <span id="trip-transfer-count" class="text-[28px] font-semibold text-emerald-600 dark:text-emerald-400">2 Payments</span>
+          </div>
+        </div>
+
+        <!-- Settlement Plan -->
+        <div class="p-5 rounded-[18px] border border-black/8 dark:border-white/10 space-y-3">
+          <div class="flex items-center justify-between">
+            <h4 class="text-[15px] font-semibold text-[#1d1d1f] dark:text-white">
+              ⚡ Minimal Transfer Plan (Greedy Algorithm)
+            </h4>
+            <span class="text-[12px] text-emerald-600 dark:text-emerald-400 font-medium">Reconciled</span>
+          </div>
+          
+          <div id="trip-settlement-list" class="space-y-2 text-[14px]">
+            <div class="p-2.5 rounded-xl bg-[#f5f5f7] dark:bg-[#161617] flex items-center justify-between">
+              <span>👉 <strong>Akbar</strong> pays <strong>Amar</strong></span>
+              <span class="font-semibold text-emerald-600 dark:text-emerald-400">₹5,000</span>
+            </div>
+            <div class="p-2.5 rounded-xl bg-[#f5f5f7] dark:bg-[#161617] flex items-center justify-between">
+              <span>👉 <strong>Anthony</strong> pays <strong>Amar</strong></span>
+              <span class="font-semibold text-emerald-600 dark:text-emerald-400">₹2,000</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
+          <button
+            type="button"
+            id="btn-download-trip-excel"
+            class="w-full sm:w-auto px-5 py-2.5 rounded-full border border-black/15 dark:border-white/20 text-[#1d1d1f] dark:text-white text-[14px] font-normal hover:bg-black/5 dark:hover:bg-white/5 transition flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <span>📥 Export to Excel (.csv / .xlsx)</span>
+          </button>
+
+          <a
+            href="http://localhost:5173"
+            class="w-full sm:w-auto apple-btn-primary"
+          >
+            Start Free in Roommate Web App
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How to Split Travel Expenses With Friends Guide (White Canvas) -->
+  <section class="py-20 bg-white dark:bg-black transition-colors duration-200">
+    <div class="max-w-[1024px] mx-auto px-4 sm:px-6 space-y-12">
+      <div class="text-center max-w-2xl mx-auto space-y-2">
+        <h2 class="apple-display-lg text-[#1d1d1f] dark:text-white">
+          How to Split Travel Expenses With Friends Without Drama
+        </h2>
+        <p class="text-[17px] text-[#86868b]">
+          Four battle-tested rules that prevent post-vacation money arguments.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-[15px] leading-relaxed">
+        <div class="p-6 rounded-[18px] bg-white dark:bg-[#1d1d1f] border border-black/8 dark:border-white/10 space-y-3">
+          <div class="text-[24px]">💳</div>
+          <h3 class="text-[17px] font-semibold text-[#1d1d1f] dark:text-white">1. Designate Anchor Spenders</h3>
+          <p class="text-[#86868b] dark:text-[#a1a1a6]">
+            Instead of all 5 people pulling out cards at every restaurant or museum counter, designate 1 or 2 anchor spenders to pay large bills. Then log the exact bill immediately in Roommate.
+          </p>
+        </div>
+
+        <div class="p-6 rounded-[18px] bg-white dark:bg-[#1d1d1f] border border-black/8 dark:border-white/10 space-y-3">
+          <div class="text-[24px]">⏱️</div>
+          <h3 class="text-[17px] font-semibold text-[#1d1d1f] dark:text-white">2. Log Micro-Expenses in &lt;10s</h3>
+          <p class="text-[#86868b] dark:text-[#a1a1a6]">
+            Chai, toll booths, bottled water, and auto-rickshaws seem minor, but they add up to thousands of rupees on a multi-day trip. Roommate's 3-tap mobile entry lets you log them before getting back in the car.
+          </p>
+        </div>
+
+        <div class="p-6 rounded-[18px] bg-white dark:bg-[#1d1d1f] border border-black/8 dark:border-white/10 space-y-3">
+          <div class="text-[24px]">📊</div>
+          <h3 class="text-[17px] font-semibold text-[#1d1d1f] dark:text-white">3. Verify With Live Excel Matrix</h3>
+          <p class="text-[#86868b] dark:text-[#a1a1a6]">
+            Roommate gives you a transparent spreadsheet view where each person can see exactly what they paid and what they consumed. Full transparency eliminates doubts.
+          </p>
+        </div>
+
+        <div class="p-6 rounded-[18px] bg-white dark:bg-[#1d1d1f] border border-black/8 dark:border-white/10 space-y-3">
+          <div class="text-[24px]">⚡</div>
+          <h3 class="text-[17px] font-semibold text-[#1d1d1f] dark:text-white">4. Settle Within 24 Hours of Returning</h3>
+          <p class="text-[#86868b] dark:text-[#a1a1a6]">
+            The longer debts sit after a trip, the more awkward they become to collect. Open Roommate's Settle Up tab, see the simplified UPI transfers, and settle in 2 minutes.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section (Parchment: #f5f5f7 / #161617) -->
+  <section class="py-20 bg-[#f5f5f7] dark:bg-[#161617] border-t border-black/5 dark:border-white/10 transition-colors duration-200">
+    <div class="max-w-[1024px] mx-auto px-4 sm:px-6">
+      <FaqAccordion items={splitFaqs} />
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="py-20 bg-white dark:bg-black text-center transition-colors duration-200">
+    <div class="max-w-[680px] mx-auto px-4 sm:px-6 space-y-4">
+      <h2 class="apple-display-lg text-[#1d1d1f] dark:text-white">
+        Planning a Trip or Outing With Friends?
+      </h2>
+      <p class="text-[17px] text-[#86868b] leading-relaxed">
+        Start tracking shared expenses for free. No credit card, no app download required. Works seamlessly on iPhone, Android, and desktop.
+      </p>
+      <div class="pt-3">
+        <a href="http://localhost:5173" class="apple-btn-primary">
+          Launch Roommate Free Web App
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script is:inline>
+  // Client-side Interactive Trip & Bill Split Calculator
+  function recalculateTrip() {
+    const membersInput = document.getElementById('trip-members');
+    const members = membersInput ? membersInput.value.split(',').map(s => s.trim()).filter(Boolean) : ['Amar', 'Akbar', 'Anthony'];
+    const numPeople = Math.max(members.length, 1);
+
+    const rows = document.querySelectorAll('#trip-items-body tr');
+    let total = 0;
+    const paidByPerson = {};
+    members.forEach(name => { paidByPerson[name] = 0; });
+
+    rows.forEach(row => {
+      const amtInput = row.querySelector('.trip-amount');
+      const payerSelect = row.querySelector('.trip-payer');
+      const amt = parseFloat(amtInput?.value || 0);
+      const payer = payerSelect?.value || members[0];
+
+      total += amt;
+      paidByPerson[payer] = (paidByPerson[payer] || 0) + amt;
+    });
+
+    const perPerson = Math.round((total / numPeople) * 100) / 100;
+    
+    // Update summary counters
+    const totalEl = document.getElementById('trip-total-cost');
+    const perPersonEl = document.getElementById('trip-per-person');
+    if (totalEl) totalEl.textContent = `₹${total.toLocaleString('en-IN')}`;
+    if (perPersonEl) perPersonEl.textContent = `₹${Math.round(perPerson).toLocaleString('en-IN')}`;
+
+    // Calculate net balances
+    const net = {};
+    members.forEach(name => {
+      net[name] = Math.round(((paidByPerson[name] || 0) - perPerson) * 100) / 100;
+    });
+
+    // Greedy debt minimization
+    const debtors = [];
+    const creditors = [];
+    for (const [name, balance] of Object.entries(net)) {
+      if (balance < -0.01) debtors.push({ name, amount: -balance });
+      else if (balance > 0.01) creditors.push({ name, amount: balance });
+    }
+
+    const settlements = [];
+    let dIdx = 0, cIdx = 0;
+    while (dIdx < debtors.length && cIdx < creditors.length) {
+      const debtor = debtors[dIdx];
+      const creditor = creditors[cIdx];
+      const payment = Math.min(debtor.amount, creditor.amount);
+
+      settlements.push({ from: debtor.name, to: creditor.name, amount: Math.round(payment) });
+      debtor.amount -= payment;
+      creditor.amount -= payment;
+
+      if (debtor.amount <= 0.01) dIdx++;
+      if (creditor.amount <= 0.01) cIdx++;
+    }
+
+    const listEl = document.getElementById('trip-settlement-list');
+    const countEl = document.getElementById('trip-transfer-count');
+    if (countEl) countEl.textContent = `${settlements.length} Payment${settlements.length === 1 ? '' : 's'}`;
+
+    if (listEl) {
+      if (settlements.length === 0) {
+        listEl.innerHTML = '<div class="p-3 text-center text-emerald-600 font-semibold">Everyone is completely even! No payments needed.</div>';
+      } else {
+        listEl.innerHTML = settlements.map(s => `
+          <div class="p-2.5 rounded-xl bg-[#f5f5f7] dark:bg-[#161617] flex items-center justify-between">
+            <span>👉 <strong>${s.from}</strong> pays <strong>${s.to}</strong></span>
+            <span class="font-semibold text-emerald-600 dark:text-emerald-400">₹${s.amount.toLocaleString('en-IN')}</span>
+          </div>
+        `).join('');
+      }
+    }
+  }
+
+  function updateTripMembersDropdown() {
+    const input = document.getElementById('trip-members');
+    const members = input ? input.value.split(',').map(s => s.trim()).filter(Boolean) : ['Amar', 'Akbar', 'Anthony'];
+    
+    document.querySelectorAll('.trip-payer').forEach(sel => {
+      const currentVal = sel.value;
+      sel.innerHTML = members.map(name => `<option value="${name}" ${name === currentVal ? 'selected' : ''}>${name}</option>`).join('');
+    });
+    recalculateTrip();
+  }
+
+  document.getElementById('btn-update-trip-members')?.addEventListener('click', updateTripMembersDropdown);
+  document.getElementById('trip-members')?.addEventListener('change', updateTripMembersDropdown);
+
+  document.getElementById('trip-items-body')?.addEventListener('input', (e) => {
+    if (e.target.classList.contains('trip-amount') || e.target.classList.contains('trip-payer')) {
+      recalculateTrip();
+    }
+  });
+
+  document.getElementById('trip-items-body')?.addEventListener('change', (e) => {
+    if (e.target.classList.contains('trip-payer')) {
+      recalculateTrip();
+    }
+  });
+
+  document.getElementById('trip-items-body')?.addEventListener('click', (e) => {
+    if (e.target.classList.contains('btn-remove-trip-row')) {
+      const tr = e.target.closest('tr');
+      if (tr && document.querySelectorAll('#trip-items-body tr').length > 1) {
+        tr.remove();
+        recalculateTrip();
+      }
+    }
+  });
+
+  document.getElementById('btn-add-trip-row')?.addEventListener('click', () => {
+    const tbody = document.getElementById('trip-items-body');
+    const input = document.getElementById('trip-members');
+    const members = input ? input.value.split(',').map(s => s.trim()).filter(Boolean) : ['Amar', 'Akbar', 'Anthony'];
+
+    if (tbody) {
+      const newTr = document.createElement('tr');
+      newTr.innerHTML = `
+        <td class="p-3">
+          <input type="text" value="New Shared Bill" class="w-full bg-transparent text-[#1d1d1f] dark:text-white focus:outline-none" />
+        </td>
+        <td class="p-3">
+          <input type="number" value="1000" class="w-28 px-2 py-1 rounded border border-black/10 dark:border-white/10 bg-transparent text-[#1d1d1f] dark:text-white trip-amount" />
+        </td>
+        <td class="p-3">
+          <select class="trip-payer bg-transparent text-[#1d1d1f] dark:text-white border border-black/10 dark:border-white/10 rounded px-2 py-1">
+            ${members.map(name => `<option value="${name}">${name}</option>`).join('')}
+          </select>
+        </td>
+        <td class="p-3 text-right">
+          <button type="button" class="text-rose-500 hover:text-rose-700 text-xs btn-remove-trip-row">Remove</button>
+        </td>
+      `;
+      tbody.appendChild(newTr);
+      recalculateTrip();
+    }
+  });
+
+  document.getElementById('btn-download-trip-excel')?.addEventListener('click', () => {
+    const rows = document.querySelectorAll('#trip-items-body tr');
+    let csvContent = "data:text/csv;charset=utf-8,Expense,Amount (INR),Paid By\n";
+    rows.forEach(row => {
+      const item = row.querySelector('input[type="text"]')?.value || "Expense";
+      const amt = row.querySelector('.trip-amount')?.value || 0;
+      const payer = row.querySelector('.trip-payer')?.value || "Member";
+      csvContent += `"${item}",${amt},"${payer}"\n`;
+    });
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "trip-expenses-format.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  });
+</script>

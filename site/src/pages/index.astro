@@ -17,11 +17,11 @@ const homeFaq = [
   },
   {
     question: "Is Roommate really 100% free with no daily limits like Splitwise?",
-    answer: "Yes, completely free forever! Splitwise recently imposed a restrictive 3-expense per day limit on free accounts and added annoying 10-second wait timers. Roommate has zero artificial limits, no ads, no wait timers, and no paid pro tier. You can log unlimited expenses across unlimited groups."
+    answer: "Yes, completely free forever. Splitwise recently imposed a restrictive 3-expense per day limit on free accounts and added 10-second wait timers. Roommate has zero artificial limits, no ads, no wait timers, and no paid pro tier. You can log unlimited expenses across unlimited groups."
   },
   {
     question: "Why is Roommate better than a Google Sheets or Excel spreadsheet?",
-    answer: "Google Sheets fails for shared flats not because of the math, but because of 'entry friction'. Opening a spreadsheet on a mobile phone at a supermarket checkout, zooming into tiny cells, and typing amounts takes 45+ seconds, so roommates put it off and forget. Roommate takes ≤ 3 taps (under 10 seconds). Plus, it gives you a built-in Excel matrix view and 1-click .xlsx export anytime you want spreadsheet transparency."
+    answer: "Google Sheets fails for shared flats not because of the math, but because of entry friction. Opening a spreadsheet on a mobile phone at a supermarket checkout, zooming into tiny cells, and typing amounts takes 45+ seconds, so roommates put it off and forget. Roommate takes ≤ 3 taps (under 10 seconds). Plus, it gives you a built-in Excel matrix view and 1-click .xlsx export anytime you want spreadsheet transparency."
   },
   {
     question: "How do we sign in without waiting for OTP SMS codes?",
@@ -40,254 +40,241 @@ const homeFaq = [
   keywords={keywords}
   faqSchema={homeFaq}
 >
-  <!-- Hero Section -->
-  <section class="relative pt-16 pb-20 overflow-hidden">
-    <!-- Ambient Background Lighting -->
-    <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-gradient-to-tr from-indigo-600/20 via-purple-600/10 to-emerald-500/10 blur-[130px] pointer-events-none"></div>
+  <!-- 1. HERO PRODUCT TILE (Canvas: Pure White / Pure Black) -->
+  <section class="pt-16 pb-20 bg-white dark:bg-black transition-colors duration-200">
+    <div class="max-w-[1024px] mx-auto px-4 sm:px-6 text-center space-y-6">
+      
+      <!-- Eyebrow / Tagline -->
+      <p class="text-[14px] sm:text-[17px] font-semibold text-[#86868b] tracking-tight">
+        Roommate Expense Tracker
+      </p>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-      <div class="text-center max-w-3xl mx-auto space-y-6">
-        <!-- Trust Pill -->
-        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-slate-700/80 text-xs font-semibold text-slate-300 shadow-inner">
-          <span class="flex h-2 w-2 rounded-full bg-emerald-400"></span>
-          <span>The #1 Free Splitwise Alternative for Flatmates</span>
-          <span class="text-slate-600">|</span>
-          <span class="text-indigo-400">≤ 3 Taps to Log</span>
-        </div>
-
-        <!-- Main H1 Target Keyword Heading -->
-        <h1 class="text-4xl sm:text-6xl font-black text-white tracking-tight leading-[1.1]">
-          The Zero-Friction <br class="hidden sm:inline" />
-          <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-teal-300 to-emerald-400">
-            Roommate Expense Tracker
-          </span>
+      <!-- Main Headline in Apple SF Pro Display -->
+      <div class="space-y-2">
+        <h1 class="apple-hero-display text-[#1d1d1f] dark:text-white">
+          The Zero-Friction Shared Bill Tracker.
         </h1>
-
-        <!-- Subheading -->
-        <p class="text-base sm:text-lg text-slate-300 leading-relaxed font-normal max-w-2xl mx-auto">
-          Tired of forgotten bills, broken Google Sheets, and Splitwise’s annoying daily limits? Track rent, groceries, and utilities in under 10 seconds. Settle everything at month-end in under 5 minutes.
+        <p class="text-[20px] sm:text-[28px] font-semibold text-[#86868b] dark:text-[#a1a1a6] tracking-tight">
+          Track in seconds. Settle at month-end in minutes.
         </p>
+      </div>
 
-        <!-- CTAs -->
-        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
-          <a
-            href="http://localhost:5173"
-            class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-base shadow-xl shadow-indigo-600/30 hover:shadow-indigo-600/50 transition active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
-          >
-            <span>Start Tracking Free (Web App)</span>
-            <span aria-hidden="true">→</span>
-          </a>
+      <!-- Lead paragraph -->
+      <p class="text-[16px] sm:text-[17px] text-[#86868b] dark:text-[#a1a1a6] max-w-2xl mx-auto leading-relaxed">
+        Tired of forgotten bills, broken spreadsheets, and Splitwise's 3-expense daily cap? Roommate gives flatmates instant bill logging, live Excel balance matrices, and zero daily limits. 100% free forever.
+      </p>
 
-          <a
-            href="#comparison"
-            class="w-full sm:w-auto px-6 py-4 rounded-2xl bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 font-bold text-sm transition flex items-center justify-center gap-2"
-          >
-            <span>Compare vs Splitwise</span>
-            <span class="text-slate-500">↓</span>
-          </a>
+      <!-- Apple Action Blue CTA Group -->
+      <div class="flex items-center justify-center gap-6 pt-2">
+        <a
+          href="http://localhost:5173"
+          class="apple-btn-primary"
+        >
+          Start Tracking Free
+        </a>
+
+        <a
+          href="#comparison"
+          class="apple-btn-secondary"
+        >
+          <span>Compare vs Splitwise</span>
+          <span aria-hidden="true">›</span>
+        </a>
+      </div>
+
+      <!-- Metric Badges in Apple Grid -->
+      <div class="pt-8 grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-2xl mx-auto border-t border-black/5 dark:border-white/10 text-center">
+        <div>
+          <span class="block text-[28px] sm:text-[34px] font-semibold text-[#1d1d1f] dark:text-white tracking-tight">≤ 3 Taps</span>
+          <span class="text-[12px] text-[#86868b]">Add bill in &lt;10s</span>
         </div>
-
-        <!-- Metric Badges -->
-        <div class="pt-6 grid grid-cols-2 sm:grid-cols-4 gap-4 text-left border-t border-slate-800/80 max-w-2xl mx-auto">
-          <div>
-            <span class="block text-xl font-black text-white">≤ 3 Taps</span>
-            <span class="text-xs text-slate-400 font-medium">Add bill in &lt;10s</span>
-          </div>
-          <div>
-            <span class="block text-xl font-black text-emerald-400">100% Free</span>
-            <span class="text-xs text-slate-400 font-medium">Zero daily limits</span>
-          </div>
-          <div>
-            <span class="block text-xl font-black text-white">0 OTP Wait</span>
-            <span class="text-xs text-slate-400 font-medium">Mobile + 6-digit PIN</span>
-          </div>
-          <div>
-            <span class="block text-xl font-black text-indigo-400">Excel View</span>
-            <span class="text-xs text-slate-400 font-medium">1-Click XLSX export</span>
-          </div>
+        <div>
+          <span class="block text-[28px] sm:text-[34px] font-semibold text-[#0066cc] dark:text-[#2997ff] tracking-tight">100% Free</span>
+          <span class="text-[12px] text-[#86868b]">No daily caps or ads</span>
+        </div>
+        <div>
+          <span class="block text-[28px] sm:text-[34px] font-semibold text-[#1d1d1f] dark:text-white tracking-tight">0 OTP Wait</span>
+          <span class="text-[12px] text-[#86868b]">Mobile + 6-digit PIN</span>
+        </div>
+        <div>
+          <span class="block text-[28px] sm:text-[34px] font-semibold text-[#1d1d1f] dark:text-white tracking-tight">Excel View</span>
+          <span class="text-[12px] text-[#86868b]">1-Click XLSX export</span>
         </div>
       </div>
 
-      <!-- Real Interactive Dashboard UI Simulator (Auto-Animated + Mobile & Desktop View) -->
-      <div class="mt-14 max-w-5xl mx-auto">
+      <!-- Real Product UI Simulator Resting On Surface With System Shadow -->
+      <div class="pt-10">
         <HeroDashboardSimulator />
       </div>
     </div>
   </section>
 
-  <!-- Debt Simplification Algorithm Showcase Section -->
-  <section class="py-12 bg-slate-950/60 border-t border-slate-850">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+  <!-- 2. DEBT SIMPLIFICATION SECTION (Parchment: #f5f5f7 / #161617) -->
+  <section class="py-20 bg-[#f5f5f7] dark:bg-[#161617] border-t border-black/5 dark:border-white/10 transition-colors duration-200">
+    <div class="max-w-[1024px] mx-auto px-4 sm:px-6">
       <InteractiveDebtSimplifier />
     </div>
   </section>
 
-  <!-- Value Pillars Section -->
-  <section class="py-20 bg-slate-900/40 border-y border-slate-800">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-      <div class="text-center max-w-2xl mx-auto space-y-3">
-        <h2 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
+  <!-- 3. VALUE PILLARS (Store Utility Cards Grid on Pure White / Pure Black) -->
+  <section class="py-20 bg-white dark:bg-black transition-colors duration-200">
+    <div class="max-w-[1024px] mx-auto px-4 sm:px-6 space-y-12">
+      <div class="text-center max-w-2xl mx-auto space-y-2">
+        <h2 class="apple-display-lg text-[#1d1d1f] dark:text-white">
           Why Roommate Beats Every Other Shared Expense Tool
         </h2>
-        <p class="text-sm text-slate-400">
-          Built from real shared-flat experience by engineers living with roommates. Here is what makes it different.
+        <p class="text-[17px] text-[#86868b]">
+          Engineered from real shared-flat experience. Here is why it feels effortless.
         </p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <!-- Feature 1 -->
-        <div class="p-6 rounded-3xl bg-slate-950/80 border border-slate-800 hover:border-indigo-500/50 transition space-y-4">
-          <div class="w-12 h-12 rounded-2xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center font-bold text-xl border border-indigo-500/30">
-            ⚡
-          </div>
-          <h3 class="text-lg font-bold text-white">3-Tap Mobile Entry (&lt;10s)</h3>
-          <p class="text-xs text-slate-400 leading-relaxed">
-            Most expense trackers fail because logging a ₹120 milk packet feels like filling a tax return. With Roommate, enter the amount, select who shared it, and tap save. Done in under 10 seconds at the counter.
+        <!-- Card 1 -->
+        <div class="p-6 rounded-[18px] bg-white dark:bg-[#1d1d1f] border border-black/8 dark:border-white/10 space-y-3">
+          <div class="text-[28px]">⚡</div>
+          <h3 class="text-[17px] font-semibold text-[#1d1d1f] dark:text-white">3-Tap Mobile Entry (&lt;10s)</h3>
+          <p class="text-[14px] text-[#86868b] dark:text-[#a1a1a6] leading-relaxed">
+            Most expense trackers fail because logging a ₹120 milk packet feels like filing paperwork. With Roommate, enter the amount, select who shared it, and tap save. Done at the counter in under 10 seconds.
           </p>
         </div>
 
-        <!-- Feature 2 -->
-        <div class="p-6 rounded-3xl bg-slate-950/80 border border-slate-800 hover:border-emerald-500/50 transition space-y-4">
-          <div class="w-12 h-12 rounded-2xl bg-emerald-600/20 text-emerald-400 flex items-center justify-center font-bold text-xl border border-emerald-500/30">
-            📊
-          </div>
-          <h3 class="text-lg font-bold text-white">Built-in Excel Sheet Matrix</h3>
-          <p class="text-xs text-slate-400 leading-relaxed">
-            Want to see exactly how the math works? Toggle the spreadsheet tab to view every expense as a row, each roommate's share as a column, and the exact net balance row. Export directly to .xlsx or PDF client-side.
+        <!-- Card 2 -->
+        <div class="p-6 rounded-[18px] bg-white dark:bg-[#1d1d1f] border border-black/8 dark:border-white/10 space-y-3">
+          <div class="text-[28px]">📊</div>
+          <h3 class="text-[17px] font-semibold text-[#1d1d1f] dark:text-white">Built-in Excel Sheet Matrix</h3>
+          <p class="text-[14px] text-[#86868b] dark:text-[#a1a1a6] leading-relaxed">
+            Want to verify the math? Toggle the spreadsheet tab to view every bill as a row, each roommate's share as a column, and the exact net balance row. Export directly to .xlsx client-side anytime.
           </p>
         </div>
 
-        <!-- Feature 3 -->
-        <div class="p-6 rounded-3xl bg-slate-950/80 border border-slate-800 hover:border-purple-500/50 transition space-y-4">
-          <div class="w-12 h-12 rounded-2xl bg-purple-600/20 text-purple-400 flex items-center justify-center font-bold text-xl border border-purple-500/30">
-            🔒
-          </div>
-          <h3 class="text-lg font-bold text-white">Zero OTP Friction (Mobile + PIN)</h3>
-          <p class="text-xs text-slate-400 leading-relaxed">
-            No waiting 3 minutes for an SMS OTP that never arrives. Your phone number is your identifier, and a secure 6-digit numeric PIN is your instant key. Quick, seamless, and spam-free.
+        <!-- Card 3 -->
+        <div class="p-6 rounded-[18px] bg-white dark:bg-[#1d1d1f] border border-black/8 dark:border-white/10 space-y-3">
+          <div class="text-[28px]">🔒</div>
+          <h3 class="text-[17px] font-semibold text-[#1d1d1f] dark:text-white">Zero OTP Friction (Mobile + PIN)</h3>
+          <p class="text-[14px] text-[#86868b] dark:text-[#a1a1a6] leading-relaxed">
+            No waiting 3 minutes for an SMS OTP that gets delayed. Your phone number is your identifier, and a secure 6-digit numeric PIN is your instant key. Quick, seamless, and spam-free.
           </p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Live Excel Matrix Feature Spotlight -->
-  <section class="py-20">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+  <!-- 4. LIVE EXCEL MATRIX SPOTLIGHT (Parchment: #f5f5f7 / #161617) -->
+  <section class="py-20 bg-[#f5f5f7] dark:bg-[#161617] border-t border-black/5 dark:border-white/10 transition-colors duration-200">
+    <div class="max-w-[1024px] mx-auto px-4 sm:px-6 space-y-10">
       <div class="text-center max-w-2xl mx-auto space-y-2">
-        <span class="text-xs font-bold text-indigo-400 uppercase tracking-widest">Spreadsheet Transparency</span>
-        <h2 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
-          The Power of an Excel Sheet Without the Formula Breakages
+        <p class="text-[14px] font-semibold text-[#0066cc] dark:text-[#2997ff]">Spreadsheet Transparency</p>
+        <h2 class="apple-display-lg text-[#1d1d1f] dark:text-white">
+          The Power of an Excel Sheet Without Broken Formulas
         </h2>
-        <p class="text-xs sm:text-sm text-slate-400">
-          Spreadsheets break when someone deletes a cell formula or changes a column. Roommate gives you pure spreadsheet transparency backed by an unbreakable database.
+        <p class="text-[17px] text-[#86868b]">
+          Spreadsheets break when someone accidentally deletes a cell formula or changes a column. Roommate provides spreadsheet clarity backed by an unbreakable database.
         </p>
       </div>
 
-      <div class="max-w-5xl mx-auto">
+      <div>
         <ExcelMatrixPreview />
       </div>
     </div>
   </section>
 
-  <!-- Competitor Comparison Section (#comparison) -->
-  <section id="comparison" class="py-20 bg-slate-900/50 border-t border-slate-800">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-      <div class="text-center max-w-3xl mx-auto space-y-3">
-        <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest">Unbiased Comparison</span>
-        <h2 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
+  <!-- 5. COMPETITOR COMPARISON (Pure White / Pure Black) -->
+  <section id="comparison" class="py-20 bg-white dark:bg-black transition-colors duration-200">
+    <div class="max-w-[1024px] mx-auto px-4 sm:px-6 space-y-10">
+      <div class="text-center max-w-2xl mx-auto space-y-2">
+        <p class="text-[14px] font-semibold text-[#0066cc] dark:text-[#2997ff]">Unbiased Comparison</p>
+        <h2 class="apple-display-lg text-[#1d1d1f] dark:text-white">
           Roommate vs. Splitwise vs. Google Sheets
         </h2>
-        <p class="text-xs sm:text-sm text-slate-400">
+        <p class="text-[17px] text-[#86868b]">
           See why thousands of flatmates and bachelors are ditching restrictive paid apps and clunky spreadsheets for Roommate.
         </p>
       </div>
 
-      <div class="max-w-5xl mx-auto">
+      <div>
         <ComparisonTable />
       </div>
 
-      <div class="text-center pt-4">
+      <div class="text-center pt-2">
         <a
           href="/splitwise-alternative"
-          class="inline-flex items-center gap-2 text-sm text-indigo-400 hover:text-indigo-300 font-semibold"
+          class="apple-btn-secondary text-[15px]"
         >
-          <span>Read our comprehensive 2026 Splitwise Alternative Analysis →</span>
+          <span>Read our full Splitwise Alternative Analysis</span>
+          <span aria-hidden="true">›</span>
         </a>
       </div>
     </div>
   </section>
 
-  <!-- Real Roommate Story & Payday Cycle Section -->
-  <section class="py-20 border-t border-slate-800">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="p-8 sm:p-12 rounded-3xl bg-gradient-to-br from-indigo-950/40 via-slate-900 to-slate-950 border border-indigo-900/30 relative overflow-hidden space-y-6">
-        <div class="space-y-2">
-          <span class="text-xs font-bold uppercase tracking-wider text-indigo-400">The Origin Story</span>
-          <h2 class="text-2xl sm:text-3xl font-black text-white">
-            Built for Amar, Akbar, and Anthony
-          </h2>
-        </div>
+  <!-- 6. THE ORIGIN STORY: AMAR, AKBAR, AND ANTHONY (Parchment: #f5f5f7 / #161617) -->
+  <section class="py-20 bg-[#f5f5f7] dark:bg-[#161617] border-t border-black/5 dark:border-white/10 transition-colors duration-200">
+    <div class="max-w-[760px] mx-auto px-4 sm:px-6 space-y-6">
+      <div class="space-y-1">
+        <p class="text-[13px] font-semibold uppercase tracking-wider text-[#0066cc] dark:text-[#2997ff]">The Origin Story</p>
+        <h2 class="apple-display-lg text-[#1d1d1f] dark:text-white">
+          Built for Amar, Akbar, and Anthony.
+        </h2>
+      </div>
 
-        <div class="space-y-4 text-xs sm:text-sm text-slate-300 leading-relaxed">
-          <p>
-            In our shared flat, we ran into a classic problem: <strong>our paydays fall on completely different dates</strong>. Anthony gets paid on the <strong>1st</strong>, Akbar on the <strong>5th</strong>, and Amar on the <strong>15th</strong>.
-          </p>
-          <p>
-            Because of that, whoever had cash on hand covered rent, groceries, and bills for the first two weeks, and we reconciled later. We tried tracking this in a Google Sheet for months. <strong>It failed miserably.</strong>
-          </p>
-          <p>
-            Expenses weren't logged when they happened because opening Google Sheets on a phone was painful. By the end of the month, reconstructing ₹20,000 of mixed expenses took 3 hours of awkward discussions and receipts digging.
-          </p>
-          <p class="font-semibold text-white">
-            The root cause was <span class="text-indigo-400">entry friction</span>, not the math. So we engineered Roommate with one ironclad rule: <span class="text-emerald-400">Adding any bill must take under 3 taps and 10 seconds.</span> Now, our month-end settlement takes under 5 minutes.
-          </p>
-        </div>
+      <div class="space-y-4 text-[17px] text-[#1d1d1f] dark:text-[#f5f5f7] leading-relaxed">
+        <p>
+          In our shared flat, we ran into a classic problem: <strong>our paydays fall on completely different dates</strong>. Anthony gets paid on the <strong>1st</strong>, Akbar on the <strong>5th</strong>, and Amar on the <strong>15th</strong>.
+        </p>
+        <p>
+          Because of that, whoever had cash on hand covered rent, groceries, and bills for the first two weeks, and we reconciled later. We tried tracking this in a Google Sheet for months. <strong>It failed miserably.</strong>
+        </p>
+        <p>
+          Expenses weren't logged when they happened because opening Google Sheets on a phone was painful. By month-end, reconstructing ₹20,000 of mixed expenses took 3 hours of awkward discussions and receipts digging.
+        </p>
+        <p class="font-medium text-[#1d1d1f] dark:text-white">
+          The root cause was entry friction, not the math. So we engineered Roommate with one ironclad rule: adding any bill must take under 3 taps and 10 seconds. Now, our month-end settlement takes under 5 minutes.
+        </p>
+      </div>
 
-        <div class="pt-4 flex flex-wrap gap-4">
-          <a
-            href="http://localhost:5173"
-            class="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs sm:text-sm shadow-md transition"
-          >
-            Try Roommate Free With Your Flatmates →
-          </a>
-          <a
-            href="/blog/how-to-manage-different-paydays-with-roommates"
-            class="px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs sm:text-sm transition"
-          >
-            Read the Full Payday Guide
-          </a>
-        </div>
+      <div class="pt-4 flex items-center gap-6">
+        <a
+          href="http://localhost:5173"
+          class="apple-btn-primary"
+        >
+          Try Roommate Free
+        </a>
+        <a
+          href="/blog/how-to-manage-different-paydays-with-roommates"
+          class="apple-btn-secondary"
+        >
+          <span>Read Payday Guide</span>
+          <span aria-hidden="true">›</span>
+        </a>
       </div>
     </div>
   </section>
 
-  <!-- FAQ Section with Schema.org Accordion -->
-  <section class="py-20 bg-slate-900/30 border-t border-slate-800">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <!-- 7. FAQ ACCORDION (Pure White / Pure Black) -->
+  <section class="py-20 bg-white dark:bg-black transition-colors duration-200">
+    <div class="max-w-[1024px] mx-auto px-4 sm:px-6">
       <FaqAccordion items={homeFaq} />
     </div>
   </section>
 
-  <!-- Final CTA Banner -->
-  <section class="py-20 border-t border-slate-800 relative overflow-hidden">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
-      <h2 class="text-3xl sm:text-5xl font-black text-white tracking-tight">
+  <!-- 8. FINAL CTA TILE (Parchment: #f5f5f7 / #161617) -->
+  <section class="py-20 bg-[#f5f5f7] dark:bg-[#161617] border-t border-black/5 dark:border-white/10 text-center transition-colors duration-200">
+    <div class="max-w-[680px] mx-auto px-4 sm:px-6 space-y-4">
+      <h2 class="apple-display-lg text-[#1d1d1f] dark:text-white">
         Ready to Settle Flat Bills in &lt; 5 Minutes?
       </h2>
-      <p class="text-sm sm:text-base text-slate-400 max-w-xl mx-auto">
+      <p class="text-[17px] text-[#86868b] leading-relaxed">
         No credit card, no app store download required, no daily expense caps. Works instantly on any mobile or desktop browser.
       </p>
-      <div class="pt-2">
+      <div class="pt-3">
         <a
           href="http://localhost:5173"
-          class="inline-flex items-center gap-2 px-9 py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 text-slate-950 font-black text-base shadow-xl shadow-emerald-500/20 hover:shadow-emerald-500/40 transition active:scale-95 cursor-pointer"
+          class="apple-btn-primary"
         >
-          <span>Launch Roommate Web App Now</span>
-          <span>⚡</span>
+          Launch Roommate App Free
         </a>
       </div>
-      <p class="text-xs text-slate-500">100% Free Forever • Secure Mobile PIN • Instant Invite Link</p>
+      <p class="text-[12px] text-[#86868b] pt-2">100% Free Forever · Secure Mobile PIN · Instant Group Invite</p>
     </div>
   </section>
 </BaseLayout>

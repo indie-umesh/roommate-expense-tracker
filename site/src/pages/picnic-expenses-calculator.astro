@@ -1,0 +1,631 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import FaqAccordion from '../components/FaqAccordion.astro';
+
+const title = "Picnic Expenses Calculator — Split Office & Friends Picnic Costs Free (Excel Format)";
+const description = "Free online picnic expenses calculator. Easily split food, drinks, transport, venue entry, and games among friends or colleagues. Export picnic expense format in Excel (.xlsx) with 1 click.";
+const keywords = "picnic expenses calculator, picnic expenses, picnic expenses format in excel, picnic expenses app, picnic expenses list, office picnic expenses, split picnic costs with friends, picnic bill splitter online";
+
+const picnicFaqs = [
+  {
+    question: "How does the Picnic Expenses Calculator work?",
+    answer: "Add the names of everyone attending the picnic, enter the bills paid by each person (such as food, venue entry, transport, snacks, or games), and our calculator instantly runs a greedy debt minimization algorithm. It shows exactly who owes whom the minimum number of payments so you can settle up via UPI or cash in seconds."
+  },
+  {
+    question: "Can I split office picnic expenses where the company pays a portion?",
+    answer: "Yes! For office picnics, you can record the company subsidy as an advance credit or split only the out-of-pocket personal expenses (such as evening drinks or extra activities) equally among participating colleagues."
+  },
+  {
+    question: "Can I download a Picnic Expenses format in Excel (.xlsx)?",
+    answer: "Yes. Our tool provides a pre-formatted Excel picnic spreadsheet with itemized columns (Food, Travel, Tickets, Games) and auto-calculating balance formulas. You can also use the 100% free Roommate app to track picnic expenses on your phone at the park without opening Excel."
+  },
+  {
+    question: "How should we handle non-drinkers or people who skip certain picnic activities?",
+    answer: "The fairest approach is item-level tagging. Common food, entry tickets, and transport are split by all picnic attendees, while optional add-ons (such as alcohol, boat rentals, or special adventure sports) are split only among the people who participated."
+  },
+  {
+    question: "Why is an app better than a shared picnic spreadsheet?",
+    answer: "At outdoor picnics, no one wants to open a laptop or zoom into tiny cells on a smartphone screen while eating BBQ or playing frisbee. With the free Roommate app, anyone can log a bill in under 10 seconds right from their mobile browser with zero app download required."
+  }
+];
+
+const breadcrumbs = [
+  { name: "Home", url: "https://roommatesexpensemanager.com" },
+  { name: "Picnic Expenses Calculator", url: "https://roommatesexpensemanager.com/picnic-expenses-calculator" }
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  keywords={keywords}
+  faqSchema={picnicFaqs}
+  breadcrumbs={breadcrumbs}
+>
+  <!-- Hero Section -->
+  <section class="pt-16 pb-16 bg-white dark:bg-black transition-colors duration-200">
+    <div class="max-w-[1024px] mx-auto px-4 sm:px-6 text-center space-y-5">
+      <p class="text-[14px] sm:text-[17px] font-semibold text-[#86868b] tracking-tight">
+        Free Online Expense Splitter
+      </p>
+
+      <div class="space-y-2">
+        <h1 class="apple-hero-display text-[#1d1d1f] dark:text-white">
+          Picnic Expenses Calculator.
+        </h1>
+        <p class="text-[20px] sm:text-[28px] font-semibold text-[#86868b] dark:text-[#a1a1a6] tracking-tight">
+          Split food, travel, and venue costs among friends or colleagues.
+        </p>
+      </div>
+
+      <p class="text-[16px] sm:text-[17px] text-[#86868b] dark:text-[#a1a1a6] max-w-2xl mx-auto leading-relaxed">
+        Whether organizing an annual office picnic or a weekend lake day with friends, track all shared costs, calculate fair shares, and settle balances instantly with zero math confusion.
+      </p>
+
+      <div class="flex items-center justify-center gap-6 pt-2">
+        <a href="#calculator" class="apple-btn-primary">
+          Use Online Calculator
+        </a>
+        <a href="#excel-format" class="apple-btn-secondary">
+          <span>Excel Format</span>
+          <span aria-hidden="true">›</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Picnic Calculator Widget -->
+  <section id="calculator" class="py-16 bg-[#f5f5f7] dark:bg-[#161617] border-t border-black/5 dark:border-white/10 transition-colors duration-200">
+    <div class="max-w-[1024px] mx-auto px-4 sm:px-6 space-y-8">
+      <div class="text-center max-w-xl mx-auto space-y-1">
+        <h2 class="apple-display-lg text-[#1d1d1f] dark:text-white">
+          Interactive Picnic Cost Splitter
+        </h2>
+        <p class="text-[15px] text-[#86868b]">
+          Enter participants, add expenses, and see the exact simplified settlement.
+        </p>
+      </div>
+
+      <!-- Calculator Card -->
+      <div class="rounded-[24px] bg-white dark:bg-[#1d1d1f] border border-black/8 dark:border-white/10 p-6 sm:p-8 apple-product-shadow space-y-6">
+        
+        <!-- Step 1: Participants Input -->
+        <div class="space-y-3">
+          <label class="block text-[14px] font-semibold text-[#1d1d1f] dark:text-white">
+            1. Picnic Attendees (comma separated):
+          </label>
+          <div class="flex flex-col sm:flex-row gap-3">
+            <input
+              type="text"
+              id="picnic-attendees"
+              value="Amar, Akbar, Anthony, Sneha"
+              class="flex-1 px-4 py-2.5 rounded-full border border-black/15 dark:border-white/20 bg-transparent text-[15px] text-[#1d1d1f] dark:text-white focus:outline-none focus:border-[#0066cc]"
+              placeholder="e.g. Amar, Akbar, Anthony, Sneha"
+            />
+            <button
+              type="button"
+              id="btn-update-attendees"
+              class="px-5 py-2.5 rounded-full bg-[#0066cc] text-white text-[14px] font-normal hover:bg-[#0071e3] transition active:scale-95 cursor-pointer"
+            >
+              Update Members
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 2: Preset Picnic Expenses Table -->
+        <div class="space-y-3">
+          <div class="flex items-center justify-between">
+            <label class="block text-[14px] font-semibold text-[#1d1d1f] dark:text-white">
+              2. Picnic Expenses List:
+            </label>
+            <button
+              type="button"
+              id="btn-add-picnic-row"
+              class="text-[13px] text-[#0066cc] dark:text-[#2997ff] font-semibold hover:underline cursor-pointer"
+            >
+              + Add Another Item
+            </button>
+          </div>
+
+          <div class="overflow-x-auto rounded-xl border border-black/8 dark:border-white/10">
+            <table class="w-full text-left text-[13px]">
+              <thead class="bg-[#f5f5f7] dark:bg-[#161617] text-[#86868b] border-b border-black/5 dark:border-white/10 uppercase text-[11px] font-semibold">
+                <tr>
+                  <th class="p-3">Item / Activity</th>
+                  <th class="p-3">Amount (₹)</th>
+                  <th class="p-3">Paid By</th>
+                  <th class="p-3 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody id="picnic-items-body" class="divide-y divide-black/5 dark:divide-white/10">
+                <tr>
+                  <td class="p-3">
+                    <input type="text" value="BBQ & Food Supplies" class="w-full bg-transparent text-[#1d1d1f] dark:text-white focus:outline-none" />
+                  </td>
+                  <td class="p-3">
+                    <input type="number" value="3200" class="w-24 px-2 py-1 rounded border border-black/10 dark:border-white/10 bg-transparent text-[#1d1d1f] dark:text-white item-amount" />
+                  </td>
+                  <td class="p-3">
+                    <select class="item-payer bg-transparent text-[#1d1d1f] dark:text-white border border-black/10 dark:border-white/10 rounded px-2 py-1">
+                      <option value="Amar" selected>Amar</option>
+                      <option value="Akbar">Akbar</option>
+                      <option value="Anthony">Anthony</option>
+                      <option value="Sneha">Sneha</option>
+                    </select>
+                  </td>
+                  <td class="p-3 text-right">
+                    <button type="button" class="text-rose-500 hover:text-rose-700 text-xs btn-remove-row">Remove</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="p-3">
+                    <input type="text" value="Van / Cab Fuel & Toll" class="w-full bg-transparent text-[#1d1d1f] dark:text-white focus:outline-none" />
+                  </td>
+                  <td class="p-3">
+                    <input type="number" value="2400" class="w-24 px-2 py-1 rounded border border-black/10 dark:border-white/10 bg-transparent text-[#1d1d1f] dark:text-white item-amount" />
+                  </td>
+                  <td class="p-3">
+                    <select class="item-payer bg-transparent text-[#1d1d1f] dark:text-white border border-black/10 dark:border-white/10 rounded px-2 py-1">
+                      <option value="Amar">Amar</option>
+                      <option value="Akbar" selected>Akbar</option>
+                      <option value="Anthony">Anthony</option>
+                      <option value="Sneha">Sneha</option>
+                    </select>
+                  </td>
+                  <td class="p-3 text-right">
+                    <button type="button" class="text-rose-500 hover:text-rose-700 text-xs btn-remove-row">Remove</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="p-3">
+                    <input type="text" value="Resort / Park Entry Tickets" class="w-full bg-transparent text-[#1d1d1f] dark:text-white focus:outline-none" />
+                  </td>
+                  <td class="p-3">
+                    <input type="number" value="1600" class="w-24 px-2 py-1 rounded border border-black/10 dark:border-white/10 bg-transparent text-[#1d1d1f] dark:text-white item-amount" />
+                  </td>
+                  <td class="p-3">
+                    <select class="item-payer bg-transparent text-[#1d1d1f] dark:text-white border border-black/10 dark:border-white/10 rounded px-2 py-1">
+                      <option value="Amar">Amar</option>
+                      <option value="Akbar">Akbar</option>
+                      <option value="Anthony" selected>Anthony</option>
+                      <option value="Sneha">Sneha</option>
+                    </select>
+                  </td>
+                  <td class="p-3 text-right">
+                    <button type="button" class="text-rose-500 hover:text-rose-700 text-xs btn-remove-row">Remove</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="p-3">
+                    <input type="text" value="Snacks, Ice & Drinks" class="w-full bg-transparent text-[#1d1d1f] dark:text-white focus:outline-none" />
+                  </td>
+                  <td class="p-3">
+                    <input type="number" value="800" class="w-24 px-2 py-1 rounded border border-black/10 dark:border-white/10 bg-transparent text-[#1d1d1f] dark:text-white item-amount" />
+                  </td>
+                  <td class="p-3">
+                    <select class="item-payer bg-transparent text-[#1d1d1f] dark:text-white border border-black/10 dark:border-white/10 rounded px-2 py-1">
+                      <option value="Amar">Amar</option>
+                      <option value="Akbar">Akbar</option>
+                      <option value="Anthony">Anthony</option>
+                      <option value="Sneha" selected>Sneha</option>
+                    </select>
+                  </td>
+                  <td class="p-3 text-right">
+                    <button type="button" class="text-rose-500 hover:text-rose-700 text-xs btn-remove-row">Remove</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Calculation Summary Box -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+          <div class="p-4 rounded-[14px] bg-[#f5f5f7] dark:bg-[#161617] text-center">
+            <span class="block text-[12px] text-[#86868b] uppercase tracking-wider font-semibold">Total Picnic Cost</span>
+            <span id="picnic-total-cost" class="text-[28px] font-semibold text-[#1d1d1f] dark:text-white">₹8,000</span>
+          </div>
+          <div class="p-4 rounded-[14px] bg-[#f5f5f7] dark:bg-[#161617] text-center">
+            <span class="block text-[12px] text-[#86868b] uppercase tracking-wider font-semibold">Per Person Share</span>
+            <span id="picnic-per-person" class="text-[28px] font-semibold text-[#0066cc] dark:text-[#2997ff]">₹2,000</span>
+          </div>
+          <div class="p-4 rounded-[14px] bg-[#f5f5f7] dark:bg-[#161617] text-center">
+            <span class="block text-[12px] text-[#86868b] uppercase tracking-wider font-semibold">Settlement Transfers</span>
+            <span id="picnic-transfer-count" class="text-[28px] font-semibold text-emerald-600 dark:text-emerald-400">2 Payments</span>
+          </div>
+        </div>
+
+        <!-- Simplified Settlement Plan -->
+        <div class="p-5 rounded-[18px] border border-black/8 dark:border-white/10 space-y-3">
+          <div class="flex items-center justify-between">
+            <h4 class="text-[15px] font-semibold text-[#1d1d1f] dark:text-white">
+              ⚡ Minimal Settlement Transactions
+            </h4>
+            <span class="text-[12px] text-emerald-600 dark:text-emerald-400 font-medium">Auto-Reconciled</span>
+          </div>
+          
+          <div id="picnic-settlement-list" class="space-y-2 text-[14px]">
+            <div class="p-2.5 rounded-xl bg-[#f5f5f7] dark:bg-[#161617] flex items-center justify-between">
+              <span>👉 <strong>Sneha</strong> pays <strong>Amar</strong></span>
+              <span class="font-semibold text-emerald-600 dark:text-emerald-400">₹1,200</span>
+            </div>
+            <div class="p-2.5 rounded-xl bg-[#f5f5f7] dark:bg-[#161617] flex items-center justify-between">
+              <span>👉 <strong>Anthony</strong> pays <strong>Akbar</strong></span>
+              <span class="font-semibold text-emerald-600 dark:text-emerald-400">₹400</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action CTAs -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
+          <button
+            type="button"
+            id="btn-download-excel"
+            class="w-full sm:w-auto px-5 py-2.5 rounded-full border border-black/15 dark:border-white/20 text-[#1d1d1f] dark:text-white text-[14px] font-normal hover:bg-black/5 dark:hover:bg-white/5 transition flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <span>📥 Download Picnic Excel Format (.csv / .xlsx)</span>
+          </button>
+
+          <a
+            href="http://localhost:5173"
+            class="w-full sm:w-auto apple-btn-primary"
+          >
+            Track in Roommate App Free
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Complete Picnic Expenses List & Checklist (White Canvas) -->
+  <section class="py-20 bg-white dark:bg-black transition-colors duration-200">
+    <div class="max-w-[1024px] mx-auto px-4 sm:px-6 space-y-12">
+      <div class="text-center max-w-2xl mx-auto space-y-2">
+        <h2 class="apple-display-lg text-[#1d1d1f] dark:text-white">
+          Ultimate Picnic Expenses Checklist
+        </h2>
+        <p class="text-[17px] text-[#86868b]">
+          Never forget an essential cost when planning an outdoor gathering or office retreat.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Category 1 -->
+        <div class="p-6 rounded-[18px] bg-white dark:bg-[#1d1d1f] border border-black/8 dark:border-white/10 space-y-3">
+          <div class="text-[28px]">🥪</div>
+          <h3 class="text-[17px] font-semibold text-[#1d1d1f] dark:text-white">Food & Refreshments</h3>
+          <ul class="text-[14px] text-[#86868b] dark:text-[#a1a1a6] space-y-1.5 leading-relaxed">
+            <li>• Marinated BBQ / paneer / chicken</li>
+            <li>• Bread, sandwich fillings & spreads</li>
+            <li>• Fresh fruits (watermelon, grapes)</li>
+            <li>• Packaged juices, sodas & water cans</li>
+            <li>• Disposable plates, cups & tissues</li>
+            <li>• Ice bags & insulated cooler boxes</li>
+          </ul>
+        </div>
+
+        <!-- Category 2 -->
+        <div class="p-6 rounded-[18px] bg-white dark:bg-[#1d1d1f] border border-black/8 dark:border-white/10 space-y-3">
+          <div class="text-[28px]">🚐</div>
+          <h3 class="text-[17px] font-semibold text-[#1d1d1f] dark:text-white">Travel & Logistics</h3>
+          <ul class="text-[14px] text-[#86868b] dark:text-[#a1a1a6] space-y-1.5 leading-relaxed">
+            <li>• Shared tempo traveler / rental van</li>
+            <li>• Fuel & highway toll charges</li>
+            <li>• Parking pass & vehicle permits</li>
+            <li>• Resort / lake / national park tickets</li>
+            <li>• Tent / gazebo / lawn seating rental</li>
+          </ul>
+        </div>
+
+        <!-- Category 3 -->
+        <div class="p-6 rounded-[18px] bg-white dark:bg-[#1d1d1f] border border-black/8 dark:border-white/10 space-y-3">
+          <div class="text-[28px]">🎯</div>
+          <h3 class="text-[17px] font-semibold text-[#1d1d1f] dark:text-white">Activities & Safety</h3>
+          <ul class="text-[14px] text-[#86868b] dark:text-[#a1a1a6] space-y-1.5 leading-relaxed">
+            <li>• Frisbee, football, badminton & cricket set</li>
+            <li>• Bluetooth speaker & battery pack</li>
+            <li>• First aid kit & insect repellent</li>
+            <li>• Board games & card decks</li>
+            <li>• Trash bags for zero-waste clean-up</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Office Picnic Expenses vs Friends Picnic Guide (Parchment: #f5f5f7 / #161617) -->
+  <section class="py-20 bg-[#f5f5f7] dark:bg-[#161617] border-t border-black/5 dark:border-white/10 transition-colors duration-200">
+    <div class="max-w-[1024px] mx-auto px-4 sm:px-6 space-y-10">
+      <div class="text-center max-w-2xl mx-auto space-y-2">
+        <p class="text-[14px] font-semibold text-[#0066cc] dark:text-[#2997ff]">Best Practices</p>
+        <h2 class="apple-display-lg text-[#1d1d1f] dark:text-white">
+          Office Picnic Expenses vs Friends Picnic: 3 Golden Rules
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-[15px] leading-relaxed">
+        <div class="p-6 rounded-[18px] bg-white dark:bg-[#1d1d1f] border border-black/8 dark:border-white/10 space-y-3">
+          <h3 class="text-[17px] font-semibold text-[#1d1d1f] dark:text-white">🏢 For Office Picnics</h3>
+          <p class="text-[#86868b] dark:text-[#a1a1a6]">
+            <strong>1. Company Subsidies:</strong> If HR approves a budget of ₹1,000 per employee, record the subsidy as a negative offset before dividing remaining hotel or transport costs.
+          </p>
+          <p class="text-[#86868b] dark:text-[#a1a1a6]">
+            <strong>2. Keep GST Invoices:</strong> Require participants who buy bulk items to collect GST receipts for HR reimbursement submission.
+          </p>
+          <p class="text-[#86868b] dark:text-[#a1a1a6]">
+            <strong>3. Voluntary Add-ons:</strong> Never force non-participating colleagues to pay for alcohol or optional go-karting tickets.
+          </p>
+        </div>
+
+        <div class="p-6 rounded-[18px] bg-white dark:bg-[#1d1d1f] border border-black/8 dark:border-white/10 space-y-3">
+          <h3 class="text-[17px] font-semibold text-[#1d1d1f] dark:text-white">🏕️ For Friends Picnics</h3>
+          <p class="text-[#86868b] dark:text-[#a1a1a6]">
+            <strong>1. Log On the Spot:</strong> Don't wait until Monday morning. At the picnic, log each bill in Roommate in &lt;10 seconds before receipts fade or get tossed away.
+          </p>
+          <p class="text-[#86868b] dark:text-[#a1a1a6]">
+            <strong>2. Car Fuel Splitting:</strong> Calculate fuel per car or pool all transportation costs so vehicle owners don't carry an unfair fuel burden.
+          </p>
+          <p class="text-[#86868b] dark:text-[#a1a1a6]">
+            <strong>3. Settle Same Day:</strong> Use UPI direct settlement right when packing up or on the ride home. Clean slate, zero lingering tension.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Picnic Expenses Format in Excel Section (#excel-format) -->
+  <section id="excel-format" class="py-20 bg-white dark:bg-black transition-colors duration-200">
+    <div class="max-w-[1024px] mx-auto px-4 sm:px-6 space-y-8">
+      <div class="text-center max-w-2xl mx-auto space-y-2">
+        <h2 class="apple-display-lg text-[#1d1d1f] dark:text-white">
+          Picnic Expenses Format in Excel
+        </h2>
+        <p class="text-[17px] text-[#86868b]">
+          A standard matrix ledger for picnic organizers who need a downloadable report.
+        </p>
+      </div>
+
+      <div class="overflow-x-auto rounded-[18px] border border-black/8 dark:border-white/10 text-[13px]">
+        <table class="w-full text-left">
+          <thead class="bg-[#f5f5f7] dark:bg-[#161617] text-[#86868b] uppercase text-[11px] font-semibold border-b border-black/5 dark:border-white/10">
+            <tr>
+              <th class="p-3">S.No</th>
+              <th class="p-3">Category</th>
+              <th class="p-3">Description</th>
+              <th class="p-3">Amount</th>
+              <th class="p-3">Paid By</th>
+              <th class="p-3">Split Method</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-black/5 dark:divide-white/10 text-[#1d1d1f] dark:text-[#f5f5f7]">
+            <tr>
+              <td class="p-3 font-mono">1</td>
+              <td class="p-3">Food</td>
+              <td class="p-3">Barbecue chicken & marination</td>
+              <td class="p-3 font-semibold">₹3,200</td>
+              <td class="p-3 font-medium text-[#0066cc]">Amar</td>
+              <td class="p-3">Equally (All 4)</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-mono">2</td>
+              <td class="p-3">Travel</td>
+              <td class="p-3">Van rental & toll tax</td>
+              <td class="p-3 font-semibold">₹2,400</td>
+              <td class="p-3 font-medium text-amber-600">Akbar</td>
+              <td class="p-3">Equally (All 4)</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-mono">3</td>
+              <td class="p-3">Venue</td>
+              <td class="p-3">Lake resort entry tickets</td>
+              <td class="p-3 font-semibold">₹1,600</td>
+              <td class="p-3 font-medium text-purple-600">Anthony</td>
+              <td class="p-3">Equally (All 4)</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-mono">4</td>
+              <td class="p-3">Refreshments</td>
+              <td class="p-3">Cold drinks, wafers & disposable cups</td>
+              <td class="p-3 font-semibold">₹800</td>
+              <td class="p-3 font-medium text-emerald-600">Sneha</td>
+              <td class="p-3">Equally (All 4)</td>
+            </tr>
+          </tbody>
+          <tfoot class="bg-[#f5f5f7] dark:bg-[#161617] font-semibold text-[13px] border-t border-black/5 dark:border-white/10">
+            <tr>
+              <td colspan="3" class="p-3 text-right uppercase text-[#86868b]">Total Picnic Budget:</td>
+              <td colspan="3" class="p-3 text-emerald-600 dark:text-emerald-400 font-bold">₹8,000 (₹2,000 / head)</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="py-20 bg-[#f5f5f7] dark:bg-[#161617] border-t border-black/5 dark:border-white/10 transition-colors duration-200">
+    <div class="max-w-[1024px] mx-auto px-4 sm:px-6">
+      <FaqAccordion items={picnicFaqs} />
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="py-20 bg-white dark:bg-black text-center transition-colors duration-200">
+    <div class="max-w-[680px] mx-auto px-4 sm:px-6 space-y-4">
+      <h2 class="apple-display-lg text-[#1d1d1f] dark:text-white">
+        Organizing a Picnic This Weekend?
+      </h2>
+      <p class="text-[17px] text-[#86868b] leading-relaxed">
+        Don't stress over who paid for ice, charcoal, or parking. Create a free Roommate group, share the link, and let everyone see their balance live.
+      </p>
+      <div class="pt-3">
+        <a href="http://localhost:5173" class="apple-btn-primary">
+          Create Free Picnic Group Now
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script is:inline>
+  // Client-side Interactive Picnic Cost Calculator
+  function recalculatePicnic() {
+    const attendeesInput = document.getElementById('picnic-attendees');
+    const attendees = attendeesInput ? attendeesInput.value.split(',').map(s => s.trim()).filter(Boolean) : ['Amar', 'Akbar', 'Anthony', 'Sneha'];
+    const numPeople = Math.max(attendees.length, 1);
+
+    const rows = document.querySelectorAll('#picnic-items-body tr');
+    let total = 0;
+    const paidByPerson = {};
+    attendees.forEach(name => { paidByPerson[name] = 0; });
+
+    rows.forEach(row => {
+      const amtInput = row.querySelector('.item-amount');
+      const payerSelect = row.querySelector('.item-payer');
+      const amt = parseFloat(amtInput?.value || 0);
+      const payer = payerSelect?.value || attendees[0];
+
+      total += amt;
+      paidByPerson[payer] = (paidByPerson[payer] || 0) + amt;
+    });
+
+    const perPerson = Math.round((total / numPeople) * 100) / 100;
+    
+    // Update DOM summary
+    const totalEl = document.getElementById('picnic-total-cost');
+    const perPersonEl = document.getElementById('picnic-per-person');
+    if (totalEl) totalEl.textContent = `₹${total.toLocaleString('en-IN')}`;
+    if (perPersonEl) perPersonEl.textContent = `₹${Math.round(perPerson).toLocaleString('en-IN')}`;
+
+    // Calculate net dues
+    const net = {};
+    attendees.forEach(name => {
+      net[name] = Math.round(((paidByPerson[name] || 0) - perPerson) * 100) / 100;
+    });
+
+    // Debt simplification
+    const debtors = [];
+    const creditors = [];
+    for (const [name, balance] of Object.entries(net)) {
+      if (balance < -0.01) debtors.push({ name, amount: -balance });
+      else if (balance > 0.01) creditors.push({ name, amount: balance });
+    }
+
+    const settlements = [];
+    let dIdx = 0, cIdx = 0;
+    while (dIdx < debtors.length && cIdx < creditors.length) {
+      const debtor = debtors[dIdx];
+      const creditor = creditors[cIdx];
+      const payment = Math.min(debtor.amount, creditor.amount);
+
+      settlements.push({ from: debtor.name, to: creditor.name, amount: Math.round(payment) });
+      debtor.amount -= payment;
+      creditor.amount -= payment;
+
+      if (debtor.amount <= 0.01) dIdx++;
+      if (creditor.amount <= 0.01) cIdx++;
+    }
+
+    const listEl = document.getElementById('picnic-settlement-list');
+    const countEl = document.getElementById('picnic-transfer-count');
+    if (countEl) countEl.textContent = `${settlements.length} Payment${settlements.length === 1 ? '' : 's'}`;
+
+    if (listEl) {
+      if (settlements.length === 0) {
+        listEl.innerHTML = '<div class="p-3 text-center text-emerald-600 font-semibold">Everyone is completely even! No payments needed.</div>';
+      } else {
+        listEl.innerHTML = settlements.map(s => `
+          <div class="p-2.5 rounded-xl bg-[#f5f5f7] dark:bg-[#161617] flex items-center justify-between">
+            <span>👉 <strong>${s.from}</strong> pays <strong>${s.to}</strong></span>
+            <span class="font-semibold text-emerald-600 dark:text-emerald-400">₹${s.amount.toLocaleString('en-IN')}</span>
+          </div>
+        `).join('');
+      }
+    }
+  }
+
+  // Update attendees list in dropdowns
+  function updateAttendeesDropdown() {
+    const input = document.getElementById('picnic-attendees');
+    const attendees = input ? input.value.split(',').map(s => s.trim()).filter(Boolean) : ['Amar', 'Akbar', 'Anthony', 'Sneha'];
+    
+    document.querySelectorAll('.item-payer').forEach(sel => {
+      const currentVal = sel.value;
+      sel.innerHTML = attendees.map(name => `<option value="${name}" ${name === currentVal ? 'selected' : ''}>${name}</option>`).join('');
+    });
+    recalculatePicnic();
+  }
+
+  // Attach event listeners
+  document.getElementById('btn-update-attendees')?.addEventListener('click', updateAttendeesDropdown);
+  document.getElementById('picnic-attendees')?.addEventListener('change', updateAttendeesDropdown);
+
+  document.getElementById('picnic-items-body')?.addEventListener('input', (e) => {
+    if (e.target.classList.contains('item-amount') || e.target.classList.contains('item-payer')) {
+      recalculatePicnic();
+    }
+  });
+
+  document.getElementById('picnic-items-body')?.addEventListener('change', (e) => {
+    if (e.target.classList.contains('item-payer')) {
+      recalculatePicnic();
+    }
+  });
+
+  document.getElementById('picnic-items-body')?.addEventListener('click', (e) => {
+    if (e.target.classList.contains('btn-remove-row')) {
+      const tr = e.target.closest('tr');
+      if (tr && document.querySelectorAll('#picnic-items-body tr').length > 1) {
+        tr.remove();
+        recalculatePicnic();
+      }
+    }
+  });
+
+  document.getElementById('btn-add-picnic-row')?.addEventListener('click', () => {
+    const tbody = document.getElementById('picnic-items-body');
+    const input = document.getElementById('picnic-attendees');
+    const attendees = input ? input.value.split(',').map(s => s.trim()).filter(Boolean) : ['Amar', 'Akbar', 'Anthony', 'Sneha'];
+
+    if (tbody) {
+      const newTr = document.createElement('tr');
+      newTr.innerHTML = `
+        <td class="p-3">
+          <input type="text" value="New Picnic Expense" class="w-full bg-transparent text-[#1d1d1f] dark:text-white focus:outline-none" />
+        </td>
+        <td class="p-3">
+          <input type="number" value="500" class="w-24 px-2 py-1 rounded border border-black/10 dark:border-white/10 bg-transparent text-[#1d1d1f] dark:text-white item-amount" />
+        </td>
+        <td class="p-3">
+          <select class="item-payer bg-transparent text-[#1d1d1f] dark:text-white border border-black/10 dark:border-white/10 rounded px-2 py-1">
+            ${attendees.map(name => `<option value="${name}">${name}</option>`).join('')}
+          </select>
+        </td>
+        <td class="p-3 text-right">
+          <button type="button" class="text-rose-500 hover:text-rose-700 text-xs btn-remove-row">Remove</button>
+        </td>
+      `;
+      tbody.appendChild(newTr);
+      recalculatePicnic();
+    }
+  });
+
+  // Client-side CSV export
+  document.getElementById('btn-download-excel')?.addEventListener('click', () => {
+    const rows = document.querySelectorAll('#picnic-items-body tr');
+    let csvContent = "data:text/csv;charset=utf-8,Item,Amount (INR),Paid By\n";
+    rows.forEach(row => {
+      const item = row.querySelector('input[type="text"]')?.value || "Expense";
+      const amt = row.querySelector('.item-amount')?.value || 0;
+      const payer = row.querySelector('.item-payer')?.value || "Member";
+      csvContent += `"${item}",${amt},"${payer}"\n`;
+    });
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "picnic-expenses-format.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  });
+</script>

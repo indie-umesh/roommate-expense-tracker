@@ -20,20 +20,20 @@ const {
 
 <section class="space-y-8">
   <div class="text-center max-w-2xl mx-auto space-y-2">
-    <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">{title}</h2>
-    <p class="text-xs sm:text-sm text-slate-400">{subtitle}</p>
+    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">{title}</h2>
+    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">{subtitle}</p>
   </div>
 
   <div class="max-w-3xl mx-auto space-y-3.5">
     {items.map((item, idx) => (
-      <details class="group p-5 rounded-2xl bg-slate-900/80 border border-slate-800 transition hover:border-slate-700 cursor-pointer">
-        <summary class="flex items-center justify-between font-bold text-sm sm:text-base text-white list-none">
+      <details class="group p-5 rounded-2xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 transition hover:border-slate-300 dark:hover:border-slate-700 cursor-pointer shadow-xs">
+        <summary class="flex items-center justify-between font-bold text-sm sm:text-base text-slate-900 dark:text-white list-none">
           <span>{item.question}</span>
-          <span class="w-6 h-6 rounded-full bg-slate-800 text-slate-400 group-open:rotate-180 transition flex items-center justify-center text-xs shrink-0">
+          <span class="w-6 h-6 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 group-open:rotate-180 transition flex items-center justify-center text-xs shrink-0">
             ▼
           </span>
         </summary>
-        <div class="mt-3 text-xs sm:text-sm text-slate-400 leading-relaxed pt-2 border-t border-slate-800/80">
+        <div class="mt-3 text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed pt-2 border-t border-slate-100 dark:border-slate-800/80">
           <p>{item.answer}</p>
         </div>
       </details>

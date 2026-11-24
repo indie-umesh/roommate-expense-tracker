@@ -1,14 +1,144 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer base {
   :root {
-    --brand-primary: #4f46e5;
-    --brand-secondary: #10b981;
-    --brand-dark: #0f172a;
+    --colors-primary: #0066cc;
+    --colors-primary-focus: #0071e3;
+    --colors-primary-on-dark: #2997ff;
+    --colors-ink: #1d1d1f;
+    --colors-body: #1d1d1f;
+    --colors-body-muted: #86868b;
+    --colors-ink-muted-80: #333333;
+    --colors-ink-muted-48: #7a7a7a;
+    --colors-hairline: rgba(0, 0, 0, 0.08);
+    --colors-divider-soft: #f0f0f0;
+    --colors-canvas: #ffffff;
+    --colors-canvas-parchment: #f5f5f7;
+    --colors-surface-pearl: #fafafc;
+    --colors-surface-tile-1: #272729;
+    --colors-surface-tile-2: #2a2a2c;
+    --colors-surface-tile-3: #252527;
+    --colors-surface-black: #000000;
+    --product-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.22);
   }
-  
+
+  .dark {
+    --colors-primary: #2997ff;
+    --colors-primary-focus: #0071e3;
+    --colors-primary-on-dark: #2997ff;
+    --colors-ink: #f5f5f7;
+    --colors-body: #f5f5f7;
+    --colors-body-muted: #a1a1a6;
+    --colors-ink-muted-80: #d2d2d7;
+    --colors-ink-muted-48: #86868b;
+    --colors-hairline: rgba(255, 255, 255, 0.12);
+    --colors-divider-soft: rgba(255, 255, 255, 0.08);
+    --colors-canvas: #000000;
+    --colors-canvas-parchment: #161617;
+    --colors-surface-pearl: #1d1d1f;
+    --colors-surface-tile-1: #272729;
+    --colors-surface-tile-2: #2a2a2c;
+    --colors-surface-tile-3: #252527;
+    --colors-surface-black: #000000;
+    --product-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+  }
+
   html {
     scroll-behavior: smooth;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
+
+  body {
+    background-color: var(--colors-canvas);
+    color: var(--colors-ink);
+    font-size: 17px;
+    line-height: 1.47;
+    letter-spacing: -0.022em;
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+}
+
+/* Apple typography helpers */
+.apple-hero-display {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif;
+  font-size: clamp(36px, 6vw, 56px);
+  font-weight: 600;
+  line-height: 1.07;
+  letter-spacing: -0.025em;
+}
+
+.apple-display-lg {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif;
+  font-size: clamp(28px, 4vw, 40px);
+  font-weight: 600;
+  line-height: 1.10;
+  letter-spacing: -0.015em;
+}
+
+.apple-lead {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", sans-serif;
+  font-size: clamp(18px, 2.5vw, 24px);
+  font-weight: 400;
+  line-height: 1.35;
+  letter-spacing: 0.005em;
+}
+
+.apple-body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.47;
+  letter-spacing: -0.022em;
+}
+
+/* Apple Button Styles */
+.apple-btn-primary {
+  background-color: #0066cc;
+  color: #ffffff;
+  border-radius: 9999px;
+  padding: 10px 22px;
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.2;
+  display: inline-flex;
+  items-center: center;
+  justify-content: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.15s ease;
+}
+.apple-btn-primary:hover {
+  background-color: #0071e3;
+}
+.apple-btn-primary:active {
+  transform: scale(0.95);
+}
+
+.apple-btn-secondary {
+  color: #0066cc;
+  font-size: 17px;
+  font-weight: 400;
+  display: inline-flex;
+  items-center: center;
+  gap: 4px;
+  text-decoration: none;
+  cursor: pointer;
+}
+.dark .apple-btn-secondary {
+  color: #2997ff;
+}
+.apple-btn-secondary:hover {
+  text-decoration: underline;
+}
+
+/* Apple Product Shadow */
+.apple-product-shadow {
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.22);
+}
+.dark .apple-product-shadow {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
 }

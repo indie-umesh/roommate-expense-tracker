@@ -1,17 +1,17 @@
 ---
-// Ultra-rich, auto-animated and fully interactive Dashboard UI Simulator
-// Allows users to experience the actual app interface in both Mobile and Desktop views
+// Ultra-realistic, auto-animated and interactive Dashboard UI Simulator
+// Features authentic iPhone chassis with Dynamic Island and BottomNav, and desktop browser frame
 ---
 
 <div class="w-full max-w-5xl mx-auto space-y-4" id="dashboard-simulator-root">
-  <!-- Top Control Bar: Device Switcher & Auto-Play Controls -->
+  <!-- Top Control Bar: Device Switcher, Theme Status & Auto-Play Controls -->
   <div class="flex flex-wrap items-center justify-between gap-3 px-2 sm:px-4">
     <!-- Device Mode Switcher -->
-    <div class="flex items-center gap-1 p-1 bg-slate-900 border border-slate-800 rounded-2xl shadow-inner">
+    <div class="flex items-center gap-1 p-1 bg-slate-200/80 dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-2xl shadow-inner">
       <button
         type="button"
         id="btn-device-desktop"
-        class="flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer bg-indigo-600 text-white shadow-md shadow-indigo-600/30"
+        class="flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer bg-[#0066cc] text-white"
         aria-label="Desktop Browser View"
       >
         <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -23,27 +23,27 @@
       <button
         type="button"
         id="btn-device-mobile"
-        class="flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer text-slate-400 hover:text-white"
+        class="flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
         aria-label="Mobile Phone View"
       >
         <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
         </svg>
-        <span>Mobile Phone</span>
+        <span>Mobile Phone (iPhone)</span>
       </button>
     </div>
 
-    <!-- Live Simulation Status & Step Navigator -->
+    <!-- Live Step Status & Auto-Play Controls -->
     <div class="flex items-center gap-2 text-xs">
-      <div class="hidden sm:flex items-center gap-1.5 bg-slate-900/90 border border-slate-800 px-3 py-1.5 rounded-xl text-slate-300">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-        <span id="sim-step-label" class="font-medium">Step 1: Adding Expense (&lt;10s)</span>
+      <div class="hidden sm:flex items-center gap-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-3 py-1.5 rounded-xl text-slate-700 dark:text-slate-300 shadow-xs">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+        <span id="sim-step-label" class="font-semibold">Step 1: 3-Tap Mobile Entry (&lt;10s)</span>
       </div>
 
       <button
         type="button"
         id="btn-sim-toggle"
-        class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 font-semibold cursor-pointer transition active:scale-95"
+        class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 font-semibold cursor-pointer transition active:scale-95 shadow-xs"
       >
         <span id="sim-play-icon">⏸</span>
         <span id="sim-play-text">Pause Demo</span>
@@ -51,13 +51,13 @@
     </div>
   </div>
 
-  <!-- THE MAIN SIMULATOR CONTAINER -->
-  <div class="relative transition-all duration-500 ease-out flex justify-center" id="device-frame-container">
+  <!-- MAIN SIMULATOR CONTAINER -->
+  <div class="relative transition-all duration-500 ease-out flex justify-center py-2" id="device-frame-container">
     
-    <!-- DESKTOP BROWSER FRAME (Default) -->
-    <div id="frame-desktop" class="w-full rounded-2xl sm:rounded-3xl border border-slate-700/80 bg-slate-950 shadow-2xl overflow-hidden transition-all duration-300">
+    <!-- 1. DESKTOP BROWSER FRAME (Visible by default) -->
+    <div id="frame-desktop" class="w-full rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 shadow-2xl overflow-hidden transition-all duration-300">
       <!-- Browser Top Bar -->
-      <div class="bg-slate-900 px-4 py-3 border-b border-slate-800 flex items-center justify-between gap-3">
+      <div class="bg-slate-100 dark:bg-slate-900 px-4 py-3 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3">
         <div class="flex items-center gap-2">
           <span class="w-3 h-3 rounded-full bg-rose-500/80 inline-block"></span>
           <span class="w-3 h-3 rounded-full bg-amber-500/80 inline-block"></span>
@@ -65,85 +65,82 @@
         </div>
 
         <!-- Simulated Browser Address Bar -->
-        <div class="flex-1 max-w-md mx-auto bg-slate-950/80 border border-slate-800 rounded-lg px-3 py-1 flex items-center gap-2 text-xs text-slate-400 font-mono">
-          <span class="text-emerald-400">🔒</span>
+        <div class="flex-1 max-w-md mx-auto bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-1 flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 font-mono shadow-xs">
+          <span class="text-emerald-500">🔒</span>
           <span class="truncate">https://app.roommatesexpensemanager.com/group/indore-flat</span>
         </div>
 
-        <div class="text-[11px] font-semibold text-emerald-400 flex items-center gap-1">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span>Live Demo</span>
+        <div class="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>Interactive Preview</span>
         </div>
       </div>
 
-      <!-- App Content Area (Inside Desktop Frame) -->
-      <div class="bg-slate-950 text-slate-100 p-4 sm:p-6 space-y-6 min-h-[520px] relative">
+      <!-- App Content Area (Desktop Layout) -->
+      <div class="bg-slate-50/70 dark:bg-slate-950 text-slate-900 dark:text-slate-100 p-4 sm:p-6 space-y-6 min-h-[530px] relative transition-colors duration-200">
         <!-- App Header -->
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white font-bold text-base flex items-center justify-center shadow-lg shadow-indigo-600/30">
+            <div class="w-10 h-10 rounded-xl bg-[#0066cc] text-white font-bold text-base flex items-center justify-center">
               ₹
             </div>
             <div>
               <div class="flex items-center gap-2">
-                <h3 class="font-extrabold text-white text-base sm:text-lg">Indore Flat 🏠</h3>
-                <span class="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded-md font-mono">ROOM-ETVT</span>
+                <h3 class="font-extrabold text-slate-900 dark:text-white text-base sm:text-lg">Indore Flat 🏠</h3>
+                <span class="text-[10px] bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2 py-0.5 rounded-md font-mono font-medium">ROOM-ETVT</span>
               </div>
-              <p class="text-xs text-slate-400">
-                3 Roommates · Signed in as <strong class="text-indigo-400">Amar (You)</strong>
+              <p class="text-xs text-slate-500 dark:text-slate-400">
+                3 Roommates · Signed in as <strong class="text-[#0066cc] dark:text-[#2997ff]">Amar (You)</strong>
               </p>
             </div>
           </div>
 
-          <!-- App Navigation Pills -->
-          <div class="flex items-center gap-1 bg-slate-900 p-1 rounded-xl border border-slate-800 text-xs font-semibold">
-            <button type="button" class="sim-tab-btn px-3 py-1.5 rounded-lg bg-indigo-600 text-white shadow-xs transition" data-tab="overview">
+          <!-- Desktop Navigation Pills -->
+          <div class="flex items-center gap-1 bg-white dark:bg-slate-900 p-1 rounded-xl border border-slate-200 dark:border-slate-800 text-xs font-semibold shadow-xs">
+            <button type="button" class="sim-tab-btn px-3 py-1.5 rounded-lg bg-[#0066cc] text-white transition cursor-pointer" data-tab="overview">
               Overview
             </button>
-            <button type="button" class="sim-tab-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition" data-tab="sheet">
+            <button type="button" class="sim-tab-btn px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition" data-tab="sheet">
               📊 Spreadsheet Matrix
             </button>
-            <button type="button" class="sim-tab-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition" data-tab="settle">
+            <button type="button" class="sim-tab-btn px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition" data-tab="settle">
               💳 Settle Up
             </button>
-            <button type="button" class="sim-tab-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition" data-tab="roommates">
+            <button type="button" class="sim-tab-btn px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition" data-tab="roommates">
               👥 Roommates
             </button>
           </div>
         </div>
 
-        <!-- TAB 1: OVERVIEW & ACTIVITY (Active by Default) -->
-        <div id="sim-view-overview" class="sim-tab-content space-y-6">
-          <!-- Top Row: Net Balance Card + Quick Simplified Transfers -->
+        <!-- TAB 1: OVERVIEW -->
+        <div id="desktop-view-overview" class="desktop-tab-view space-y-6">
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <!-- Net Balance Card -->
-            <div class="p-5 rounded-2xl bg-gradient-to-br from-indigo-950/50 via-slate-900 to-slate-900 border border-indigo-500/30 relative overflow-hidden">
-              <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider block">Your Net Balance</span>
+            <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-indigo-500/30 shadow-sm relative overflow-hidden">
+              <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">Your Net Balance</span>
               <div class="flex items-baseline gap-2 mt-1">
-                <span id="sim-net-balance" class="text-3xl font-black text-emerald-400 transition-all duration-500">+₹10,000</span>
-                <span class="text-xs text-emerald-500 font-semibold">Owed to you</span>
+                <span id="desktop-net-balance" class="text-3xl font-black text-emerald-600 dark:text-emerald-400 transition-all duration-500">+₹10,000</span>
+                <span class="text-xs text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-full">Flat owes you</span>
               </div>
-              <p class="text-[11px] text-slate-400 mt-2">
-                Flat owes you this amount after all bills. Group sum = <strong class="text-white">₹0</strong>
+              <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-2">
+                All bills reconciled. Group sum = <strong class="text-slate-900 dark:text-white">₹0</strong>
               </p>
             </div>
 
-            <!-- Simplified Transfers Card -->
-            <div class="md:col-span-2 p-5 rounded-2xl bg-slate-900/80 border border-slate-800 flex flex-col justify-between">
+            <div class="md:col-span-2 p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between">
               <div class="flex items-center justify-between mb-2">
-                <span class="text-xs font-bold text-slate-300 uppercase tracking-wider">
+                <span class="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider">
                   ⚡ Simplified Direct Transfers
                 </span>
-                <span class="text-[11px] text-emerald-400 font-semibold">2 Payments Settle Everything</span>
+                <span class="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold">2 Payments Settle Everything</span>
               </div>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                <div class="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800 flex items-center justify-between">
-                  <span>👉 <strong class="text-amber-400">Akbar</strong> pays <strong class="text-indigo-400">Amar</strong></span>
-                  <span id="sim-akbar-dues" class="font-bold text-emerald-400">₹4,000</span>
+                <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                  <span>👉 <strong class="text-amber-600 dark:text-amber-400">Akbar</strong> pays <strong class="text-[#0066cc] dark:text-[#2997ff]">Amar</strong></span>
+                  <span id="desktop-akbar-dues" class="font-bold text-emerald-600 dark:text-emerald-400">₹4,000</span>
                 </div>
-                <div class="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800 flex items-center justify-between">
-                  <span>👉 <strong class="text-purple-400">Anthony</strong> pays <strong class="text-indigo-400">Amar</strong></span>
-                  <span id="sim-anthony-dues" class="font-bold text-emerald-400">₹6,000</span>
+                <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                  <span>👉 <strong class="text-purple-600 dark:text-purple-400">Anthony</strong> pays <strong class="text-[#0066cc] dark:text-[#2997ff]">Amar</strong></span>
+                  <span id="desktop-anthony-dues" class="font-bold text-emerald-600 dark:text-emerald-400">₹6,000</span>
                 </div>
               </div>
             </div>
@@ -152,166 +149,137 @@
           <!-- Activity Feed -->
           <div class="space-y-3">
             <div class="flex items-center justify-between">
-              <h4 class="font-bold text-sm text-white">Recent Flat Activity</h4>
+              <h4 class="font-bold text-sm text-slate-900 dark:text-white">Recent Flat Activity</h4>
               <button
                 type="button"
-                id="btn-sim-manual-add"
-                class="px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-md shadow-indigo-600/30 transition flex items-center gap-1.5 cursor-pointer"
+                id="btn-desktop-add"
+                class="px-3.5 py-1.5 rounded-full bg-[#0066cc] hover:bg-[#0071e3] text-white text-xs font-normal transition flex items-center gap-1.5 cursor-pointer active:scale-95"
               >
-                <span>+ Add Expense (3 Taps)</span>
+                <span>+ Add Expense (&lt;10s)</span>
               </button>
             </div>
 
-            <!-- Feed List -->
-            <div class="space-y-2" id="sim-activity-feed">
-              <!-- Dynamically prepended expense will show here -->
-              <div id="sim-new-expense-row" class="hidden p-3.5 rounded-xl bg-indigo-950/60 border border-indigo-500/60 transition-all duration-500">
+            <div class="space-y-2">
+              <div id="desktop-new-expense-row" class="hidden p-3.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-black/10 dark:border-white/10 transition-all duration-500">
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-xl bg-emerald-600/20 text-emerald-400 font-bold text-sm flex items-center justify-center border border-emerald-500/30">🍕</div>
+                    <div class="w-9 h-9 rounded-xl bg-emerald-100 dark:bg-emerald-600/20 text-emerald-600 dark:text-emerald-400 font-bold text-sm flex items-center justify-center border border-emerald-200 dark:border-emerald-500/30">🍕</div>
                     <div>
-                      <h5 class="font-bold text-sm text-white flex items-center gap-2">
+                      <h5 class="font-bold text-sm text-slate-900 dark:text-white flex items-center gap-2">
                         <span>Swiggy Dinner</span>
-                        <span class="text-[10px] bg-emerald-500/20 text-emerald-300 px-1.5 py-0.2 rounded font-semibold animate-pulse">Just Added</span>
+                        <span class="text-[10px] bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 px-1.5 py-0.2 rounded font-semibold animate-pulse">Just Added</span>
                       </h5>
-                      <p class="text-xs text-slate-400">Paid by Amar (You) • Split equally (₹400 each)</p>
+                      <p class="text-xs text-slate-500 dark:text-slate-400">Paid by Amar (You) • Split equally (₹400 each)</p>
                     </div>
                   </div>
-                  <span class="text-sm font-black text-white">₹1,200</span>
+                  <span class="text-sm font-black text-slate-900 dark:text-white">₹1,200</span>
                 </div>
               </div>
 
-              <!-- Default Static Entries -->
-              <div class="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center justify-between">
+              <div class="p-3.5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 flex items-center justify-between shadow-xs">
                 <div class="flex items-center gap-3">
-                  <div class="w-9 h-9 rounded-xl bg-indigo-600/20 text-indigo-400 font-bold text-sm flex items-center justify-center border border-indigo-500/30">🏠</div>
+                  <div class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 text-[#0066cc] dark:text-[#2997ff] font-bold text-sm flex items-center justify-center border border-black/5 dark:border-white/10">🏠</div>
                   <div>
-                    <h5 class="font-bold text-sm text-white">Flat Rent</h5>
-                    <p class="text-xs text-slate-400">Paid by Amar • Split among 3 roommates</p>
+                    <h5 class="font-bold text-sm text-slate-900 dark:text-white">Flat Rent</h5>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Paid by Amar • Split among 3 roommates</p>
                   </div>
                 </div>
-                <span class="text-sm font-bold text-white">₹15,000</span>
+                <span class="text-sm font-bold text-slate-900 dark:text-white">₹15,000</span>
               </div>
 
-              <div class="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center justify-between">
+              <div class="p-3.5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 flex items-center justify-between shadow-xs">
                 <div class="flex items-center gap-3">
-                  <div class="w-9 h-9 rounded-xl bg-amber-600/20 text-amber-400 font-bold text-sm flex items-center justify-center border border-amber-500/30">🛒</div>
+                  <div class="w-9 h-9 rounded-xl bg-amber-100 dark:bg-amber-600/20 text-amber-600 dark:text-amber-400 font-bold text-sm flex items-center justify-center border border-amber-200 dark:border-amber-500/30">🛒</div>
                   <div>
-                    <h5 class="font-bold text-sm text-white">DMart Groceries</h5>
-                    <p class="text-xs text-slate-400">Paid by Akbar • Split among 3 roommates</p>
+                    <h5 class="font-bold text-sm text-slate-900 dark:text-white">DMart Groceries</h5>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Paid by Akbar • Split among 3 roommates</p>
                   </div>
                 </div>
-                <span class="text-sm font-bold text-white">₹3,000</span>
-              </div>
-
-              <div class="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                  <div class="w-9 h-9 rounded-xl bg-purple-600/20 text-purple-400 font-bold text-sm flex items-center justify-center border border-purple-500/30">📶</div>
-                  <div>
-                    <h5 class="font-bold text-sm text-white">Broadband Wi-Fi</h5>
-                    <p class="text-xs text-slate-400">Paid by Anthony • Split among 3 roommates</p>
-                  </div>
-                </div>
-                <span class="text-sm font-bold text-white">₹999</span>
+                <span class="text-sm font-bold text-slate-900 dark:text-white">₹3,000</span>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- TAB 2: LIVE SPREADSHEET MATRIX VIEW -->
-        <div id="sim-view-sheet" class="sim-tab-content hidden space-y-4">
+        <!-- TAB 2: SPREADSHEET MATRIX -->
+        <div id="desktop-view-sheet" class="desktop-tab-view hidden space-y-4">
           <div class="flex items-center justify-between">
             <div>
-              <h4 class="font-bold text-sm text-white">Real-Time Spreadsheet Ledger</h4>
-              <p class="text-xs text-slate-400">Live matrix auto-updates with zero formula breakages.</p>
+              <h4 class="font-bold text-sm text-slate-900 dark:text-white">Real-Time Spreadsheet Matrix</h4>
+              <p class="text-xs text-slate-500 dark:text-slate-400">Rows = Bills, Columns = Individual Shares.</p>
             </div>
-            <span class="text-xs px-3 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 font-semibold border border-emerald-500/30">
-              Auto-Balanced
+            <span class="text-xs px-3 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-semibold border border-emerald-200 dark:border-emerald-500/30">
+              Live .xlsx Sync
             </span>
           </div>
 
-          <div class="overflow-x-auto rounded-xl border border-slate-800 bg-slate-950 text-xs">
+          <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-xs shadow-sm">
             <table class="w-full text-left border-collapse">
               <thead>
-                <tr class="bg-slate-900 text-slate-400 font-bold uppercase text-[10px]">
+                <tr class="bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400 font-bold uppercase text-[10px]">
                   <th class="p-3">Expense</th>
                   <th class="p-3">Total</th>
                   <th class="p-3">Payer</th>
-                  <th class="p-3 text-center text-indigo-400">Amar</th>
-                  <th class="p-3 text-center text-amber-400">Akbar</th>
-                  <th class="p-3 text-center text-purple-400">Anthony</th>
+                  <th class="p-3 text-center text-indigo-600 dark:text-indigo-400">Amar</th>
+                  <th class="p-3 text-center text-amber-600 dark:text-amber-400">Akbar</th>
+                  <th class="p-3 text-center text-purple-600 dark:text-purple-400">Anthony</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-slate-800 text-slate-300">
-                <tr id="sim-sheet-new-row" class="hidden bg-indigo-950/50 font-semibold transition">
-                  <td class="p-3 text-white">🍕 Swiggy Dinner</td>
-                  <td class="p-3 text-white">₹1,200</td>
-                  <td class="p-3 text-indigo-400">Amar</td>
+              <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
+                <tr id="desktop-sheet-new-row" class="hidden bg-indigo-50/70 dark:bg-indigo-950/50 font-semibold transition">
+                  <td class="p-3 text-slate-900 dark:text-white">🍕 Swiggy Dinner</td>
+                  <td class="p-3 text-slate-900 dark:text-white">₹1,200</td>
+                  <td class="p-3 text-indigo-600 dark:text-indigo-400">Amar</td>
                   <td class="p-3 text-center font-mono">₹400</td>
                   <td class="p-3 text-center font-mono">₹400</td>
                   <td class="p-3 text-center font-mono">₹400</td>
                 </tr>
                 <tr>
-                  <td class="p-3 font-medium text-white">Flat Rent</td>
-                  <td class="p-3 font-bold text-white">₹15,000</td>
-                  <td class="p-3 text-indigo-400">Amar</td>
+                  <td class="p-3 font-medium text-slate-900 dark:text-white">Flat Rent</td>
+                  <td class="p-3 font-bold text-slate-900 dark:text-white">₹15,000</td>
+                  <td class="p-3 text-indigo-600 dark:text-indigo-400">Amar</td>
                   <td class="p-3 text-center font-mono">₹5,000</td>
                   <td class="p-3 text-center font-mono">₹5,000</td>
                   <td class="p-3 text-center font-mono">₹5,000</td>
                 </tr>
                 <tr>
-                  <td class="p-3 font-medium text-white">DMart Groceries</td>
-                  <td class="p-3 font-bold text-white">₹3,000</td>
-                  <td class="p-3 text-amber-400">Akbar</td>
+                  <td class="p-3 font-medium text-slate-900 dark:text-white">DMart Groceries</td>
+                  <td class="p-3 font-bold text-slate-900 dark:text-white">₹3,000</td>
+                  <td class="p-3 text-amber-600 dark:text-amber-400">Akbar</td>
                   <td class="p-3 text-center font-mono">₹1,000</td>
                   <td class="p-3 text-center font-mono">₹1,000</td>
                   <td class="p-3 text-center font-mono">₹1,000</td>
-                </tr>
-                <tr>
-                  <td class="p-3 font-medium text-white">Wi-Fi Broadband</td>
-                  <td class="p-3 font-bold text-white">₹999</td>
-                  <td class="p-3 text-purple-400">Anthony</td>
-                  <td class="p-3 text-center font-mono">₹333</td>
-                  <td class="p-3 text-center font-mono">₹333</td>
-                  <td class="p-3 text-center font-mono">₹333</td>
                 </tr>
               </tbody>
               <tfoot>
-                <tr class="bg-indigo-950/40 border-t border-indigo-500/40 font-bold text-xs">
-                  <td colspan="3" class="p-3 text-right uppercase text-slate-400">Net Balance:</td>
-                  <td id="sim-matrix-amar" class="p-3 text-center font-mono text-emerald-400 font-black">+₹10,000</td>
-                  <td id="sim-matrix-akbar" class="p-3 text-center font-mono text-rose-400 font-black">-₹4,000</td>
-                  <td id="sim-matrix-anthony" class="p-3 text-center font-mono text-rose-400 font-black">-₹6,000</td>
+                <tr class="bg-indigo-50/80 dark:bg-indigo-950/40 border-t border-indigo-200 dark:border-indigo-500/40 font-bold text-xs">
+                  <td colspan="3" class="p-3 text-right uppercase text-slate-500 dark:text-slate-400">Net Settle:</td>
+                  <td id="desktop-matrix-amar" class="p-3 text-center font-mono text-emerald-600 dark:text-emerald-400 font-black">+₹10,000</td>
+                  <td id="desktop-matrix-akbar" class="p-3 text-center font-mono text-rose-600 dark:text-rose-400 font-black">-₹4,000</td>
+                  <td id="desktop-matrix-anthony" class="p-3 text-center font-mono text-rose-600 dark:text-rose-400 font-black">-₹6,000</td>
                 </tr>
               </tfoot>
             </table>
           </div>
         </div>
 
-        <!-- TAB 3: SETTLE UP VIEW -->
-        <div id="sim-view-settle" class="sim-tab-content hidden space-y-4">
-          <div class="flex items-center justify-between">
-            <div>
-              <h4 class="font-bold text-sm text-white">1-Tap Settle Up & UPI</h4>
-              <p class="text-xs text-slate-400">Minimal transfers without confusing cross-payments.</p>
-            </div>
-          </div>
-
+        <!-- TAB 3: SETTLE UP -->
+        <div id="desktop-view-settle" class="desktop-tab-view hidden space-y-4">
+          <h4 class="font-bold text-sm text-slate-900 dark:text-white">Minimal Debt Transfers (Greedy Settle)</h4>
           <div class="space-y-3">
-            <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between">
+            <div class="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-between shadow-xs">
               <div>
-                <p class="text-sm font-bold text-white">Akbar owes you ₹4,000</p>
-                <p class="text-xs text-slate-400 font-mono">UPI: akbar@okhdfcbank</p>
+                <p class="text-sm font-bold text-slate-900 dark:text-white">Akbar owes you ₹4,000</p>
+                <p class="text-xs text-slate-500 dark:text-slate-400 font-mono">UPI: akbar@okhdfcbank</p>
               </div>
               <button type="button" class="px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition cursor-pointer">
                 Record Payment
               </button>
             </div>
-
-            <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between">
+            <div class="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-between shadow-xs">
               <div>
-                <p class="text-sm font-bold text-white">Anthony owes you ₹6,000</p>
-                <p class="text-xs text-slate-400 font-mono">UPI: anthony@oksbi</p>
+                <p class="text-sm font-bold text-slate-900 dark:text-white">Anthony owes you ₹6,000</p>
+                <p class="text-xs text-slate-500 dark:text-slate-400 font-mono">UPI: anthony@oksbi</p>
               </div>
               <button type="button" class="px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition cursor-pointer">
                 Record Payment
@@ -320,90 +288,301 @@
           </div>
         </div>
 
-        <!-- TAB 4: ROOMMATES VIEW -->
-        <div id="sim-view-roommates" class="sim-tab-content hidden space-y-4">
-          <h4 class="font-bold text-sm text-white">Flat Roommates (3)</h4>
+        <!-- TAB 4: ROOMMATES -->
+        <div id="desktop-view-roommates" class="desktop-tab-view hidden space-y-4">
+          <h4 class="font-bold text-sm text-slate-900 dark:text-white">Flat Roommates (3)</h4>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
-              <span class="font-bold text-sm text-white block">Amar (You)</span>
-              <span class="text-xs text-emerald-400 font-semibold block">Flat owes you ₹10,000</span>
+            <div class="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-1">
+              <span class="font-bold text-sm text-slate-900 dark:text-white block">Amar (You)</span>
+              <span class="text-xs text-emerald-600 dark:text-emerald-400 font-semibold block">Flat owes you ₹10,000</span>
               <span class="text-[11px] text-slate-500 font-mono">+91 98260XXXXX</span>
             </div>
-            <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
-              <span class="font-bold text-sm text-white block">Akbar</span>
-              <span class="text-xs text-rose-400 font-semibold block">Owes flat ₹4,000</span>
+            <div class="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-1">
+              <span class="font-bold text-sm text-slate-900 dark:text-white block">Akbar</span>
+              <span class="text-xs text-rose-600 dark:text-rose-400 font-semibold block">Owes flat ₹4,000</span>
               <span class="text-[11px] text-slate-500 font-mono">+91 97130XXXXX</span>
             </div>
-            <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
-              <span class="font-bold text-sm text-white block">Anthony</span>
-              <span class="text-xs text-rose-400 font-semibold block">Owes flat ₹6,000</span>
+            <div class="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-1">
+              <span class="font-bold text-sm text-slate-900 dark:text-white block">Anthony</span>
+              <span class="text-xs text-rose-600 dark:text-rose-400 font-semibold block">Owes flat ₹6,000</span>
               <span class="text-[11px] text-slate-500 font-mono">+91 95593XXXXX</span>
             </div>
           </div>
         </div>
+      </div>
+    </div>
 
-        <!-- SIMULATED 3-TAP ADD EXPENSE MODAL (Pops up during Phase 1) -->
-        <div
-          id="sim-modal-add-expense"
-          class="hidden absolute inset-0 z-40 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 transition-all duration-300"
-        >
-          <div class="w-full max-w-sm bg-slate-900 border border-indigo-500/60 rounded-2xl p-5 shadow-2xl space-y-4 animate-scale-up">
-            <div class="flex items-center justify-between pb-2 border-b border-slate-800">
-              <h5 class="font-bold text-sm text-white flex items-center gap-2">
-                <span>⚡ Add Expense (3 Taps)</span>
-              </h5>
-              <span class="text-[10px] text-emerald-400 font-mono">0s Wait Timer</span>
+
+    <!-- 2. AUTHENTIC SMARTPHONE FRAME (iPhone Chassis + Dynamic Island + BottomNav) -->
+    <div id="frame-mobile" class="hidden w-full max-w-[380px] rounded-[48px] p-3 bg-slate-900 dark:bg-slate-800 border-4 border-slate-700/80 shadow-2xl ring-1 ring-black/30 transition-all duration-300">
+      
+      <!-- Phone Inner Screen -->
+      <div class="rounded-[38px] bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 overflow-hidden flex flex-col h-[680px] relative border border-slate-300 dark:border-slate-800 transition-colors duration-200">
+        
+        <!-- Status Bar & Dynamic Island -->
+        <div class="pt-3 px-6 pb-2 flex items-center justify-between text-[11px] font-bold text-slate-900 dark:text-white shrink-0 select-none">
+          <span>9:41</span>
+          
+          <!-- Dynamic Island -->
+          <div class="w-24 h-5 bg-black rounded-full flex items-center justify-end pr-2 gap-1.5 shadow-sm">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          </div>
+
+          <div class="flex items-center gap-1.5 text-xs">
+            <span>5G</span>
+            <!-- Battery Icon -->
+            <div class="w-5 h-2.5 rounded-[4px] border border-slate-700 dark:border-slate-300 p-0.5 flex items-center">
+              <div class="w-full h-full bg-emerald-500 rounded-[2px]"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phone Top App Bar -->
+        <div class="px-4 py-2.5 bg-white/90 dark:bg-slate-900/90 backdrop-blur border-b border-slate-200 dark:border-slate-800 flex items-center justify-between shrink-0">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-lg bg-indigo-600 text-white font-bold text-xs flex items-center justify-center shadow-xs">
+              ₹
+            </div>
+            <div>
+              <h4 class="font-extrabold text-xs text-slate-900 dark:text-white leading-tight">Indore Flat 🏠</h4>
+              <p class="text-[10px] text-slate-500 dark:text-slate-400">Amar (You) · ROOM-ETVT</p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            id="btn-mobile-add"
+            class="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-[11px] font-bold shadow-xs cursor-pointer flex items-center gap-1 active:scale-95"
+          >
+            <span>+ Add</span>
+          </button>
+        </div>
+
+        <!-- Scrollable Phone Screen Content -->
+        <div class="flex-1 overflow-y-auto p-4 space-y-4">
+          
+          <!-- MOBILE VIEW 1: OVERVIEW -->
+          <div id="mobile-view-overview" class="mobile-tab-view space-y-4">
+            <!-- Net Balance Card -->
+            <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-indigo-500/30 shadow-xs">
+              <span class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">Your Net Balance</span>
+              <div class="flex items-baseline justify-between mt-1">
+                <span id="mobile-net-balance" class="text-2xl font-black text-emerald-600 dark:text-emerald-400">+₹10,000</span>
+                <span class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-full">
+                  Owed to you
+                </span>
+              </div>
             </div>
 
-            <div class="space-y-3 text-xs">
-              <div>
-                <label class="block text-slate-400 font-semibold mb-1">Amount (₹)</label>
-                <div class="relative">
-                  <span class="absolute left-3 top-2.5 text-slate-400 font-bold">₹</span>
-                  <input
-                    type="text"
-                    id="sim-input-amount"
-                    readonly
-                    value=""
-                    placeholder="0"
-                    class="w-full pl-7 pr-3 py-2 bg-slate-950 border border-indigo-500/60 rounded-xl text-lg font-black text-white focus:outline-none"
-                  />
+            <!-- Simplified Transfers -->
+            <div class="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-2">
+              <span class="text-[11px] font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider block">
+                ⚡ Direct UPI Settlements
+              </span>
+              <div class="space-y-1.5 text-[11px]">
+                <div class="p-2 rounded-xl bg-slate-50 dark:bg-slate-950 flex items-center justify-between border border-slate-100 dark:border-slate-800">
+                  <span>👉 <strong class="text-amber-600 dark:text-amber-400">Akbar</strong> pays <strong class="text-indigo-600 dark:text-indigo-400">Amar</strong></span>
+                  <span id="mobile-akbar-dues" class="font-bold text-emerald-600 dark:text-emerald-400">₹4,000</span>
+                </div>
+                <div class="p-2 rounded-xl bg-slate-50 dark:bg-slate-950 flex items-center justify-between border border-slate-100 dark:border-slate-800">
+                  <span>👉 <strong class="text-purple-600 dark:text-purple-400">Anthony</strong> pays <strong class="text-indigo-600 dark:text-indigo-400">Amar</strong></span>
+                  <span id="mobile-anthony-dues" class="font-bold text-emerald-600 dark:text-emerald-400">₹6,000</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Mobile Feed -->
+            <div class="space-y-2">
+              <span class="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">Activity Feed</span>
+              
+              <div id="mobile-new-expense-row" class="hidden p-3 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200 dark:border-indigo-500/60">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <span class="text-base">🍕</span>
+                    <div>
+                      <h6 class="font-bold text-xs text-slate-900 dark:text-white">Swiggy Dinner</h6>
+                      <p class="text-[10px] text-slate-500 dark:text-slate-400">Paid by Amar • ₹400/ea</p>
+                    </div>
+                  </div>
+                  <span class="font-black text-xs text-slate-900 dark:text-white">₹1,200</span>
                 </div>
               </div>
 
+              <div class="p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-between shadow-xs">
+                <div class="flex items-center gap-2">
+                  <span class="text-base">🏠</span>
+                  <div>
+                    <h6 class="font-bold text-xs text-slate-900 dark:text-white">Flat Rent</h6>
+                    <p class="text-[10px] text-slate-500 dark:text-slate-400">Paid by Amar</p>
+                  </div>
+                </div>
+                <span class="font-bold text-xs text-slate-900 dark:text-white">₹15,000</span>
+              </div>
+
+              <div class="p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-between shadow-xs">
+                <div class="flex items-center gap-2">
+                  <span class="text-base">🛒</span>
+                  <div>
+                    <h6 class="font-bold text-xs text-slate-900 dark:text-white">DMart Groceries</h6>
+                    <p class="text-[10px] text-slate-500 dark:text-slate-400">Paid by Akbar</p>
+                  </div>
+                </div>
+                <span class="font-bold text-xs text-slate-900 dark:text-white">₹3,000</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- MOBILE VIEW 2: SPREADSHEET MATRIX -->
+          <div id="mobile-view-sheet" class="mobile-tab-view hidden space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-slate-900 dark:text-white">Spreadsheet Matrix</span>
+              <span class="text-[10px] text-emerald-600 font-mono">Sum = ₹0</span>
+            </div>
+
+            <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-[10px] shadow-xs">
+              <table class="w-full text-left">
+                <thead>
+                  <tr class="bg-slate-100 dark:bg-slate-900 text-slate-500 font-bold">
+                    <th class="p-2">Bill</th>
+                    <th class="p-2">Total</th>
+                    <th class="p-2 text-center text-indigo-500">Amar</th>
+                    <th class="p-2 text-center text-amber-500">Akbar</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                  <tr id="mobile-sheet-new-row" class="hidden bg-indigo-50 dark:bg-indigo-950/40 font-semibold">
+                    <td class="p-2 font-medium">🍕 Swiggy</td>
+                    <td class="p-2">₹1,200</td>
+                    <td class="p-2 text-center font-mono">₹400</td>
+                    <td class="p-2 text-center font-mono">₹400</td>
+                  </tr>
+                  <tr>
+                    <td class="p-2 font-medium">Rent</td>
+                    <td class="p-2 font-bold">₹15,000</td>
+                    <td class="p-2 text-center font-mono">₹5,000</td>
+                    <td class="p-2 text-center font-mono">₹5,000</td>
+                  </tr>
+                  <tr>
+                    <td class="p-2 font-medium">Groceries</td>
+                    <td class="p-2 font-bold">₹3,000</td>
+                    <td class="p-2 text-center font-mono">₹1,000</td>
+                    <td class="p-2 text-center font-mono">₹1,000</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- MOBILE VIEW 3: SETTLE UP -->
+          <div id="mobile-view-settle" class="mobile-tab-view hidden space-y-3">
+            <span class="text-xs font-bold text-slate-900 dark:text-white block">Settle Dues</span>
+            <div class="p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-2">
+              <div class="flex items-center justify-between text-xs">
+                <span class="font-bold text-slate-800 dark:text-slate-200">Akbar owes ₹4,000</span>
+                <span class="text-[10px] text-emerald-600 font-semibold bg-emerald-50 px-2 py-0.5 rounded-md">UPI Ready</span>
+              </div>
+              <button type="button" class="w-full py-1.5 bg-emerald-600 text-white font-bold rounded-lg text-xs">
+                Mark as Settled
+              </button>
+            </div>
+            <div class="p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-2">
+              <div class="flex items-center justify-between text-xs">
+                <span class="font-bold text-slate-800 dark:text-slate-200">Anthony owes ₹6,000</span>
+                <span class="text-[10px] text-emerald-600 font-semibold bg-emerald-50 px-2 py-0.5 rounded-md">UPI Ready</span>
+              </div>
+              <button type="button" class="w-full py-1.5 bg-emerald-600 text-white font-bold rounded-lg text-xs">
+                Mark as Settled
+              </button>
+            </div>
+          </div>
+
+          <!-- MOBILE VIEW 4: ROOMMATES -->
+          <div id="mobile-view-roommates" class="mobile-tab-view hidden space-y-2">
+            <span class="text-xs font-bold text-slate-900 dark:text-white block">Flatmates (3)</span>
+            <div class="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs">
+              <span class="font-bold">Amar (You)</span>
+              <span class="text-emerald-600 font-semibold">+₹10,000</span>
+            </div>
+            <div class="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs">
+              <span class="font-bold">Akbar</span>
+              <span class="text-rose-500 font-semibold">-₹4,000</span>
+            </div>
+            <div class="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs">
+              <span class="font-bold">Anthony</span>
+              <span class="text-rose-500 font-semibold">-₹6,000</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- AUTHENTIC MOBILE BOTTOM NAVIGATION BAR -->
+        <nav class="bg-white/95 dark:bg-slate-900/95 backdrop-blur border-t border-slate-200 dark:border-slate-800 py-1.5 px-3 flex items-center justify-around shrink-0 z-30" aria-label="Mobile Bottom Navigation">
+          <button type="button" class="mobile-tab-btn flex flex-col items-center gap-0.5 text-indigo-600 font-bold text-[10px] cursor-pointer" data-tab="overview">
+            <span class="text-base leading-none">🏠</span>
+            <span>Home</span>
+          </button>
+          <button type="button" class="mobile-tab-btn flex flex-col items-center gap-0.5 text-slate-500 dark:text-slate-400 font-medium text-[10px] cursor-pointer" data-tab="sheet">
+            <span class="text-base leading-none">📊</span>
+            <span>Matrix</span>
+          </button>
+          <button type="button" class="mobile-tab-btn flex flex-col items-center gap-0.5 text-slate-500 dark:text-slate-400 font-medium text-[10px] cursor-pointer" data-tab="settle">
+            <span class="text-base leading-none">💳</span>
+            <span>Settle</span>
+          </button>
+          <button type="button" class="mobile-tab-btn flex flex-col items-center gap-0.5 text-slate-500 dark:text-slate-400 font-medium text-[10px] cursor-pointer" data-tab="roommates">
+            <span class="text-base leading-none">👥</span>
+            <span>Roommates</span>
+          </button>
+        </nav>
+
+        <!-- iPhone Home Indicator Bar -->
+        <div class="w-32 h-1 bg-slate-300 dark:bg-slate-700 rounded-full mx-auto my-1.5 shrink-0"></div>
+
+        <!-- MOBILE ADD EXPENSE POPUP MODAL -->
+        <div id="mobile-modal-add" class="hidden absolute inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div class="w-full bg-white dark:bg-slate-900 rounded-3xl p-5 shadow-2xl border border-indigo-500/40 space-y-3.5 animate-scale-up">
+            <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+              <span class="text-xs font-bold text-slate-900 dark:text-white">⚡ Add Expense (3 Taps)</span>
+              <span class="text-[10px] text-emerald-600 font-semibold bg-emerald-50 px-2 py-0.5 rounded-full">0s Wait</span>
+            </div>
+
+            <div class="space-y-2.5 text-xs">
               <div>
-                <label class="block text-slate-400 font-semibold mb-1">What was this for?</label>
+                <label class="block text-[11px] font-semibold text-slate-500 mb-0.5">Amount</label>
                 <input
                   type="text"
-                  id="sim-input-details"
+                  id="mobile-input-amount"
                   readonly
-                  value=""
-                  placeholder="e.g. Swiggy Dinner"
-                  class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-xs text-white"
+                  placeholder="₹0"
+                  class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-indigo-400 rounded-xl text-lg font-black text-slate-900 dark:text-white"
                 />
               </div>
 
               <div>
-                <label class="block text-slate-400 font-semibold mb-1">Split Among</label>
-                <div class="flex gap-1.5">
-                  <span class="px-2.5 py-1 rounded-lg bg-indigo-600 text-white font-semibold text-[11px]">Amar (You) ✓</span>
-                  <span class="px-2.5 py-1 rounded-lg bg-indigo-600 text-white font-semibold text-[11px]">Akbar ✓</span>
-                  <span class="px-2.5 py-1 rounded-lg bg-indigo-600 text-white font-semibold text-[11px]">Anthony ✓</span>
-                </div>
+                <label class="block text-[11px] font-semibold text-slate-500 mb-0.5">Details</label>
+                <input
+                  type="text"
+                  id="mobile-input-details"
+                  readonly
+                  placeholder="e.g. Swiggy Dinner"
+                  class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white"
+                />
               </div>
             </div>
 
             <button
               type="button"
-              id="sim-btn-save-expense"
-              class="w-full py-2.5 bg-gradient-to-r from-emerald-500 to-teal-400 text-slate-950 font-black rounded-xl text-xs transition cursor-pointer shadow-lg shadow-emerald-500/20"
+              id="mobile-btn-save"
+              class="w-full py-2.5 bg-gradient-to-r from-emerald-500 to-teal-400 text-slate-950 font-black rounded-xl text-xs shadow-md transition"
             >
               Save Expense (&lt;10s)
             </button>
           </div>
         </div>
+
       </div>
     </div>
+
   </div>
 </div>
 
@@ -412,86 +591,109 @@
     const desktopBtn = document.getElementById("btn-device-desktop");
     const mobileBtn = document.getElementById("btn-device-mobile");
     const frameDesktop = document.getElementById("frame-desktop");
-    const container = document.getElementById("device-frame-container");
+    const frameMobile = document.getElementById("frame-mobile");
 
     const simStepLabel = document.getElementById("sim-step-label");
     const simToggleBtn = document.getElementById("btn-sim-toggle");
     const simPlayIcon = document.getElementById("sim-play-icon");
     const simPlayText = document.getElementById("sim-play-text");
 
-    const modalAddExpense = document.getElementById("sim-modal-add-expense");
-    const inputAmount = document.getElementById("sim-input-amount");
-    const inputDetails = document.getElementById("sim-input-details");
-    const btnSaveExpense = document.getElementById("sim-btn-save-expense");
-    const newExpenseRow = document.getElementById("sim-new-expense-row");
-    const netBalanceEl = document.getElementById("sim-net-balance");
-    const akbarDuesEl = document.getElementById("sim-akbar-dues");
-    const anthonyDuesEl = document.getElementById("sim-anthony-dues");
+    // Desktop elements
+    const desktopTabBtns = document.querySelectorAll(".sim-tab-btn");
+    const desktopTabViews = document.querySelectorAll(".desktop-tab-view");
+    const desktopNewRow = document.getElementById("desktop-new-expense-row");
+    const desktopNetBalance = document.getElementById("desktop-net-balance");
+    const desktopAkbarDues = document.getElementById("desktop-akbar-dues");
+    const desktopAnthonyDues = document.getElementById("desktop-anthony-dues");
+    const desktopSheetNewRow = document.getElementById("desktop-sheet-new-row");
+    const desktopMatrixAmar = document.getElementById("desktop-matrix-amar");
+    const desktopMatrixAkbar = document.getElementById("desktop-matrix-akbar");
+    const desktopMatrixAnthony = document.getElementById("desktop-matrix-anthony");
 
-    const tabButtons = document.querySelectorAll(".sim-tab-btn");
-    const tabContents = document.querySelectorAll(".sim-tab-content");
-    const sheetNewRow = document.getElementById("sim-sheet-new-row");
-    const matrixAmar = document.getElementById("sim-matrix-amar");
-    const matrixAkbar = document.getElementById("sim-matrix-akbar");
-    const matrixAnthony = document.getElementById("sim-matrix-anthony");
+    // Mobile elements
+    const mobileTabBtns = document.querySelectorAll(".mobile-tab-btn");
+    const mobileTabViews = document.querySelectorAll(".mobile-tab-view");
+    const mobileModal = document.getElementById("mobile-modal-add");
+    const mobileInputAmt = document.getElementById("mobile-input-amount");
+    const mobileInputDet = document.getElementById("mobile-input-details");
+    const mobileBtnSave = document.getElementById("mobile-btn-save");
+    const mobileNewRow = document.getElementById("mobile-new-expense-row");
+    const mobileNetBalance = document.getElementById("mobile-net-balance");
+    const mobileAkbarDues = document.getElementById("mobile-akbar-dues");
+    const mobileAnthonyDues = document.getElementById("mobile-anthony-dues");
+    const mobileSheetNewRow = document.getElementById("mobile-sheet-new-row");
 
-    let isMobileView = false;
+    let isMobile = false;
     let isPaused = false;
-    let currentStep = 0;
+    let stepIndex = 0;
     let timerId = null;
 
-    // Device Switching
-    function setDeviceMode(mobile) {
-      isMobileView = mobile;
-      if (mobile) {
-        desktopBtn.className = "flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer text-slate-400 hover:text-white";
-        mobileBtn.className = "flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer bg-indigo-600 text-white shadow-md shadow-indigo-600/30";
-        frameDesktop.style.maxWidth = "390px";
-        frameDesktop.style.borderRadius = "40px";
-        frameDesktop.style.borderWidth = "8px";
-        frameDesktop.style.borderColor = "#1e293b";
+    // Switch Device Frames
+    function setDevice(mobileMode) {
+      isMobile = mobileMode;
+      if (mobileMode) {
+        desktopBtn.className = "flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white";
+        mobileBtn.className = "flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer bg-indigo-600 text-white shadow-md shadow-indigo-600/30";
+        frameDesktop.classList.add("hidden");
+        frameMobile.classList.remove("hidden");
       } else {
-        desktopBtn.className = "flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer bg-indigo-600 text-white shadow-md shadow-indigo-600/30";
-        mobileBtn.className = "flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer text-slate-400 hover:text-white";
-        frameDesktop.style.maxWidth = "100%";
-        frameDesktop.style.borderRadius = "24px";
-        frameDesktop.style.borderWidth = "1px";
-        frameDesktop.style.borderColor = "#334155";
+        desktopBtn.className = "flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer bg-indigo-600 text-white shadow-md shadow-indigo-600/30";
+        mobileBtn.className = "flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white";
+        frameDesktop.classList.remove("hidden");
+        frameMobile.classList.add("hidden");
       }
     }
 
-    desktopBtn?.addEventListener("click", () => setDeviceMode(false));
-    mobileBtn?.addEventListener("click", () => setDeviceMode(true));
+    desktopBtn?.addEventListener("click", () => setDevice(false));
+    mobileBtn?.addEventListener("click", () => setDevice(true));
 
-    // Tab Switching
-    function switchTab(tabId) {
-      tabButtons.forEach((btn) => {
-        if (btn.dataset.tab === tabId) {
+    // Desktop Tab Switching
+    function switchDesktopTab(tab) {
+      desktopTabBtns.forEach((btn) => {
+        if (btn.dataset.tab === tab) {
           btn.className = "sim-tab-btn px-3 py-1.5 rounded-lg bg-indigo-600 text-white shadow-xs transition";
         } else {
-          btn.className = "sim-tab-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition";
+          btn.className = "sim-tab-btn px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition";
         }
       });
-
-      tabContents.forEach((c) => {
-        if (c.id === `sim-view-${tabId}`) {
-          c.classList.remove("hidden");
-        } else {
-          c.classList.add("hidden");
-        }
+      desktopTabViews.forEach((v) => {
+        v.classList.toggle("hidden", v.id !== `desktop-view-${tab}`);
       });
     }
 
-    tabButtons.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        isPaused = true;
-        updatePauseState();
-        switchTab(btn.dataset.tab);
+    // Mobile Tab Switching
+    function switchMobileTab(tab) {
+      mobileTabBtns.forEach((btn) => {
+        if (btn.dataset.tab === tab) {
+          btn.className = "mobile-tab-btn flex flex-col items-center gap-0.5 text-indigo-600 font-bold text-[10px] cursor-pointer";
+        } else {
+          btn.className = "mobile-tab-btn flex flex-col items-center gap-0.5 text-slate-500 dark:text-slate-400 font-medium text-[10px] cursor-pointer";
+        }
       });
-    });
+      mobileTabViews.forEach((v) => {
+        v.classList.toggle("hidden", v.id !== `mobile-view-${tab}`);
+      });
+    }
 
-    // Pause / Play
-    function updatePauseState() {
+    function switchAllTabs(tab) {
+      switchDesktopTab(tab);
+      switchMobileTab(tab);
+    }
+
+    desktopTabBtns.forEach((b) => b.addEventListener("click", () => {
+      isPaused = true;
+      updatePauseUI();
+      switchAllTabs(b.dataset.tab);
+    }));
+
+    mobileTabBtns.forEach((b) => b.addEventListener("click", () => {
+      isPaused = true;
+      updatePauseUI();
+      switchAllTabs(b.dataset.tab);
+    }));
+
+    // Pause UI
+    function updatePauseUI() {
       if (isPaused) {
         simPlayIcon.textContent = "▶";
         simPlayText.textContent = "Resume Demo";
@@ -503,85 +705,86 @@
 
     simToggleBtn?.addEventListener("click", () => {
       isPaused = !isPaused;
-      updatePauseState();
+      updatePauseUI();
     });
 
-    document.getElementById("btn-sim-manual-add")?.addEventListener("click", () => {
-      triggerAddExpenseAnimation();
-    });
+    document.getElementById("btn-desktop-add")?.addEventListener("click", triggerAddSimulation);
+    document.getElementById("btn-mobile-add")?.addEventListener("click", triggerAddSimulation);
 
-    // Step Animation Workflow
-    function triggerAddExpenseAnimation() {
-      switchTab("overview");
-      modalAddExpense.classList.remove("hidden");
-      inputAmount.value = "";
-      inputDetails.value = "";
+    // Simulated 3-Tap Add Expense
+    function triggerAddSimulation() {
+      switchAllTabs("overview");
+      mobileModal.classList.remove("hidden");
+      mobileInputAmt.value = "";
+      mobileInputDet.value = "";
 
       let amt = "1200";
-      let details = "Swiggy Dinner 🍕";
+      let det = "Swiggy Dinner 🍕";
       let i = 0;
 
-      // Simulated typing
-      const typeAmt = setInterval(() => {
+      const tAmt = setInterval(() => {
         if (i < amt.length) {
-          inputAmount.value += amt[i];
+          mobileInputAmt.value += amt[i];
           i++;
         } else {
-          clearInterval(typeAmt);
+          clearInterval(tAmt);
           let j = 0;
-          const typeDetails = setInterval(() => {
-            if (j < details.length) {
-              inputDetails.value += details[j];
+          const tDet = setInterval(() => {
+            if (j < det.length) {
+              mobileInputDet.value += det[j];
               j++;
             } else {
-              clearInterval(typeDetails);
-              // Auto click save
+              clearInterval(tDet);
               setTimeout(() => {
-                btnSaveExpense.classList.add("scale-95");
+                mobileBtnSave.classList.add("scale-95");
                 setTimeout(() => {
-                  btnSaveExpense.classList.remove("scale-95");
-                  modalAddExpense.classList.add("hidden");
-                  // Apply results
-                  newExpenseRow.classList.remove("hidden");
-                  netBalanceEl.textContent = "+₹10,800";
-                  akbarDuesEl.textContent = "₹4,400";
-                  anthonyDuesEl.textContent = "₹6,400";
-                  sheetNewRow.classList.remove("hidden");
-                  matrixAmar.textContent = "+₹10,800";
-                  matrixAkbar.textContent = "-₹4,400";
-                  matrixAnthony.textContent = "-₹6,400";
-                }, 400);
-              }, 600);
+                  mobileBtnSave.classList.remove("scale-95");
+                  mobileModal.classList.add("hidden");
+
+                  // Update Desktop View
+                  desktopNewRow?.classList.remove("hidden");
+                  desktopNetBalance.textContent = "+₹10,800";
+                  desktopAkbarDues.textContent = "₹4,400";
+                  desktopAnthonyDues.textContent = "₹6,400";
+                  desktopSheetNewRow?.classList.remove("hidden");
+                  desktopMatrixAmar.textContent = "+₹10,800";
+                  desktopMatrixAkbar.textContent = "-₹4,400";
+                  desktopMatrixAnthony.textContent = "-₹6,400";
+
+                  // Update Mobile View
+                  mobileNewRow?.classList.remove("hidden");
+                  mobileNetBalance.textContent = "+₹10,800";
+                  mobileAkbarDues.textContent = "₹4,400";
+                  mobileAnthonyDues.textContent = "₹6,400";
+                  mobileSheetNewRow?.classList.remove("hidden");
+                }, 300);
+              }, 500);
             }
           }, 35);
         }
       }, 70);
     }
 
-    function runSimulationStep() {
+    function runNextStep() {
       if (isPaused) return;
+      stepIndex = (stepIndex + 1) % 4;
 
-      currentStep = (currentStep + 1) % 4;
-
-      if (currentStep === 0) {
-        simStepLabel.textContent = "Step 1: Adding Expense (<10s, 3 taps)";
-        triggerAddExpenseAnimation();
-      } else if (currentStep === 1) {
+      if (stepIndex === 0) {
+        simStepLabel.textContent = "Step 1: 3-Tap Mobile Entry (<10s)";
+        triggerAddSimulation();
+      } else if (stepIndex === 1) {
         simStepLabel.textContent = "Step 2: Balance Auto-Updated (+₹10,800)";
-        switchTab("overview");
-      } else if (currentStep === 2) {
+        switchAllTabs("overview");
+      } else if (stepIndex === 2) {
         simStepLabel.textContent = "Step 3: Live Spreadsheet Matrix View";
-        switchTab("sheet");
-      } else if (currentStep === 3) {
+        switchAllTabs("sheet");
+      } else if (stepIndex === 3) {
         simStepLabel.textContent = "Step 4: Greedy Debt Simplification (2 UPIs)";
-        switchTab("settle");
+        switchAllTabs("settle");
       }
     }
 
-    // Auto-loop every 4.5 seconds
-    timerId = setInterval(runSimulationStep, 4500);
-
-    // Initial run
-    setTimeout(runSimulationStep, 1000);
+    timerId = setInterval(runNextStep, 4500);
+    setTimeout(runNextStep, 800);
   })();
 </script>

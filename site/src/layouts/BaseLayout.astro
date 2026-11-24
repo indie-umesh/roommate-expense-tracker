@@ -38,7 +38,7 @@ const {
 } = Astro.props;
 
 const siteUrl = "https://roommatesexpensemanager.com";
-const appUrl = "http://192.168.1.6:5173"; // Or production app URL https://app.roommatesexpensemanager.com
+const appUrl = "http://localhost:5173";
 
 // Base JSON-LD SoftwareApplication Schema
 const softwareSchema = {
@@ -99,8 +99,8 @@ const articleJsonLd = articleSchema ? {
   "dateModified": articleSchema.dateModified || articleSchema.datePublished,
   "author": {
     "@type": "Person",
-    "name": articleSchema.authorName || "Umesh Jaiswal",
-    "jobTitle": "Full-Stack Engineer & Flatmate",
+    "name": articleSchema.authorName || "Roommate Team",
+    "jobTitle": "Flatmate & Engineer",
     "url": "https://roommatesexpensemanager.com/about"
   },
   "publisher": {
@@ -162,46 +162,77 @@ const articleJsonLd = articleSchema ? {
     <script type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
     {faqJsonLd && <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />}
     {articleJsonLd && <script type="application/ld+json" set:html={JSON.stringify(articleJsonLd)} />}
+
+    <!-- Anti-FOUC Theme Initialization (Default: Light Mode) -->
+    <script is:inline>
+      (function() {
+        try {
+          const stored = localStorage.getItem('theme');
+          if (stored === 'dark') {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+        } catch (_) {}
+      })();
+    </script>
   </head>
 
-  <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-indigo-500 selection:text-white">
-    <!-- Top Announcement Bar -->
-    <aside aria-label="Announcement" class="bg-gradient-to-r from-indigo-900 via-indigo-600 to-emerald-600 text-white text-xs font-semibold py-2 px-4 text-center">
-      <span>🚀 Tired of Splitwise's 3-expense/day limit? Switch to Roommate — 100% Free Forever, No Ads, No Wait Times.</span>
-      <a href="/splitwise-alternative" class="underline ml-2 hover:text-indigo-200">See Comparison →</a>
+  <body class="bg-white dark:bg-black text-[#1d1d1f] dark:text-[#f5f5f7] min-h-screen flex flex-col font-sans transition-colors duration-200">
+    <!-- Top Announcement Bar (Apple Sub-Banner Style) -->
+    <aside aria-label="Announcement" class="bg-[#f5f5f7] dark:bg-[#161617] text-[#1d1d1f] dark:text-[#f5f5f7] border-b border-black/5 dark:border-white/10 text-[12px] sm:text-[13px] py-2 px-4 text-center">
+      <span>Tired of Splitwise's 3-expense/day cap? Switch to Roommate — 100% Free Forever, No Ads, No Wait Times.</span>
+      <a href="/splitwise-alternative" class="text-[#0066cc] dark:text-[#2997ff] hover:underline font-normal ml-1">See comparison <span aria-hidden="true">›</span></a>
     </aside>
 
-    <!-- Navigation Header -->
-    <header class="sticky top-0 z-50 backdrop-blur-xl bg-slate-950/80 border-b border-slate-800">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+    <!-- Global Navigation Header (Apple 48px Frosted Glass) -->
+    <header class="sticky top-0 z-50 backdrop-blur-md bg-white/80 dark:bg-black/80 border-b border-black/5 dark:border-white/10 transition-colors duration-200">
+      <div class="max-w-[1024px] mx-auto px-4 sm:px-6 h-12 flex items-center justify-between gap-4">
         <!-- Logo -->
-        <a href="/" class="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-lg p-1">
-          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-emerald-500 text-white flex items-center justify-center font-black text-lg shadow-lg shadow-indigo-500/20 group-hover:scale-105 transition">
+        <a href="/" class="flex items-center gap-2 group focus:outline-none" aria-label="Roommate Homepage">
+          <div class="w-6 h-6 rounded-md bg-[#0066cc] text-white flex items-center justify-center font-semibold text-xs shadow-xs">
             ₹
           </div>
-          <div>
-            <span class="font-bold text-lg tracking-tight text-white block leading-tight">Roommate</span>
-            <span class="text-[10px] text-emerald-400 font-medium block">Free Expense Tracker</span>
-          </div>
+          <span class="font-semibold text-[15px] tracking-tight text-[#1d1d1f] dark:text-white">Roommate</span>
         </a>
 
-        <!-- Desktop Navigation -->
-        <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-300" aria-label="Main Navigation">
-          <a href="/splitwise-alternative" class="hover:text-white transition">Splitwise Alternative</a>
-          <a href="/roommate-expense-tracker-excel" class="hover:text-white transition">Excel View</a>
-          <a href="/roommate-expense-tracker-google-sheets" class="hover:text-white transition">Google Sheets vs App</a>
-          <a href="/roommate-expense-tracker-template" class="hover:text-white transition">Free Template</a>
-          <a href="/blog" class="hover:text-white transition">Guides & Blog</a>
+        <!-- Desktop Navigation Links (Apple SF Pro Text 12px) -->
+        <nav class="hidden md:flex items-center gap-6 text-[12px] font-normal text-[#1d1d1f]/80 dark:text-white/80 tracking-normal" aria-label="Main Navigation">
+          <a href="/splitwise-alternative" class="hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors">Splitwise Alternative</a>
+          <a href="/picnic-expenses-calculator" class="hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors">Picnic Calculator</a>
+          <a href="/split-expenses-calculator-online" class="hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors">Trip Calculator</a>
+          <a href="/roommate-expense-tracker-excel" class="hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors">Excel View</a>
+          <a href="/roommate-expense-tracker-template" class="hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors">Free Template</a>
+          <a href="/blog" class="hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors">Guides & Blog</a>
         </nav>
 
-        <!-- CTAs -->
-        <div class="flex items-center gap-3">
-          <a
-            href="http://localhost:5173"
-            class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs sm:text-sm font-bold shadow-lg shadow-indigo-600/30 hover:shadow-indigo-600/50 transition active:scale-95 flex items-center gap-1.5"
+        <!-- Right Action Cluster: Theme Switch & Action Blue Pill Button -->
+        <div class="flex items-center gap-2 sm:gap-3">
+          <!-- Minimalist Theme Switch Button -->
+          <button
+            type="button"
+            id="site-theme-toggle"
+            class="w-7 h-7 rounded-full bg-black/5 dark:bg-white/10 text-[#1d1d1f] dark:text-white hover:bg-black/10 dark:hover:bg-white/20 transition flex items-center justify-center cursor-pointer"
+            aria-label="Toggle Theme"
+            title="Toggle Light / Dark Mode"
           >
-            <span>Launch Web App</span>
-            <span aria-hidden="true">→</span>
+            <!-- Sun icon (shown in dark mode) -->
+            <svg class="w-3.5 h-3.5 hidden dark:block text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+            <!-- Moon icon (shown in light mode) -->
+            <svg class="w-3.5 h-3.5 block dark:hidden text-[#1d1d1f]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+            </svg>
+          </button>
+
+          <!-- Signature Action Blue Pill CTA -->
+          <a
+            href={appUrl}
+            class="px-3.5 py-1 rounded-full bg-[#0066cc] hover:bg-[#0071e3] text-white text-[12px] sm:text-[13px] font-normal transition active:scale-95 flex items-center gap-1 cursor-pointer"
+          >
+            <span>Launch App</span>
+            <span aria-hidden="true">›</span>
           </a>
         </div>
       </div>
@@ -212,74 +243,83 @@ const articleJsonLd = articleSchema ? {
       <slot />
     </main>
 
-    <!-- Comprehensive Hub-and-Spoke SEO Footer -->
-    <footer class="bg-slate-900 border-t border-slate-800 text-slate-400 text-sm pt-14 pb-12 mt-20">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-slate-800">
+    <!-- Apple Museum Gallery Footer (Parchment #f5f5f7 / #161617) -->
+    <footer class="bg-[#f5f5f7] dark:bg-[#161617] border-t border-black/5 dark:border-white/10 text-[#86868b] text-[12px] py-14 transition-colors duration-200">
+      <div class="max-w-[1024px] mx-auto px-4 sm:px-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 pb-10 border-b border-black/5 dark:border-white/10">
           <!-- Col 1: About & Positioning -->
-          <div class="lg:col-span-2 space-y-4">
-            <div class="flex items-center gap-2.5">
-              <div class="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-bold text-sm">₹</div>
-              <span class="text-white font-bold text-base">Roommate Expense Tracker</span>
+          <div class="lg:col-span-2 space-y-3">
+            <div class="flex items-center gap-2">
+              <div class="w-5 h-5 rounded bg-[#0066cc] text-white flex items-center justify-center font-semibold text-[10px]">₹</div>
+              <span class="text-[#1d1d1f] dark:text-white font-semibold text-[13px]">Roommate Expense Tracker</span>
             </div>
-            <p class="text-xs text-slate-400 leading-relaxed max-w-sm">
-              The fastest shared expense tracker built for flatmates, bachelors, and roommates. Log bills in 3 taps, view live spreadsheet matrices, handle staggered paydays, and settle accounts in under 5 minutes without awkward money chats.
+            <p class="text-[12px] leading-relaxed max-w-sm text-[#86868b]">
+              The zero-friction shared expense manager built for flatmates, bachelors, and roommates. Log bills in 3 taps, view live spreadsheet matrices, handle staggered paydays, and settle accounts in under 5 minutes without awkward conversations.
             </p>
-            <div class="flex items-center gap-3 pt-2">
-              <span class="inline-flex items-center gap-1.5 text-xs text-emerald-400 font-semibold bg-emerald-950/60 border border-emerald-800/40 px-2.5 py-1 rounded-full">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                100% Free Forever • No Ads • Zero Friction
-              </span>
-            </div>
+            <p class="text-[11px] text-[#86868b]">
+              100% Free Forever · No Ads · Zero Daily Limits
+            </p>
           </div>
 
           <!-- Col 2: Core Keywords & Tool Pages -->
-          <div class="space-y-3">
-            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-200">Expense Tools</h4>
-            <ul class="space-y-2 text-xs">
-              <li><a href="/" class="hover:text-white transition">Roommate Expense Tracker App</a></li>
-              <li><a href="/shared-expense-tracker-app-free" class="hover:text-white transition">Shared Expense Tracker Free</a></li>
-              <li><a href="/roommate-expense-tracker-excel" class="hover:text-white transition">Roommate Expense Tracker Excel</a></li>
-              <li><a href="/roommate-expense-tracker-google-sheets" class="hover:text-white transition">Roommate Google Sheets View</a></li>
-              <li><a href="/roommate-expense-tracker-template" class="hover:text-white transition">Roommate Bill Split Template</a></li>
+          <div class="space-y-2">
+            <h4 class="text-[12px] font-semibold text-[#1d1d1f] dark:text-white">Expense Tools</h4>
+            <ul class="space-y-1.5 text-[12px]">
+              <li><a href="/picnic-expenses-calculator" class="hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors font-medium">Picnic Expenses Calculator</a></li>
+              <li><a href="/split-expenses-calculator-online" class="hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors font-medium">Split Expenses Calculator Online</a></li>
+              <li><a href="/" class="hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors">Roommate Expense App</a></li>
+              <li><a href="/shared-expense-tracker-app-free" class="hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors">Shared Expense Free</a></li>
+              <li><a href="/roommate-expense-tracker-excel" class="hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors">Excel Matrix Ledger</a></li>
+              <li><a href="/roommate-expense-tracker-template" class="hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors">Bill Split Template</a></li>
             </ul>
           </div>
 
           <!-- Col 3: Competitor Alternatives -->
-          <div class="space-y-3">
-            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-200">Alternatives</h4>
-            <ul class="space-y-2 text-xs">
-              <li><a href="/splitwise-alternative" class="hover:text-white transition font-medium text-indigo-400">Splitwise Alternative 2026</a></li>
-              <li><a href="/splitwise-alternative#limits" class="hover:text-white transition">Splitwise Daily Limit Workaround</a></li>
-              <li><a href="/tricount-alternative" class="hover:text-white transition">Tricount Alternative</a></li>
-              <li><a href="/settle-up-alternative" class="hover:text-white transition">Settle Up Alternative</a></li>
-              <li><a href="/splitwise-alternative#pricing" class="hover:text-white transition">Splitwise Pro Pricing Breakdown</a></li>
+          <div class="space-y-2">
+            <h4 class="text-[12px] font-semibold text-[#1d1d1f] dark:text-white">Alternatives</h4>
+            <ul class="space-y-1.5 text-[12px]">
+              <li><a href="/splitwise-alternative" class="hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors">Splitwise Alternative</a></li>
+              <li><a href="/splitwise-alternative#limits" class="hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors">Splitwise Daily Limit</a></li>
+              <li><a href="/tricount-alternative" class="hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors">Tricount Alternative</a></li>
+              <li><a href="/settle-up-alternative" class="hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors">Settle Up Alternative</a></li>
+              <li><a href="/splitwise-alternative#pricing" class="hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors">Splitwise Pro Pricing</a></li>
             </ul>
           </div>
 
           <!-- Col 4: Expert Blog Guides -->
-          <div class="space-y-3">
-            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-200">Guides & Articles</h4>
-            <ul class="space-y-2 text-xs">
-              <li><a href="/blog/why-google-sheets-fails-for-roommates" class="hover:text-white transition">Why Google Sheets Fails</a></li>
-              <li><a href="/blog/how-to-manage-different-paydays-with-roommates" class="hover:text-white transition">Managing Different Paydays</a></li>
-              <li><a href="/blog/splitwise-limits-and-best-free-alternatives-2026" class="hover:text-white transition">Best Free Bill Split Apps</a></li>
-              <li><a href="/blog/how-to-split-rent-and-groceries-equitably" class="hover:text-white transition">Fair Rent & Grocery Split Rules</a></li>
-              <li><a href="/blog" class="hover:text-white transition font-medium text-emerald-400">View All Blog Posts →</a></li>
+          <div class="space-y-2">
+            <h4 class="text-[12px] font-semibold text-[#1d1d1f] dark:text-white">Guides & Blog</h4>
+            <ul class="space-y-1.5 text-[12px]">
+              <li><a href="/blog/why-google-sheets-fails-for-roommates" class="hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors">Why Google Sheets Fails</a></li>
+              <li><a href="/blog/how-to-manage-different-paydays-with-roommates" class="hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors">Managing Paydays</a></li>
+              <li><a href="/blog/splitwise-limits-and-best-free-alternatives-2026" class="hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors">Free Bill Split Apps</a></li>
+              <li><a href="/blog/how-to-split-rent-and-groceries-equitably" class="hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors">Fair Rent Split Rules</a></li>
+              <li><a href="/blog" class="hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors font-medium">All Guides <span aria-hidden="true">›</span></a></li>
             </ul>
           </div>
         </div>
 
-        <!-- Bottom Bar -->
-        <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-          <p>© {new Date().getFullYear()} Roommate Expense Tracker. Built with care for flatmates everywhere.</p>
-          <div class="flex items-center gap-6">
-            <a href="/llms.txt" class="hover:text-slate-300 text-slate-400 font-mono">llms.txt (AI Overview)</a>
-            <a href="/sitemap-index.xml" class="hover:text-slate-300">XML Sitemap</a>
-            <a href="http://localhost:5173" class="hover:text-white text-indigo-400 font-semibold">Web App Login</a>
+        <!-- Bottom Legal & AI Crawler Links -->
+        <div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-[#86868b]">
+          <p>© {new Date().getFullYear()} Roommate. Built with care for flatmates everywhere.</p>
+          <div class="flex items-center gap-5">
+            <a href="/llms.txt" class="hover:text-[#1d1d1f] dark:hover:text-white transition-colors">llms.txt (AI Overview)</a>
+            <a href="/sitemap-index.xml" class="hover:text-[#1d1d1f] dark:hover:text-white transition-colors">Sitemap</a>
+            <a href={appUrl} class="text-[#0066cc] dark:text-[#2997ff] hover:underline font-medium">Web App Login</a>
           </div>
         </div>
       </div>
     </footer>
+
+    <!-- Global Theme Switch Handler -->
+    <script is:inline>
+      document.getElementById('site-theme-toggle')?.addEventListener('click', () => {
+        const isDark = document.documentElement.classList.toggle('dark');
+        try {
+          localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        } catch (_) {}
+        window.dispatchEvent(new CustomEvent('theme-changed', { detail: { isDark } }));
+      });
+    </script>
   </body>
 </html>
