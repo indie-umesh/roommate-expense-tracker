@@ -35,6 +35,10 @@ const SUPERADMIN_PIN = "982600"; // Master Superadmin Access PIN
 export const SuperadminPage: React.FC = () => {
   const queryClient = useQueryClient();
 
+  useEffect(() => {
+    document.title = "Superadmin — Roommate";
+  }, []);
+
   // Authentication state
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
     return sessionStorage.getItem("roommate_superadmin_auth") === "true";
