@@ -1,8 +1,6 @@
 /**
  * Global dynamic App URL resolver
- * - In local development: defaults to Vite dev server (http://localhost:5173)
- * - In production: reads from PUBLIC_APP_URL environment variable, or defaults to the app subdomain
+ * - Points directly to the built-in PWA web app at /app/ on the same domain
+ * - Can be overridden via PUBLIC_APP_URL environment variable if deployed separately
  */
-export const APP_URL =
-  import.meta.env.PUBLIC_APP_URL ||
-  (import.meta.env.DEV ? "http://localhost:5173" : "https://roommate-expense-app.pages.dev");
+export const APP_URL = import.meta.env.PUBLIC_APP_URL || "/app/";

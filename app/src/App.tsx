@@ -203,7 +203,7 @@ export function App() {
       <ThemeProvider>
         <LanguageProvider>
           <AuthProvider>
-            <BrowserRouter>
+            <BrowserRouter basename={import.meta.env.BASE_URL}>
               <AppContent />
             </BrowserRouter>
           </AuthProvider>

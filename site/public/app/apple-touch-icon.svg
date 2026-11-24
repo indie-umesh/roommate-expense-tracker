@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="100%" height="100%">
+  <defs>
+    <!-- Electric Turquoise & Mint Teal Gradient -->
+    <linearGradient id="rmBrandGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00c48c" />
+      <stop offset="100%" stop-color="#00805a" />
+    </linearGradient>
+
+    <!-- Subtle Inner Bevel / Rim Light -->
+    <linearGradient id="rmRimGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.4" />
+      <stop offset="50%" stop-color="#ffffff" stop-opacity="0.08" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+    </linearGradient>
+
+    <!-- Soft Depth Filter -->
+    <filter id="rmGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#004d36" flood-opacity="0.35" />
+    </filter>
+  </defs>
+
+  <!-- Outer Icon Squircle Frame -->
+  <rect x="6" y="6" width="108" height="108" rx="28" fill="url(#rmBrandGrad)" filter="url(#rmGlow)" />
+  <rect x="6.75" y="6.75" width="106.5" height="106.5" rx="27.25" fill="none" stroke="url(#rmRimGrad)" stroke-width="1.5" />
+
+  <!-- Iconic Monogram: R + Rupee (₹) + Split Balance Geometry -->
+  <g fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Top Rupee Balance Crossbar -->
+    <line x1="33" y1="36" x2="87" y2="36" stroke-width="8" />
+    
+    <!-- Second Rupee Crossbar -->
+    <line x1="33" y1="49" x2="73" y2="49" stroke-width="8" />
+
+    <!-- Main Solid Spine -->
+    <line x1="43" y1="36" x2="43" y2="88" stroke-width="8.5" />
+
+    <!-- R Upper Sharing Loop -->
+    <path d="M43,36 H66 C78,36 85,44 85,55 C85,66 78,73 65,73 H43" stroke-width="8" />
+
+    <!-- R Active Forward Kick Leg -->
+    <path d="M61,72 L82,88" stroke-width="8.5" />
+  </g>
+
+  <!-- Central Dynamic Settlement Sparkle -->
+  <circle cx="64" cy="55" r="3.5" fill="#ff385c" />
+</svg>
