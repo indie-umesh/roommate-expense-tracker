@@ -1,2 +1,14 @@
 /*
   X-Robots-Tag: noindex, nofollow, noarchive
+
+/app/sw.js
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/app/index.html
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/app/registerSW.js
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/app/manifest.webmanifest
+  Cache-Control: no-cache, no-store, must-revalidate

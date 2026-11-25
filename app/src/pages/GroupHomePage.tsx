@@ -556,24 +556,25 @@ export const GroupHomePage: React.FC = () => {
           </div>
 
           {/* Mobile Tier 2: Dedicated Full-Width Flat Identity Banner */}
-          <div className="flex md:hidden items-center justify-between pt-1 pb-2 border-t border-slate-100 dark:border-white/5 gap-2">
+          <div className="flex md:hidden items-center justify-between pt-2 pb-2.5 border-t border-slate-200/60 dark:border-white/10 gap-2">
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-2">
-                <h1 className="font-extrabold text-[15px] sm:text-base text-[var(--text-primary)] tracking-tight leading-tight truncate">
+                <h1 className="font-extrabold text-base text-[var(--text-primary)] tracking-tight leading-snug break-words">
                   {group?.name ? localizeName(group.name, currentLanguage.code) : "Indore Flat"}
                 </h1>
                 <button
                   onClick={() => navigate("/groups")}
-                  className="shrink-0 text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-100 dark:bg-white/10 text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+                  className="shrink-0 text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-white/10 dark:hover:bg-white/15 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition"
+                  title="Switch Flat"
                 >
                   Switch
                 </button>
               </div>
-              <p className="text-[11px] text-[var(--text-muted)] font-normal truncate mt-0.5 flex items-center">
+              <p className="text-xs text-[var(--text-muted)] font-normal mt-0.5 flex items-center flex-wrap gap-1">
                 <span>{members.length === 1 ? t("roommate_count_one") : t("roommate_count_other", { count: members.length })}</span>
-                <span className="mx-1.5 opacity-40">·</span>
+                <span className="opacity-40">·</span>
                 <span className="truncate">
-                  {t("signed_in_as")} <strong className="text-indigo-600 dark:text-indigo-400 font-semibold">{profile?.display_name ? localizeName(profile.display_name, currentLanguage.code) : "User"}</strong>
+                  {t("signed_in_as")} <strong className="text-[#00966d] dark:text-[#00e599] font-semibold">{profile?.display_name ? localizeName(profile.display_name, currentLanguage.code) : "User"}</strong>
                 </span>
               </p>
             </div>

@@ -84,6 +84,13 @@ class RootErrorBoundary extends Component<Props, State> {
   }
 }
 
+// Auto-reload when new service worker version activates
+if (typeof window !== "undefined" && "serviceWorker" in navigator) {
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    window.location.reload();
+  });
+}
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <RootErrorBoundary>
