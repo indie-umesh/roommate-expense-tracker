@@ -14,23 +14,11 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
   textClassName = "font-bold text-[16px] tracking-tight text-[var(--text-primary)]"
 }) => {
   return (
-    <div className={`inline-flex items-center gap-2.5 ${className}`}>
+    <div className={`inline-flex items-center ${showText ? "gap-2" : ""} ${className}`}>
       <div style={{ width: size, height: size }} className="shrink-0 transition-transform duration-200 hover:scale-105">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="100%" height="100%" className="w-full h-full drop-shadow-xs">
-          <defs>
-            <linearGradient id="reactLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#00c48c" />
-              <stop offset="100%" stopColor="#00805a" />
-            </linearGradient>
-            <linearGradient id="reactLogoRim" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#ffffff" stopOpacity="0.45" />
-              <stop offset="50%" stopColor="#ffffff" stopOpacity="0.08" />
-              <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
-            </linearGradient>
-          </defs>
-
-          <rect x="6" y="6" width="108" height="108" rx="28" fill="url(#reactLogoGrad)" />
-          <rect x="6.75" y="6.75" width="106.5" height="106.5" rx="27.25" fill="none" stroke="url(#reactLogoRim)" strokeWidth="1.5" />
+          <rect x="6" y="6" width="108" height="108" rx="28" fill="#00966d" />
+          <rect x="6.75" y="6.75" width="106.5" height="106.5" rx="27.25" fill="none" stroke="#ffffff" strokeOpacity="0.3" strokeWidth="1.5" />
 
           <g fill="none" stroke="#ffffff" strokeLinecap="round" strokeLinejoin="round">
             <line x1="33" y1="36" x2="87" y2="36" strokeWidth="8" />

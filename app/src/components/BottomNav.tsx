@@ -49,8 +49,10 @@ export const BottomNav: React.FC<BottomNavProps> = ({
         {/* Center Raised Action Button: + Add */}
         <div className="px-1 -mt-6">
           <button
+            type="button"
             onClick={onOpenAddModal}
-            className="w-13 h-13 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white flex items-center justify-center border-4 border-white dark:border-[#090d16] shadow-md transition active:scale-95 cursor-pointer"
+            style={{ touchAction: "manipulation" }}
+            className="w-13 h-13 rounded-full bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white flex items-center justify-center border-4 border-white dark:border-[#090d16] shadow-md transition cursor-pointer touch-manipulation select-none"
             title={t("add_expense")}
           >
             <Plus className="w-6 h-6 stroke-[2.5]" />

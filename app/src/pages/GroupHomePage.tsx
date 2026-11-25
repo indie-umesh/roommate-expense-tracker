@@ -396,9 +396,9 @@ export const GroupHomePage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--bg-page)] text-[var(--text-primary)] flex flex-col pb-24 md:pb-8 w-full transition-colors duration-200">
+    <div className="min-h-screen bg-[var(--bg-page)] text-[var(--text-primary)] flex flex-col pb-24 md:pb-8 w-full overflow-x-hidden transition-colors duration-200">
       {/* Top Modern App Header - Clean, Vertically Adaptive for Mobile */}
-      <header className="bg-white/95 dark:bg-[#111827]/95 backdrop-blur-md border-b border-slate-200/80 dark:border-white/10 sticky top-0 z-30 transition-all">
+      <header className="bg-white/95 dark:bg-[#111827]/95 backdrop-blur-md border-b border-slate-200/80 dark:border-white/10 sticky top-0 z-30 overflow-x-hidden transition-all">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Main Top Row */}
           <div className="h-13 md:h-16 flex items-center justify-between gap-2 sm:gap-4">
@@ -499,26 +499,7 @@ export const GroupHomePage: React.FC = () => {
             </div>
 
             {/* Right: Actions */}
-            <div className="flex items-center gap-1 sm:gap-2 shrink-0">
-              {/* Invite Code Pill */}
-              <button
-                onClick={copyCode}
-                className="h-8 md:h-9 px-2 sm:px-3 rounded-xl text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/40 text-[#00966d] dark:text-[#00e599] border border-emerald-200/80 dark:border-emerald-500/30 transition cursor-pointer flex items-center gap-1.5 whitespace-nowrap shrink-0"
-                title="Click to copy invite code"
-              >
-                {copiedCode ? (
-                  <>
-                    <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                    <span className="text-emerald-600 font-bold text-[11px] sm:text-xs">{t("copied")}</span>
-                  </>
-                ) : (
-                  <>
-                    <Copy className="w-3.5 h-3.5 opacity-70 shrink-0" />
-                    <span className="font-mono font-bold tracking-wider text-[11px] sm:text-xs">{group?.invite_code || "CODE"}</span>
-                  </>
-                )}
-              </button>
-
+            <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
               {/* Language Selector */}
               <button
                 onClick={() => setIsSettingsOpen(true)}

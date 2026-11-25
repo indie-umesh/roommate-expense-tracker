@@ -21,6 +21,13 @@
     --border-card: rgba(255, 255, 255, 0.08);
   }
 
+  html,
+  body {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
+  }
+
   body {
     background-color: var(--bg-page);
     color: var(--text-primary);

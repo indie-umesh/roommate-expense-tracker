@@ -281,7 +281,9 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
         }
         setSelectedMemberIds(uniqueMembers.map((m) => m.id));
       }
-      setTimeout(() => inputRef.current?.focus(), 150);
+      requestAnimationFrame(() => {
+        inputRef.current?.focus();
+      });
     } else {
       setAmountRupees("");
       setDetails("");
@@ -400,16 +402,17 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: 0.08 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm"
+            className="fixed inset-0 bg-black/60"
           />
 
           {/* Modal Centered Card */}
           <motion.div
-            initial={{ scale: 0.95, opacity: 0 }}
+            initial={{ scale: 0.97, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.95, opacity: 0 }}
-            transition={{ duration: 0.16, ease: "easeOut" }}
+            exit={{ scale: 0.97, opacity: 0 }}
+            transition={{ duration: 0.08, ease: "easeOut" }}
             className="relative bg-white dark:bg-[#111827] text-[var(--text-primary)] w-full max-w-lg rounded-2xl p-5 sm:p-6 shadow-2xl z-10 max-h-[92vh] overflow-y-auto border border-slate-200/90 dark:border-white/10 my-auto"
           >
             {/* Header */}
