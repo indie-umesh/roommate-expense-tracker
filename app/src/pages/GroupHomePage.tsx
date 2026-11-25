@@ -383,23 +383,193 @@ export const GroupHomePage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[var(--bg-page)] text-[var(--text-primary)] flex flex-col pb-24 md:pb-8 w-full transition-colors duration-200">
-      {/* Top Modern App Header - Clean, Balanced & Robust */}
-      <header className="h-16 bg-white/90 dark:bg-[#111827]/90 backdrop-blur-md border-b border-slate-200/80 dark:border-white/10 sticky top-0 z-30 transition-all">
-        <div className="max-w-7xl h-full mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-2 sm:gap-4">
-          {/* Left: App Logo & Flat Name */}
-          <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
-            <a
-              href={MARKETING_HOMEPAGE_URL}
-              className="shrink-0 transition-transform duration-150 hover:scale-105 focus:outline-none"
-              title="Return to Roommate Homepage"
-            >
-              <BrandLogo size={34} showText={false} />
-            </a>
-            <div className="min-w-0">
-              <h1 className="font-bold text-sm sm:text-base text-[var(--text-primary)] tracking-tight truncate leading-tight">
-                {group?.name ? localizeName(group.name, currentLanguage.code) : "Indore Flat"}
-              </h1>
-              <p className="text-[11px] sm:text-xs text-[var(--text-muted)] font-normal truncate whitespace-nowrap mt-0.5 flex items-center">
+      {/* Top Modern App Header - Clean, Vertically Adaptive for Mobile */}
+      <header className="bg-white/95 dark:bg-[#111827]/95 backdrop-blur-md border-b border-slate-200/80 dark:border-white/10 sticky top-0 z-30 transition-all">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Main Top Row */}
+          <div className="h-13 md:h-16 flex items-center justify-between gap-2 sm:gap-4">
+            {/* Desktop Left: Logo + Flat Name */}
+            <div className="hidden md:flex items-center gap-3 min-w-0">
+              <a
+                href={MARKETING_HOMEPAGE_URL}
+                className="shrink-0 transition-transform duration-150 hover:scale-105 focus:outline-none"
+                title="Return to Roommate Homepage"
+              >
+                <BrandLogo size={34} showText={false} />
+              </a>
+              <div className="min-w-0">
+                <div className="flex items-center gap-2">
+                  <h1 className="font-bold text-base text-[var(--text-primary)] tracking-tight truncate leading-tight">
+                    {group?.name ? localizeName(group.name, currentLanguage.code) : "Indore Flat"}
+                  </h1>
+                  <button
+                    onClick={() => navigate("/groups")}
+                    className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition cursor-pointer"
+                    title="Switch Flat"
+                  >
+                    Switch
+                  </button>
+                </div>
+                <p className="text-xs text-[var(--text-muted)] font-normal truncate whitespace-nowrap mt-0.5 flex items-center">
+                  <span>{members.length === 1 ? t("roommate_count_one") : t("roommate_count_other", { count: members.length })}</span>
+                  <span className="mx-1.5 opacity-40">·</span>
+                  <span className="truncate">
+                    {t("signed_in_as")} <strong className="text-indigo-600 dark:text-indigo-400 font-semibold">{profile?.display_name ? localizeName(profile.display_name, currentLanguage.code) : "User"}</strong>
+                  </span>
+                </p>
+              </div>
+            </div>
+
+            {/* Mobile Left: App Logo & Brand Name */}
+            <div className="flex md:hidden items-center gap-2 shrink-0">
+              <a
+                href={MARKETING_HOMEPAGE_URL}
+                className="shrink-0 transition-transform duration-150 hover:scale-105 focus:outline-none"
+                title="Return to Roommate Homepage"
+              >
+                <BrandLogo size={28} showText={false} />
+              </a>
+              <span className="font-extrabold text-sm tracking-tight text-[var(--text-primary)]">
+                Roommate
+              </span>
+            </div>
+
+            {/* Center: Tablet / Desktop Navigation Pills */}
+            <div className="hidden lg:flex items-center bg-slate-100 dark:bg-white/5 p-1 rounded-xl border border-slate-200/80 dark:border-white/5 shrink-0">
+              <button
+                onClick={() => setActiveTab("activity")}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer ${
+                  activeTab === "activity"
+                    ? "bg-white dark:bg-indigo-600 text-indigo-600 dark:text-white shadow-xs"
+                    : "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
+                }`}
+              >
+                <Home className="w-3.5 h-3.5" />
+                <span>{t("overview")}</span>
+              </button>
+              <button
+                onClick={() => setActiveTab("sheet")}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer ${
+                  activeTab === "sheet"
+                    ? "bg-white dark:bg-indigo-600 text-indigo-600 dark:text-white shadow-xs"
+                    : "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
+                }`}
+              >
+                <Table className="w-3.5 h-3.5" />
+                <span>{t("spreadsheet")}</span>
+              </button>
+              <button
+                onClick={() => setActiveTab("settle")}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer ${
+                  activeTab === "settle"
+                    ? "bg-white dark:bg-indigo-600 text-indigo-600 dark:text-white shadow-xs"
+                    : "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
+                }`}
+              >
+                <CreditCard className="w-3.5 h-3.5" />
+                <span>{t("settle")}</span>
+              </button>
+              <button
+                onClick={() => setActiveTab("members")}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer ${
+                  activeTab === "members"
+                    ? "bg-white dark:bg-indigo-600 text-indigo-600 dark:text-white shadow-xs"
+                    : "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
+                }`}
+              >
+                <Users className="w-3.5 h-3.5" />
+                <span>{t("roommates")}</span>
+              </button>
+            </div>
+
+            {/* Right: Actions */}
+            <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+              {/* Invite Code Pill */}
+              <button
+                onClick={copyCode}
+                className="h-8 md:h-9 px-2 sm:px-3 rounded-xl text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/40 text-[#00966d] dark:text-[#00e599] border border-emerald-200/80 dark:border-emerald-500/30 transition cursor-pointer flex items-center gap-1.5 whitespace-nowrap shrink-0"
+                title="Click to copy invite code"
+              >
+                {copiedCode ? (
+                  <>
+                    <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                    <span className="text-emerald-600 font-bold text-[11px] sm:text-xs">{t("copied")}</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-3.5 h-3.5 opacity-70 shrink-0" />
+                    <span className="font-mono font-bold tracking-wider text-[11px] sm:text-xs">{group?.invite_code || "CODE"}</span>
+                  </>
+                )}
+              </button>
+
+              {/* Language Selector */}
+              <button
+                onClick={() => setIsSettingsOpen(true)}
+                className="h-8 md:h-9 px-2 sm:px-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-white/10 transition cursor-pointer flex items-center gap-1 shrink-0"
+                title="Settings & Language"
+              >
+                <Globe className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400 shrink-0" />
+                <span className="text-[11px] sm:text-xs font-bold uppercase tracking-tight">{currentLanguage.code}</span>
+              </button>
+
+              {/* Desktop / iPad Add Expense CTA */}
+              <button
+                onClick={() => setIsAddModalOpen(true)}
+                className="hidden md:flex h-9 items-center gap-1.5 px-3.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold shadow-xs transition active:scale-[0.98] cursor-pointer shrink-0 whitespace-nowrap"
+              >
+                <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
+                <span>{t("add_expense")}</span>
+              </button>
+
+              {/* Theme Toggle Button */}
+              <button
+                onClick={toggleTheme}
+                className="w-8 h-8 md:w-9 md:h-9 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-600 dark:text-slate-300 transition cursor-pointer flex items-center justify-center border border-slate-200/80 dark:border-white/10 shrink-0"
+                title={`Switch to ${theme === "light" ? "Dark" : "Light"} Mode`}
+              >
+                {theme === "light" ? (
+                  <Moon className="w-3.5 h-3.5 md:w-4 md:h-4 text-indigo-600" />
+                ) : (
+                  <Sun className="w-3.5 h-3.5 md:w-4 md:h-4 text-amber-400" />
+                )}
+              </button>
+
+              {/* Settings Quick Cog */}
+              <button
+                onClick={() => setIsSettingsOpen(true)}
+                className="w-8 h-8 md:w-9 md:h-9 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition cursor-pointer flex items-center justify-center border border-slate-200/80 dark:border-white/10 shrink-0"
+                title="Settings"
+              >
+                <Settings className="w-3.5 h-3.5 md:w-4 md:h-4" />
+              </button>
+
+              {/* Logout Button (Desktop only on header - mobile has it in Settings modal) */}
+              <button
+                onClick={() => signOut()}
+                className="hidden sm:flex w-8 h-8 md:w-9 md:h-9 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-400 hover:text-rose-500 transition cursor-pointer items-center justify-center border border-slate-200/80 dark:border-white/10 shrink-0"
+                title="Sign out"
+              >
+                <LogOut className="w-3.5 h-3.5 md:w-4 md:h-4" />
+              </button>
+            </div>
+          </div>
+
+          {/* Mobile Tier 2: Dedicated Full-Width Flat Identity Banner */}
+          <div className="flex md:hidden items-center justify-between pt-1 pb-2 border-t border-slate-100 dark:border-white/5 gap-2">
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-2">
+                <h1 className="font-extrabold text-[15px] sm:text-base text-[var(--text-primary)] tracking-tight leading-tight truncate">
+                  {group?.name ? localizeName(group.name, currentLanguage.code) : "Indore Flat"}
+                </h1>
+                <button
+                  onClick={() => navigate("/groups")}
+                  className="shrink-0 text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-100 dark:bg-white/10 text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+                >
+                  Switch
+                </button>
+              </div>
+              <p className="text-[11px] text-[var(--text-muted)] font-normal truncate mt-0.5 flex items-center">
                 <span>{members.length === 1 ? t("roommate_count_one") : t("roommate_count_other", { count: members.length })}</span>
                 <span className="mx-1.5 opacity-40">·</span>
                 <span className="truncate">
@@ -407,126 +577,6 @@ export const GroupHomePage: React.FC = () => {
                 </span>
               </p>
             </div>
-          </div>
-
-          {/* Center: Tablet / Desktop Navigation Pills */}
-          <div className="hidden lg:flex items-center bg-slate-100 dark:bg-white/5 p-1 rounded-xl border border-slate-200/80 dark:border-white/5 shrink-0">
-            <button
-              onClick={() => setActiveTab("activity")}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer ${
-                activeTab === "activity"
-                  ? "bg-white dark:bg-indigo-600 text-indigo-600 dark:text-white shadow-xs"
-                  : "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
-              }`}
-            >
-              <Home className="w-3.5 h-3.5" />
-              <span>{t("overview")}</span>
-            </button>
-            <button
-              onClick={() => setActiveTab("sheet")}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer ${
-                activeTab === "sheet"
-                  ? "bg-white dark:bg-indigo-600 text-indigo-600 dark:text-white shadow-xs"
-                  : "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
-              }`}
-            >
-              <Table className="w-3.5 h-3.5" />
-              <span>{t("spreadsheet")}</span>
-            </button>
-            <button
-              onClick={() => setActiveTab("settle")}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer ${
-                activeTab === "settle"
-                  ? "bg-white dark:bg-indigo-600 text-indigo-600 dark:text-white shadow-xs"
-                  : "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
-              }`}
-            >
-              <CreditCard className="w-3.5 h-3.5" />
-              <span>{t("settle")}</span>
-            </button>
-            <button
-              onClick={() => setActiveTab("members")}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer ${
-                activeTab === "members"
-                  ? "bg-white dark:bg-indigo-600 text-indigo-600 dark:text-white shadow-xs"
-                  : "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
-              }`}
-            >
-              <Users className="w-3.5 h-3.5" />
-              <span>{t("roommates")}</span>
-            </button>
-          </div>
-
-          {/* Right: Actions with Uniform Height & Balance */}
-          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-            {/* Language & Settings Selector Button */}
-            <button
-              onClick={() => setIsSettingsOpen(true)}
-              className="h-9 px-2 sm:px-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-white/10 transition cursor-pointer flex items-center gap-1.5 shrink-0"
-              title="Settings & Language"
-            >
-              <Globe className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400 shrink-0" />
-              <span className="text-xs font-bold uppercase tracking-tight">{currentLanguage.code}</span>
-            </button>
-
-            {/* Invite Code Pill */}
-            <button
-              onClick={copyCode}
-              className="h-9 px-2.5 sm:px-3 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-indigo-600 dark:text-indigo-400 border border-slate-200/80 dark:border-white/10 transition cursor-pointer flex items-center gap-1.5 whitespace-nowrap shrink-0"
-              title="Click to copy invite code"
-            >
-              {copiedCode ? (
-                <>
-                  <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                  <span className="text-emerald-600 font-bold">{t("copied")}</span>
-                </>
-              ) : (
-                <>
-                  <Copy className="w-3.5 h-3.5 opacity-70 shrink-0" />
-                  <span className="font-mono font-bold tracking-wider">{group?.invite_code || "CODE"}</span>
-                </>
-              )}
-            </button>
-
-            {/* Desktop / iPad Add Expense CTA */}
-            <button
-              onClick={() => setIsAddModalOpen(true)}
-              className="hidden md:flex h-9 items-center gap-1.5 px-3.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold shadow-xs transition active:scale-[0.98] cursor-pointer shrink-0 whitespace-nowrap"
-            >
-              <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
-              <span>{t("add_expense")}</span>
-            </button>
-
-            {/* Theme Toggle Button */}
-            <button
-              onClick={toggleTheme}
-              className="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-600 dark:text-slate-300 transition cursor-pointer flex items-center justify-center border border-slate-200/80 dark:border-white/10 shrink-0"
-              title={`Switch to ${theme === "light" ? "Dark" : "Light"} Mode`}
-            >
-              {theme === "light" ? (
-                <Moon className="w-4 h-4 text-indigo-600" />
-              ) : (
-                <Sun className="w-4 h-4 text-amber-400" />
-              )}
-            </button>
-
-            {/* Settings Quick Cog */}
-            <button
-              onClick={() => setIsSettingsOpen(true)}
-              className="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition cursor-pointer flex items-center justify-center border border-slate-200/80 dark:border-white/10 shrink-0"
-              title="Settings"
-            >
-              <Settings className="w-4 h-4" />
-            </button>
-
-            {/* Logout Button */}
-            <button
-              onClick={() => signOut()}
-              className="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-400 hover:text-rose-500 transition cursor-pointer flex items-center justify-center border border-slate-200/80 dark:border-white/10 shrink-0"
-              title="Sign out"
-            >
-              <LogOut className="w-4 h-4" />
-            </button>
           </div>
         </div>
       </header>
