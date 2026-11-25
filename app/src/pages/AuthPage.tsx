@@ -277,7 +277,7 @@ export const AuthPage: React.FC = () => {
           <BrandLogo size={52} showText={false} />
         </a>
         <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[var(--text-primary)]">
-          Roommate
+          RoomMate<span className="text-[#00966d] dark:text-[#00e599]">ExpenseTracker</span>
         </h1>
         <p className="mt-1 text-sm text-[var(--text-muted)] font-normal">
           {t("sign_in_desc")}

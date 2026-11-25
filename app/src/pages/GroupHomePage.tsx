@@ -90,6 +90,20 @@ export const GroupHomePage: React.FC = () => {
   const [deletingMember, setDeletingMember] = useState<Member | null>(null);
   const [copiedUpiId, setCopiedUpiId] = useState<string | null>(null);
 
+  // Fetch all user groups to conditionally show Switch button only when multiple flats exist
+  const { data: userGroups = [] } = useQuery<Group[]>({
+    queryKey: ["user-groups-count", user?.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("groups")
+        .select("id")
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return (data || []) as Group[];
+    },
+    enabled: !!user?.id,
+  });
+
   // Fetch group details
   const { data: group } = useQuery<Group>({
     queryKey: ["group", groupId],
@@ -402,13 +416,15 @@ export const GroupHomePage: React.FC = () => {
                   <h1 className="font-bold text-base text-[var(--text-primary)] tracking-tight truncate leading-tight">
                     {group?.name ? localizeName(group.name, currentLanguage.code) : "Indore Flat"}
                   </h1>
-                  <button
-                    onClick={() => navigate("/groups")}
-                    className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition cursor-pointer"
-                    title="Switch Flat"
-                  >
-                    Switch
-                  </button>
+                  {userGroups.length > 1 && (
+                    <button
+                      onClick={() => navigate("/groups")}
+                      className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition cursor-pointer"
+                      title="Switch Flat"
+                    >
+                      Switch
+                    </button>
+                  )}
                 </div>
                 <p className="text-xs text-[var(--text-muted)] font-normal truncate whitespace-nowrap mt-0.5 flex items-center">
                   <span>{members.length === 1 ? t("roommate_count_one") : t("roommate_count_other", { count: members.length })}</span>
@@ -421,16 +437,16 @@ export const GroupHomePage: React.FC = () => {
             </div>
 
             {/* Mobile Left: App Logo & Brand Name */}
-            <div className="flex md:hidden items-center gap-2 shrink-0">
+            <div className="flex md:hidden items-center gap-1.5 shrink-0">
               <a
                 href={MARKETING_HOMEPAGE_URL}
                 className="shrink-0 transition-transform duration-150 hover:scale-105 focus:outline-none"
-                title="Return to Roommate Homepage"
+                title="Return to Homepage"
               >
-                <BrandLogo size={28} showText={false} />
+                <BrandLogo size={24} showText={false} />
               </a>
-              <span className="font-extrabold text-sm tracking-tight text-[var(--text-primary)]">
-                Roommate
+              <span className="font-extrabold text-xs sm:text-sm tracking-tight text-[var(--text-primary)]">
+                RoomMate<span className="text-[#00966d] dark:text-[#00e599]">ExpenseTracker</span>
               </span>
             </div>
 
@@ -562,13 +578,15 @@ export const GroupHomePage: React.FC = () => {
                 <h1 className="font-extrabold text-base text-[var(--text-primary)] tracking-tight leading-snug break-words">
                   {group?.name ? localizeName(group.name, currentLanguage.code) : "Indore Flat"}
                 </h1>
-                <button
-                  onClick={() => navigate("/groups")}
-                  className="shrink-0 text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-white/10 dark:hover:bg-white/15 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition"
-                  title="Switch Flat"
-                >
-                  Switch
-                </button>
+                {userGroups.length > 1 && (
+                  <button
+                    onClick={() => navigate("/groups")}
+                    className="shrink-0 text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-white/10 dark:hover:bg-white/15 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition"
+                    title="Switch Flat"
+                  >
+                    Switch
+                  </button>
+                )}
               </div>
               <p className="text-xs text-[var(--text-muted)] font-normal mt-0.5 flex items-center flex-wrap gap-1">
                 <span>{members.length === 1 ? t("roommate_count_one") : t("roommate_count_other", { count: members.length })}</span>

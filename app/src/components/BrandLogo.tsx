@@ -45,7 +45,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
 
       {showText && (
         <span className={textClassName}>
-          Roommate
+          RoomMate<span className="text-[#00966d] dark:text-[#00e599]">ExpenseTracker</span>
         </span>
       )}
     </div>
