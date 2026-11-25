@@ -233,17 +233,27 @@ export const GroupsPage: React.FC = () => {
             className="card-clean p-5 space-y-3.5 max-w-md mx-auto"
           >
             <h3 className="font-semibold text-sm text-[var(--text-primary)]">
-              Enter 6-Letter Flat Invite Code
+              Enter Flat Invite Code
             </h3>
+            <p className="text-xs text-[var(--text-muted)]">
+              Enter the code shared by your flatmate or paste an invite link.
+            </p>
             <input
               type="text"
               required
               autoFocus
-              maxLength={8}
-              placeholder="e.g. INDORE"
+              maxLength={24}
+              placeholder="e.g. ROOM-E4KL or E4KL"
               value={inviteCode}
-              onChange={(e) => setInviteCode(e.target.value.toUpperCase())}
-              className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-center text-sm font-bold tracking-widest text-[var(--text-primary)] focus:outline-none focus:border-indigo-500 uppercase"
+              onChange={(e) => {
+                let val = e.target.value.trim().toUpperCase();
+                if (val.includes("/JOIN/")) {
+                  const parts = val.split("/JOIN/");
+                  val = (parts[1] || "").split(/[/?#]/)[0];
+                }
+                setInviteCode(val);
+              }}
+              className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-center text-sm font-bold tracking-widest text-[var(--text-primary)] focus:outline-none focus:border-[#00966d] uppercase"
             />
             <div className="flex justify-end gap-2">
               <button
@@ -298,7 +308,7 @@ export const GroupsPage: React.FC = () => {
               <Users className="w-10 h-10 text-[var(--text-muted)] mx-auto mb-2 opacity-50" />
               <h3 className="font-semibold text-sm text-[var(--text-primary)]">No Flats Joined Yet</h3>
               <p className="text-xs text-[var(--text-muted)] mt-1">
-                Create a new flat or ask your roommate for their 6-letter invite code.
+                Create a new flat or ask your roommate for their flat invite code or link.
               </p>
             </div>
           )}

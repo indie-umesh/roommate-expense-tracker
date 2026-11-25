@@ -10,12 +10,14 @@ import { RemoveMemberModal } from "../components/RemoveMemberModal";
 import { SettingsModal } from "../components/SettingsModal";
 import { useLanguage } from "../context/LanguageContext";
 import { localizeName } from "../lib/transliterate";
+import { getInviteUrl } from "../lib/config";
 import {
   ChevronLeft,
   Share2,
   UserPlus,
   Copy,
   Check,
+  Link2,
   AlertCircle,
   Phone,
   QrCode,
@@ -55,6 +57,7 @@ export const MembersPage: React.FC = () => {
   const [deletingMember, setDeletingMember] = useState<Member | null>(null);
 
   const [copiedCode, setCopiedCode] = useState(false);
+  const [copiedLink, setCopiedLink] = useState(false);
   const [copiedUpiId, setCopiedUpiId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -280,6 +283,15 @@ export const MembersPage: React.FC = () => {
     }
   }
 
+  function copyInviteLink() {
+    if (group?.invite_code) {
+      const url = getInviteUrl(group.invite_code);
+      navigator.clipboard.writeText(url);
+      setCopiedLink(true);
+      setTimeout(() => setCopiedLink(false), 2000);
+    }
+  }
+
   function copyUpi(upi: string) {
     navigator.clipboard.writeText(upi);
     setCopiedUpiId(upi);
@@ -288,8 +300,9 @@ export const MembersPage: React.FC = () => {
 
   function shareWhatsApp() {
     if (!group) return;
+    const inviteUrl = getInviteUrl(group.invite_code);
     const text = encodeURIComponent(
-      `Hey! Join our flat on Roommate. Use invite code: ${group.invite_code} or visit https://app.roommatesexpensemanager.com`
+      `Hey! Join our flat "${group.name}" on Roommate to split bills and track expenses together:\n\n👉 Join directly: ${inviteUrl}\n\nFlat Code: ${group.invite_code}`
     );
     window.open(`https://api.whatsapp.com/send?text=${text}`, "_blank");
   }
@@ -347,7 +360,24 @@ export const MembersPage: React.FC = () => {
             </p>
           </div>
 
-          <div>
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              onClick={copyInviteLink}
+              className="w-full md:w-auto flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-xl border border-slate-200 dark:border-white/10 hover:bg-slate-100 dark:hover:bg-white/5 text-[var(--text-primary)] font-medium text-xs transition cursor-pointer shadow-xs active:scale-[0.98]"
+              title="Copy direct invite link"
+            >
+              {copiedLink ? (
+                <>
+                  <Check className="w-4 h-4 text-emerald-600" />
+                  <span className="text-emerald-600 font-bold">{t("copied")} Link</span>
+                </>
+              ) : (
+                <>
+                  <Link2 className="w-4 h-4 opacity-70" />
+                  <span>Copy Joining Link</span>
+                </>
+              )}
+            </button>
             <button
               onClick={shareWhatsApp}
               className="w-full md:w-auto flex items-center justify-center gap-2 py-2.5 px-5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-xs transition cursor-pointer shadow-xs active:scale-[0.98]"

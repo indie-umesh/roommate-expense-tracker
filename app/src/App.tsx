@@ -13,6 +13,7 @@ import { ExpenseDetailPage } from "./pages/ExpenseDetailPage";
 import { SettleUpPage } from "./pages/SettleUpPage";
 import { MembersPage } from "./pages/MembersPage";
 import { SuperadminPage } from "./pages/SuperadminPage";
+import { JoinGroupPage } from "./pages/JoinGroupPage";
 import { SuggestionModal } from "./components/SuggestionModal";
 import type { Group } from "./lib/types";
 
@@ -106,6 +107,8 @@ const AppContent: React.FC = () => {
     <>
       <Routes>
         <Route path="/" element={<RootRedirect />} />
+        <Route path="/join/:inviteCode" element={<JoinGroupPage />} />
+        <Route path="/join" element={<Navigate to="/setup" replace />} />
         <Route path="/superadmin" element={<SuperadminPage />} />
         <Route
           path="/login"

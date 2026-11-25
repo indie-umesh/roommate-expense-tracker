@@ -44,6 +44,13 @@ export const AuthPage: React.FC = () => {
   const [securityAnswer, setSecurityAnswer] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [pendingInvite, setPendingInvite] = useState<string | null>(() => {
+    try {
+      return localStorage.getItem("roommate_pending_invite");
+    } catch {
+      return null;
+    }
+  });
 
   // Forgot PIN State
   const [showForgotPin, setShowForgotPin] = useState(false);
@@ -98,6 +105,24 @@ export const AuthPage: React.FC = () => {
         );
       } else {
         await signInWithPhonePin(cleanPhone, pin);
+      }
+
+      // Check if user came via an invite link
+      const pendingCode = localStorage.getItem("roommate_pending_invite");
+      if (pendingCode) {
+        try {
+          const { data: joinedGroupId, error: joinErr } = await supabase.rpc("join_group", {
+            p_invite_code: pendingCode.trim().toUpperCase(),
+          });
+          localStorage.removeItem("roommate_pending_invite");
+          if (!joinErr && joinedGroupId) {
+            navigate(`/group/${joinedGroupId}`, { replace: true });
+            return;
+          }
+        } catch (joinEx) {
+          console.error("Auto-join error:", joinEx);
+          localStorage.removeItem("roommate_pending_invite");
+        }
       }
 
       // Route directly into flat or setup
@@ -261,6 +286,27 @@ export const AuthPage: React.FC = () => {
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="card-clean p-6 sm:p-8">
+          {pendingInvite && (
+            <div className="mb-5 p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-500/30 flex items-center justify-between text-xs">
+              <div className="flex items-center gap-2 text-emerald-800 dark:text-emerald-200">
+                <span className="font-semibold">Joining Flat:</span>
+                <span className="font-mono font-extrabold tracking-wider bg-white dark:bg-black/40 px-2 py-0.5 rounded border border-emerald-300 dark:border-emerald-500/30 text-[#00966d] dark:text-[#00e599]">
+                  {pendingInvite}
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  try { localStorage.removeItem("roommate_pending_invite"); } catch {}
+                  setPendingInvite(null);
+                }}
+                className="text-[var(--text-muted)] hover:text-[var(--text-primary)] text-[11px] underline cursor-pointer"
+              >
+                Clear
+              </button>
+            </div>
+          )}
+
           {/* Segmented Minimal Tabs */}
           <div className="flex bg-slate-100 dark:bg-white/5 p-1 rounded-xl mb-6 border border-slate-200/80 dark:border-white/5">
             <button
