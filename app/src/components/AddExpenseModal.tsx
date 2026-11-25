@@ -281,9 +281,6 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
         }
         setSelectedMemberIds(uniqueMembers.map((m) => m.id));
       }
-      requestAnimationFrame(() => {
-        inputRef.current?.focus();
-      });
     } else {
       setAmountRupees("");
       setDetails("");
@@ -570,22 +567,30 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
               /* MAIN ADD EXPENSE FORM */
               <div className="space-y-4 pt-3">
                 {/* Amount Display */}
-                <div className="bg-slate-50 dark:bg-white/5 border border-slate-200/80 dark:border-white/10 p-4 rounded-2xl text-center">
+                <div
+                  onClick={() => inputRef.current?.focus()}
+                  className="bg-slate-50 dark:bg-white/5 border border-slate-200/80 dark:border-white/10 p-4 rounded-2xl text-center cursor-pointer"
+                >
                   <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-muted)] block mb-1">
                     {t("amount_inr")}
                   </span>
                   <div className="flex items-center justify-center">
-                    <span className="text-3xl font-black text-indigo-600 dark:text-indigo-400 mr-1.5">
+                    <span className="text-3xl font-black text-indigo-600 dark:text-indigo-400 mr-1.5 select-none">
                       ₹
                     </span>
                     <input
                       ref={inputRef}
-                      type="number"
+                      type="text"
                       inputMode="decimal"
-                      step="any"
+                      pattern="[0-9]*"
                       placeholder="0"
                       value={amountRupees}
-                      onChange={(e) => setAmountRupees(e.target.value)}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (val === "" || /^\d*\.?\d*$/.test(val)) {
+                          setAmountRupees(val);
+                        }
+                      }}
                       className="text-4xl sm:text-5xl font-black text-[var(--text-primary)] bg-transparent outline-none max-w-[220px] text-center placeholder-slate-400 dark:placeholder-slate-600 tracking-tight"
                     />
                   </div>
